@@ -1,6 +1,5 @@
 import 'dart:convert'; // JSON işlemleri için
 import 'package:http/http.dart' as http; // HTTP istekleri için
-import 'package:shared_preferences/shared_preferences.dart';
 import '../Models/login.dart'; // Login modeliniz
 
 class ApiService {
