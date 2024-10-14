@@ -1,3 +1,4 @@
+import 'package:divinitaion/Views/CustomBottomNavigation.dart';
 import 'package:divinitaion/Models/login.dart';
 import 'package:divinitaion/Page/Common/email_verification.dart';
 import 'package:divinitaion/Page/Common/register.dart';
@@ -35,6 +36,12 @@ class _LoginPageState extends State<LoginPage> {
                 builder: (context) => EmailVerificationPage(
                       id: response.userId,
                     )),
+          );
+        } else {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (context) => CustomBottomNavigation()),
           );
         }
       } else {
