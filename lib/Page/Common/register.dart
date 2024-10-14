@@ -1,3 +1,5 @@
+import 'package:divinitaion/Models/register_client.dart';
+import 'package:divinitaion/Services/service.dart';
 import 'package:flutter/material.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -6,17 +8,43 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _firstNameController = TextEditingController();
+  final TextEditingController _lastNameController = TextEditingController();
+  final TextEditingController _genderController = TextEditingController();
+  final TextEditingController _dateOfBirthController = TextEditingController();
+  final TextEditingController _occupationController = TextEditingController();
+  final TextEditingController _maritalStatusController =
+      TextEditingController();
+  final TextEditingController _userNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  void _register() {
-    if (_formKey.currentState!.validate()) {
+  final ApiService _apiService = ApiService();
+
+  Future<void> _register() async {
+    User newUser = User(
+      firstName: _firstNameController.text,
+      lastName: _lastNameController.text,
+      gender: _genderController.text,
+      dateOfBirth: DateTime.parse(_dateOfBirthController.text),
+      occupation: _occupationController.text,
+      maritalStatus: _maritalStatusController.text,
+      userName: _userNameController.text,
+      email: _emailController.text,
+      password: _passwordController.text,
+    );
+
+    bool success = await _apiService.registerUser(newUser);
+
+    if (success) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Registration successful')),
+        SnackBar(content: Text('Registration successful!')),
       );
-      // Kayıt işlemleri burada yapılabilir.
+      Navigator.pop(context);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Registration failed. Please try again.')),
+      );
     }
   }
 
@@ -24,78 +52,59 @@ class _RegisterPageState extends State<RegisterPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Register Page'),
+        title: Text('Register'),
       ),
-      body: Center(
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16.0),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                // Kullanıcı adı alanı
-                TextFormField(
-                  controller: _usernameController,
-                  decoration: const InputDecoration(labelText: 'Username'),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your username';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 10),
-
-                // E-posta alanı
-                TextFormField(
-                  controller: _emailController,
-                  decoration: const InputDecoration(labelText: 'Email'),
-                  keyboardType: TextInputType.emailAddress,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your email';
-                    } else if (!RegExp(r'^[^@]+@[^@]+\.[^@]+')
-                        .hasMatch(value)) {
-                      return 'Please enter a valid email address';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 10),
-
-                // Şifre alanı
-                TextFormField(
-                  controller: _passwordController,
-                  decoration: const InputDecoration(labelText: 'Password'),
-                  obscureText: true,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your password';
-                    } else if (value.length < 6) {
-                      return 'Password must be at least 6 characters long';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 20),
-
-                // Kayıt ol butonu
-                ElevatedButton(
-                  onPressed: _register,
-                  child: const Text('Register'),
-                ),
-
-                // Giriş sayfasına gitmek için bir buton
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(context); // Giriş sayfasına geri dön
-                  },
-                  child: const Text('Already have an account? Login'),
-                ),
-              ],
-            ),
+          child: Column(
+            children: [
+              TextField(
+                controller: _firstNameController,
+                decoration: InputDecoration(labelText: 'First Name'),
+              ),
+              TextField(
+                controller: _lastNameController,
+                decoration: InputDecoration(labelText: 'Last Name'),
+              ),
+              TextField(
+                controller: _genderController,
+                decoration: InputDecoration(labelText: 'Gender'),
+              ),
+              TextField(
+                controller: _dateOfBirthController,
+                decoration:
+                    InputDecoration(labelText: 'Date of Birth (YYYY-MM-DD)'),
+                keyboardType: TextInputType.datetime,
+              ),
+              TextField(
+                controller: _occupationController,
+                decoration: InputDecoration(labelText: 'Occupation'),
+              ),
+              TextField(
+                controller: _maritalStatusController,
+                decoration: InputDecoration(labelText: 'Marital Status'),
+              ),
+              TextField(
+                controller: _userNameController,
+                decoration: InputDecoration(labelText: 'Username'),
+              ),
+              TextField(
+                controller: _emailController,
+                decoration: InputDecoration(labelText: 'Email'),
+                keyboardType: TextInputType.emailAddress,
+              ),
+              TextField(
+                controller: _passwordController,
+                decoration: InputDecoration(labelText: 'Password'),
+                obscureText: true,
+              ),
+              SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: _register,
+                child: Text('Register'),
+              ),
+            ],
           ),
         ),
       ),

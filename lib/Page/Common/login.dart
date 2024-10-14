@@ -56,11 +56,11 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Logins Page'),
+        title: const Text('Login Page'),
       ),
       body: Center(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(14.0),
           child: Form(
             key: _formKey,
             child: Column(
@@ -71,7 +71,7 @@ class _LoginPageState extends State<LoginPage> {
                   'lib/assets/logo.png',
                   height: 250,
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 15),
                 TextFormField(
                   controller: _usernameController,
                   decoration: const InputDecoration(labelText: 'Username'),
@@ -97,14 +97,25 @@ class _LoginPageState extends State<LoginPage> {
                 const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: _login,
-                  child: const Text('Login'),
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 40, vertical: 15), // Buton boyutları
+                    // Yazı boyutu ve rengi
+                  ),
+                  child: const Text(
+                    'Login',
+                    style: TextStyle(
+                        color: Color.fromARGB(255, 175, 113, 14)), // Yazı rengi
+                  ),
                 ),
                 const SizedBox(height: 10),
 
                 // Şifremi Unuttum linki
                 TextButton(
                   onPressed: null, // Şimdilik null, işlevi yok
-                  child: const Text('Şifremi Unuttum'),
+                  child: const Text(
+                    'Şifremi Unuttum',
+                  ),
                 ),
 
                 // Kayıt Ol butonu
