@@ -1,4 +1,4 @@
-import 'package:divinitaion/Views/CustomFortuneTellerCard.dart';
+import 'package:divinitaion/Views/ClientFortuneTellerCard.dart';
 import 'package:flutter/material.dart';
 
 class CustomFortuneTellerList extends StatelessWidget {
