@@ -9,10 +9,10 @@ class LoginService {
     try {
       final response = await http.post(
         Uri.parse(apiUrl),
-      headers: {
-      "Access-Control-Allow-Origin": "*",
-      'Content-Type': 'application/json',
-    },
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          'Content-Type': 'application/json',
+        },
         body: jsonEncode(loginModel.toJson()), // loginModel'i JSON'a çevirme
       );
 

@@ -1,11 +1,13 @@
 import 'dart:io';
 import 'package:divinitaion/Page/Common/email_verification.dart';
 import 'package:divinitaion/Page/Common/login.dart';
+import 'package:divinitaion/Page/Client/client_fortune_teller_list.dart';
+import 'package:divinitaion/Widgets/client_button_navigation.dart';
 import 'package:flutter/material.dart';
 
 void main() {
   HttpOverrides.global = MyHttpOverrides();
-  runApp(MaterialApp(home: LoginPage()));
+  runApp(MaterialApp(home: CustomBottomNavigation()));
 }
 
 class MyHttpOverrides extends HttpOverrides {

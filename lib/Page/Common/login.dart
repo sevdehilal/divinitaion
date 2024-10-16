@@ -1,4 +1,4 @@
-import 'package:divinitaion/Views/client_button_navigation.dart';
+import 'package:divinitaion/Widgets/client_button_navigation.dart';
 import 'package:divinitaion/Models/login.dart';
 import 'package:divinitaion/Page/Common/email_verification.dart';
 import 'package:divinitaion/Page/Common/register.dart';

@@ -80,7 +80,7 @@ class ApiService {
     }
   }
 
-   Future<bool> registerFortuneTeller(FortuneTeller fortuneTeller) async {
+  Future<bool> registerFortuneTeller(FortuneTeller fortuneTeller) async {
     try {
       final response = await http.post(
         Uri.parse("https://fallinfal.com/api/Auth/RegisterFortuneTeller"),
@@ -99,6 +99,18 @@ class ApiService {
     } catch (e) {
       print('Exception: $e');
       return false;
+    }
+  }
+
+  Future<List<FortuneTeller>> fetchUsers() async {
+    final response = await http.get(Uri.parse(
+        "https://fallinfal.com/api/FortuneTeller/GetAllFortuneTeller"));
+
+    if (response.statusCode == 200) {
+      List<dynamic> jsonList = json.decode(response.body);
+      return jsonList.map((json) => FortuneTeller.fromJson(json)).toList();
+    } else {
+      throw Exception('Failed to load users');
     }
   }
 }

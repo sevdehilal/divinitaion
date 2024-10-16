@@ -1,4 +1,4 @@
-import 'package:divinitaion/Views/client_fortune_teller_list.dart';
+import 'package:divinitaion/Page/Client/client_fortune_teller_list.dart';
 import 'package:flutter/material.dart';
 
 class CustomBottomNavigation extends StatefulWidget {
@@ -10,7 +10,7 @@ class _CustomBottomNavigationState extends State<CustomBottomNavigation> {
   int _selectedIndex = 0;
 
   static List<Widget> _pages = <Widget>[
-    CustomFortuneTellerList(), // Falcı listesi burada çağrılıyor
+    UserListPage(), // Falcı listesi burada çağrılıyor
     Center(child: Text('Fallarım', style: TextStyle(fontSize: 24))),
     Center(child: Text('Diğer', style: TextStyle(fontSize: 24))),
   ];
