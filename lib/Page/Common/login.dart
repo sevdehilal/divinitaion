@@ -2,6 +2,7 @@ import 'package:divinitaion/Views/ClientBottomNavigation.dart';
 import 'package:divinitaion/Models/login.dart';
 import 'package:divinitaion/Page/Common/email_verification.dart';
 import 'package:divinitaion/Page/Common/register.dart';
+import 'package:divinitaion/Page/Common/fortune_teller_register.dart';
 import 'package:divinitaion/Services/service.dart';
 import 'package:flutter/material.dart';
 
@@ -38,15 +39,12 @@ class _LoginPageState extends State<LoginPage> {
                     )),
           );
         } else {
-          if (response.roles.contains("client")){
+          if (response.roles.contains("client")) {
             Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-                builder: (context) => CustomBottomNavigation()),
+              context,
+              MaterialPageRoute(builder: (context) => CustomBottomNavigation()),
             );
-          }else if (response.roles.contains("fortuneTeller")){
-
-          }
+          } else if (response.roles.contains("fortuneTeller")) {}
         }
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -59,9 +57,6 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Login Page'),
-      ),
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(14.0),
@@ -71,11 +66,31 @@ class _LoginPageState extends State<LoginPage> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Image.asset(
-                  'lib/assets/logo.png',
-                  height: 250,
+                // "Fall in Fal" başlığı
+                const Text(
+                  'Fall in Fal',
+                  style: TextStyle(
+                    color: Color.fromARGB(255, 138, 43, 226), // Morumsu renk
+                    fontWeight: FontWeight.bold, // Kalın yazı
+                    fontStyle: FontStyle.italic, // Eğik yazı
+                    fontSize: 40, // Yazı boyutu büyük
+                  ),
+                ),
+                const SizedBox(height: 20), // Başlık ile logo arası boşluk
+
+                // Yuvarlak Logo
+                ClipOval(
+                  child: Image.asset(
+                    'lib/assets/logo1.png',
+                    height: 250,
+                    width: 250,
+                    fit: BoxFit
+                        .cover, // Resmin tam ortalanıp sığdırılmasını sağlar
+                  ),
                 ),
                 const SizedBox(height: 15),
+
+                // Username alanı
                 TextFormField(
                   controller: _usernameController,
                   decoration: const InputDecoration(labelText: 'Username'),
@@ -87,6 +102,8 @@ class _LoginPageState extends State<LoginPage> {
                   },
                 ),
                 const SizedBox(height: 10),
+
+                // Password alanı
                 TextFormField(
                   controller: _passwordController,
                   decoration: const InputDecoration(labelText: 'Password'),
@@ -99,12 +116,13 @@ class _LoginPageState extends State<LoginPage> {
                   },
                 ),
                 const SizedBox(height: 20),
+
+                // Login butonu
                 ElevatedButton(
                   onPressed: _login,
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 40, vertical: 15), // Buton boyutları
-                    // Yazı boyutu ve rengi
                   ),
                   child: const Text(
                     'Login',
@@ -121,16 +139,27 @@ class _LoginPageState extends State<LoginPage> {
                     'Şifremi Unuttum',
                   ),
                 ),
+                const SizedBox(height: 10),
+                Text("Hesabınız yok mu?"),
 
-                // Kayıt Ol butonu
-                OutlinedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => RegisterPage()),
-                    );
-                  }, // Şimdilik null, işlevi yok
-                  child: const Text('Kayıt Ol'),
+                // Kayıt Ol ve Falcı Olarak Kayıt Ol linkleri
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => RegisterPage()),
+                        );
+                      },
+                      child: const Text(
+                        'Kayıt Ol',
+                        style: TextStyle(fontSize: 13),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),

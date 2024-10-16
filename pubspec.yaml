@@ -23,4 +23,4 @@ flutter:
 
   # Assets bölümünü aktif hale getiriyoruz.
   assets:
-    - lib/assets/logo.png  # Burada logonuzun doğru yolunu eklediğinizden emin olun.
+    - lib/assets/logo1.png  # Burada logonuzun doğru yolunu eklediğinizden emin olun.
