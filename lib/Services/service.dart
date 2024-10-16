@@ -1,4 +1,5 @@
 import 'dart:convert'; // JSON işlemleri için
+import 'package:divinitaion/Models/fortune_teller_entity.dart';
 import 'package:divinitaion/Models/register_client.dart';
 import 'package:http/http.dart' as http; // HTTP istekleri için
 import '../Models/login.dart'; // Login modeliniz
@@ -63,6 +64,28 @@ class ApiService {
         Uri.parse("https://fallinfal.com/api/Auth/RegisterClient"),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode(user.toJson()),
+      );
+
+      if (response.statusCode == 200) {
+        // Başarılı kayıt
+        return true;
+      } else {
+        // Kayıt başarısız
+        print('Error: ${response.statusCode} - ${response.body}');
+        return false;
+      }
+    } catch (e) {
+      print('Exception: $e');
+      return false;
+    }
+  }
+
+   Future<bool> registerFortuneTeller(FortuneTeller fortuneTeller) async {
+    try {
+      final response = await http.post(
+        Uri.parse("https://fallinfal.com/api/Auth/RegisterFortuneTeller"),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(fortuneTeller.toJson()),
       );
 
       if (response.statusCode == 200) {

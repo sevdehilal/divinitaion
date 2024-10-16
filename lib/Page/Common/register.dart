@@ -1,3 +1,4 @@
+import 'package:divinitaion/Models/fortune_teller_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:divinitaion/Models/register_client.dart';
 import 'package:divinitaion/Services/service.dart';
@@ -56,28 +57,26 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   Future<void> _fortuneTellerRegister() async {
-    User newUser = User(
+    FortuneTeller newFortuneTeller = FortuneTeller(
       firstName: _firstNameController.text,
       lastName: _lastNameController.text,
       gender: _genderController.text,
-      dateOfBirth: DateTime.parse(_dateOfBirthController.text),
-      occupation: _occupationController.text,
-      maritalStatus: _maritalStatusController.text,
+      experience: _experienceController.text,
       userName: _userNameController.text,
       email: _emailController.text,
       password: _passwordController.text,
     );
 
-    bool success = await _apiService.registerUser(newUser);
+    bool success = await _apiService.registerFortuneTeller(newFortuneTeller);
 
     if (success) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Registration successful!')),
+        SnackBar(content: Text('Fortune Teller Registration successful!')),
       );
       Navigator.pop(context);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Registration failed. Please try again.')),
+        SnackBar(content: Text('Fortune Teller Registration failed. Please try again.')),
       );
     }
   }
