@@ -1,6 +1,7 @@
 // main.dart
 import 'package:divinitaion/Models/fortune_teller_entity.dart';
 import 'package:divinitaion/Services/service.dart';
+import 'package:divinitaion/Widgets/client_fortune_teller_card.dart';
 import 'package:flutter/material.dart';
 
 class UserListPage extends StatefulWidget {
@@ -41,29 +42,8 @@ class _UserListPageState extends State<UserListPage> {
             itemCount: users.length,
             itemBuilder: (context, index) {
               final user = users[index];
-              return Card(
-                margin: EdgeInsets.all(8.0),
-                child: ListTile(
-                  title: Text(user.firstName),
-                  subtitle: Text(user.lastName),
-                  onTap: () {
-                    // Kart tıklama olayı
-                    showDialog(
-                      context: context,
-                      builder: (context) => AlertDialog(
-                        title: Text('User Selected'),
-                        content: Text('${user.firstName} ${user.lastName}'),
-                        actions: [
-                          TextButton(
-                            onPressed: () => Navigator.of(context).pop(),
-                            child: Text('OK'),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                ),
-              );
+              return CustomFortuneTellerCard(
+                  firstName: user.firstName, lastName: user.lastName);
             },
           );
         },
