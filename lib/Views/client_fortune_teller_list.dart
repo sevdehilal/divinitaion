@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:divinitaion/Views/ClientFortuneTellerCard.dart';
+import 'package:divinitaion/Views/client_fortune_teller_card.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 

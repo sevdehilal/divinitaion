@@ -1,4 +1,4 @@
-import 'package:divinitaion/Views/ClientBottomNavigation.dart';
+import 'package:divinitaion/Views/client_button_navigation.dart';
 import 'package:divinitaion/Models/login.dart';
 import 'package:divinitaion/Page/Common/email_verification.dart';
 import 'package:divinitaion/Page/Common/register.dart';
@@ -44,7 +44,13 @@ class _LoginPageState extends State<LoginPage> {
               context,
               MaterialPageRoute(builder: (context) => CustomBottomNavigation()),
             );
-          } else if (response.roles.contains("fortuneTeller")) {}
+          } else if (response.roles.contains("fortuneTeller")) {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => CustomBottomNavigation()),
+            );
+
+          }
         }
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
