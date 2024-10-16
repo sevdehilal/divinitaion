@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:divinitaion/Views/client_fortune_teller_card.dart';
+import 'package:divinitaion/Views/photo_picker_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -53,6 +54,13 @@ class _CustomFortuneTellerListState extends State<CustomFortuneTellerList> {
     }
   }
 
+   void navigateToPhotoPicker(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => PhotoPickerScreen()),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -65,10 +73,13 @@ class _CustomFortuneTellerListState extends State<CustomFortuneTellerList> {
               itemCount: fortuneTellers.length,
               itemBuilder: (context, index) {
                 final fortuneTeller = fortuneTellers[index];
-                return CustomFortuneTellerCard(
-                  fortuneTellerName: fortuneTeller['name'],
-                  rating: fortuneTeller['rating'],
-                  balance: fortuneTeller['balance'],
+                return GestureDetector(
+                  onTap: () => navigateToPhotoPicker(context),
+                  child: CustomFortuneTellerCard(
+                    fortuneTellerName: fortuneTeller['name'],
+                    rating: fortuneTeller['rating'],
+                    balance: fortuneTeller['balance'],
+                  ),
                 );
               },
             ),
