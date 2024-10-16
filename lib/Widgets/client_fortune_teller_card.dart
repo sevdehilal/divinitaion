@@ -1,15 +1,10 @@
 import 'package:flutter/material.dart';
 
 class CustomFortuneTellerCard extends StatelessWidget {
-  final String fortuneTellerName;
-  final int rating; // Puan
-  final int balance; // Altın miktarı
+  final String firstName;
+  final String lastName; // Puan
 
-  CustomFortuneTellerCard({
-    required this.fortuneTellerName,
-    required this.rating,
-    required this.balance,
-  });
+  CustomFortuneTellerCard({required this.firstName, required this.lastName});
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +19,14 @@ class CustomFortuneTellerCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              fortuneTellerName,
+              firstName,
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Text(
+              lastName,
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -36,7 +38,7 @@ class CustomFortuneTellerCard extends StatelessWidget {
                 Icon(Icons.star, color: Colors.amber),
                 SizedBox(width: 5),
                 Text(
-                  '$rating Puan',
+                  '0 Puan',
                   style: TextStyle(fontSize: 18),
                 ),
               ],
@@ -47,7 +49,7 @@ class CustomFortuneTellerCard extends StatelessWidget {
                 Icon(Icons.monetization_on, color: Colors.yellow),
                 SizedBox(width: 5),
                 Text(
-                  '$balance Altın',
+                  '0 Altın',
                   style: TextStyle(fontSize: 18),
                 ),
               ],
@@ -57,7 +59,7 @@ class CustomFortuneTellerCard extends StatelessWidget {
               onPressed: () {
                 // Fal baktırma işlemi
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('$fortuneTellerName için fal baktırıldı!')),
+                  SnackBar(content: Text('$firstName için fal baktırıldı!')),
                 );
               },
               child: Text('Fal Baktır'),
