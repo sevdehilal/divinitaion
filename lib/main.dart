@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 
 void main() {
   HttpOverrides.global = MyHttpOverrides();
-  runApp(MaterialApp(home: CustomBottomNavigation()));
+  runApp(MaterialApp(home: LoginPage()));
 }
 
 class MyHttpOverrides extends HttpOverrides {

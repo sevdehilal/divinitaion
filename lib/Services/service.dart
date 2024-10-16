@@ -21,11 +21,8 @@ class ApiService {
       if (response.statusCode == 200) {
         print('Login successful');
         print(response.body);
-        //SharedPreferences prefs = await SharedPreferences.getInstance();
-
         final Map<String, dynamic> data = jsonDecode(response.body);
         final loginResponse = LoginResponse.fromJson(data);
-        //await prefs.setString('token', loginResponse.token);
         return loginResponse;
       } else {
         return null;

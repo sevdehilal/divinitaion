@@ -3,7 +3,9 @@ import 'package:divinitaion/Models/login.dart';
 import 'package:divinitaion/Page/Common/email_verification.dart';
 import 'package:divinitaion/Page/Common/register.dart';
 import 'package:divinitaion/Services/service.dart';
+import 'package:divinitaion/Widgets/fortune_teller_navigation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -15,6 +17,13 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _passwordController = TextEditingController();
   final ApiService _loginService = ApiService();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final FlutterSecureStorage _storage = FlutterSecureStorage();
+
+  @override
+  void initState() {
+    super.initState();
+    _checkLoginStatus();
+  }
 
   Future<void> _login() async {
     if (_formKey.currentState!.validate()) {
@@ -39,14 +48,16 @@ class _LoginPageState extends State<LoginPage> {
           );
         } else {
           if (response.roles.contains("client")) {
+            await _storage.write(key: 'token', value: response.token);
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (context) => CustomBottomNavigation()),
             );
-          } else if (response.roles.contains("fortuneTeller")) {
+          } else if (response.roles.contains("fortuneteller")) {
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => CustomBottomNavigation()),
+              MaterialPageRoute(
+                  builder: (context) => FortuneTellerBottomNavigation()),
             );
           }
         }
@@ -55,6 +66,21 @@ class _LoginPageState extends State<LoginPage> {
           SnackBar(content: Text('Login failed')),
         );
       }
+    }
+  }
+
+  Future<void> _checkLoginStatus() async {
+    String? token = await _storage.read(key: 'token');
+    if (token != null) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => CustomBottomNavigation()),
+      );
+    } else {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => LoginPage()),
+      );
     }
   }
 
