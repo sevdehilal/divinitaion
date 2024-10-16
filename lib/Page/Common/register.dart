@@ -28,6 +28,9 @@ class _RegisterPageState extends State<RegisterPage> {
   List<String> _categories = ['Tarot', 'Kahve Falı', 'El Falı', 'Aşk Falı'];
   String? _selectedCategory;
 
+  List<String> _category = ['Kız', 'Erkek'];
+  String? _selectedGender;
+
   Future<void> _register() async {
     User newUser = User(
       firstName: _firstNameController.text,
@@ -155,10 +158,23 @@ class _RegisterPageState extends State<RegisterPage> {
                   controller: _lastNameController,
                   decoration: InputDecoration(labelText: 'Last Name'),
                 ),
-                TextField(
-                  controller: _genderController,
+                SizedBox(height: 16),
+                DropdownButtonFormField<String>(
                   decoration: InputDecoration(labelText: 'Gender'),
+                  value: _selectedGender,
+                  onChanged: (newValue) {
+                    setState(() {
+                      _selectedGender = newValue;
+                    });
+                  },
+                  items: _category.map((category) {
+                    return DropdownMenuItem<String>(
+                      value: category,
+                      child: Text(category),
+                    );
+                  }).toList(),
                 ),
+
                 TextField(
                   controller: _dateOfBirthController,
                   decoration:
@@ -214,24 +230,10 @@ class _RegisterPageState extends State<RegisterPage> {
                 ),
 
                 // Fal kategorisi seçimi (Dropdown)
-                SizedBox(height: 16),
-                DropdownButtonFormField<String>(
-                  decoration:
-                      InputDecoration(labelText: 'Bakacağı Fal Kategorisi'),
-                  value: _selectedCategory,
-                  onChanged: (newValue) {
-                    setState(() {
-                      _selectedCategory = newValue;
-                    });
-                  },
-                  items: _categories.map((category) {
-                    return DropdownMenuItem<String>(
-                      value: category,
-                      child: Text(category),
-                    );
-                  }).toList(),
+                TextField(
+                  controller: _userNameController,
+                  decoration: InputDecoration(labelText: 'Username'),
                 ),
-
                 TextField(
                   controller: _emailController,
                   decoration: InputDecoration(labelText: 'Email'),
