@@ -23,6 +23,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
   final ApiService _apiService = ApiService();
   int _selectedButtonIndex = 0; // 0: Kayıt Ol, 1: Falcı Olarak Kayıt Ol
+  //sevde
 
   // Falcı için seçilebilecek fal kategorileri
   List<String> _categories = ['Tarot', 'Kahve Falı', 'El Falı', 'Aşk Falı'];
