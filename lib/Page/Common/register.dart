@@ -212,7 +212,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   decoration: InputDecoration(labelText: 'Cinsiyet'),
                 ),
 
-                // Fal kategorisi seçimi (Dropdown)
+                // Fal kategorisi seçimi (Dropdown) 
                 SizedBox(height: 16),
                 DropdownButtonFormField<String>(
                   decoration:
