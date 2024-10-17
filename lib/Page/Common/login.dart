@@ -19,12 +19,6 @@ class _LoginPageState extends State<LoginPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final FlutterSecureStorage _storage = FlutterSecureStorage();
 
-  @override
-  void initState() {
-    super.initState();
-    _checkLoginStatus();
-  }
-
   Future<void> _login() async {
     if (_formKey.currentState!.validate()) {
       final loginModel = Login(
@@ -48,12 +42,13 @@ class _LoginPageState extends State<LoginPage> {
           );
         } else {
           if (response.roles.contains("client")) {
-            await _storage.write(key: 'token', value: response.token);
+            await _storage.write(key: 'loggedInAs', value: "client");
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (context) => CustomBottomNavigation()),
             );
           } else if (response.roles.contains("fortuneteller")) {
+            await _storage.write(key: 'loggedInAs', value: "fortuneteller");
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
@@ -70,8 +65,8 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<void> _checkLoginStatus() async {
-    String? token = await _storage.read(key: 'token');
-    if (token != null) {
+    String? loggedInAs = await _storage.read(key: 'loggedInAs');
+    if (loggedInAs != null) {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => CustomBottomNavigation()),

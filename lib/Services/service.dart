@@ -99,7 +99,7 @@ class ApiService {
     }
   }
 
-  Future<List<FortuneTeller>> fetchUsers() async {
+  Future<List<FortuneTeller>> FetchFortuneTeller() async {
     final response = await http.get(Uri.parse(
         "https://fallinfal.com/api/FortuneTeller/GetAllFortuneTeller"));
 

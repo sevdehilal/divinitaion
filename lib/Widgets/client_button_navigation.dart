@@ -10,7 +10,7 @@ class _CustomBottomNavigationState extends State<CustomBottomNavigation> {
   int _selectedIndex = 0;
 
   static List<Widget> _pages = <Widget>[
-    UserListPage(), // Falcı listesi burada çağrılıyor
+    ClientFortuneTellerList(), // Falcı listesi burada çağrılıyor
     Center(child: Text('Fallarım', style: TextStyle(fontSize: 24))),
     Center(child: Text('Diğer', style: TextStyle(fontSize: 24))),
   ];

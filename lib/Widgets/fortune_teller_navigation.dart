@@ -1,12 +1,14 @@
-
+import 'package:divinitaion/Widgets/logout_button.dart';
 import 'package:flutter/material.dart';
 
 class FortuneTellerBottomNavigation extends StatefulWidget {
   @override
-  _FortuneTellerBottomNavigationState createState() => _FortuneTellerBottomNavigationState();
+  _FortuneTellerBottomNavigationState createState() =>
+      _FortuneTellerBottomNavigationState();
 }
 
-class _FortuneTellerBottomNavigationState extends State<FortuneTellerBottomNavigation> {
+class _FortuneTellerBottomNavigationState
+    extends State<FortuneTellerBottomNavigation> {
   int _selectedIndex = 0;
 
   static List<Widget> _pages = <Widget>[
@@ -25,6 +27,7 @@ class _FortuneTellerBottomNavigationState extends State<FortuneTellerBottomNavig
     return Scaffold(
       appBar: AppBar(
         title: Text('Bottom Navigation Bar Örneği'),
+        actions: [LogoutButton()],
       ),
       body: _pages[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
