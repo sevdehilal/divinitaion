@@ -4,7 +4,10 @@ import 'package:flutter/material.dart';
 
 void main() {
   HttpOverrides.global = MyHttpOverrides();
-  runApp(MaterialApp(home: WelcomePage()));
+  runApp(MaterialApp(
+    home: WelcomePage(),
+    debugShowCheckedModeBanner: false,
+  ));
 }
 
 class MyHttpOverrides extends HttpOverrides {

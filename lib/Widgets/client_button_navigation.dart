@@ -1,5 +1,7 @@
 import 'package:divinitaion/Page/Client/client_fortune_teller_list.dart';
+import 'package:divinitaion/Page/Client/client_profil_page.dart';
 import 'package:flutter/material.dart';
+import 'package:divinitaion/Models/register_client.dart'; // User modelinizi içe aktardığınızdan emin olun.
 
 class CustomBottomNavigation extends StatefulWidget {
   @override
@@ -9,11 +11,26 @@ class CustomBottomNavigation extends StatefulWidget {
 class _CustomBottomNavigationState extends State<CustomBottomNavigation> {
   int _selectedIndex = 0;
 
-  static List<Widget> _pages = <Widget>[
-    ClientFortuneTellerList(), // Falcı listesi burada çağrılıyor
-    Center(child: Text('Fallarım', style: TextStyle(fontSize: 24))),
-    Center(child: Text('Diğer', style: TextStyle(fontSize: 24))),
-  ];
+  // Kullanıcı bilgilerini burada tanımlıyoruz
+  final User currentUser = User(
+    firstName: 'Sevde Hilal',
+    lastName: 'Durak',
+    gender: 'Kadın',
+    dateOfBirth: DateTime(1990, 1, 1),
+    occupation: 'Öğrenci',
+    maritalStatus: 'Single',
+    userName: 'sevdehilal',
+    email: 'sevdehilald@gmail.com',
+    password: 'Sevdehilal.02',
+  );
+
+  // Sayfa listesini burada tanımlıyoruz
+  List<Widget> get _pages => [
+        ClientFortuneTellerList(), // Falcı listesi burada çağrılıyor
+        Center(child: Text('Fallarım', style: TextStyle(fontSize: 24))),
+        ClientProfilePage(
+            user: currentUser), // currentUser'ı buraya geçiriyoruz
+      ];
 
   void _onItemTapped(int index) {
     setState(() {
@@ -24,10 +41,7 @@ class _CustomBottomNavigationState extends State<CustomBottomNavigation> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Bottom Navigation Bar Örneği'),
-      ),
-      body: _pages[_selectedIndex],
+      body: _pages[_selectedIndex], // Sayfa listesini burada kullanıyoruz
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
