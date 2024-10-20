@@ -1,7 +1,9 @@
 import 'package:divinitaion/Page/Client/client_fortune_teller_list.dart';
 import 'package:divinitaion/Page/Client/client_profil_page.dart';
 import 'package:flutter/material.dart';
-import 'package:divinitaion/Models/register_client.dart'; // User modelinizi içe aktardığınızdan emin olun.
+import 'package:divinitaion/Models/register_client.dart';
+// User modelinizi içe aktardığınızdan emin olun.
+import 'package:divinitaion/Page/Common/fortune_categories_page.dart';
 
 class CustomBottomNavigation extends StatefulWidget {
   @override
@@ -26,7 +28,7 @@ class _CustomBottomNavigationState extends State<CustomBottomNavigation> {
 
   // Sayfa listesini burada tanımlıyoruz
   List<Widget> get _pages => [
-        ClientFortuneTellerList(), // Falcı listesi burada çağrılıyor
+        FortuneCategoriesPage(), // Falcı listesi burada çağrılıyor
         Center(child: Text('Fallarım', style: TextStyle(fontSize: 24))),
         ClientProfilePage(
             user: currentUser), // currentUser'ı buraya geçiriyoruz
@@ -46,7 +48,7 @@ class _CustomBottomNavigationState extends State<CustomBottomNavigation> {
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
-            label: 'Falcılar',
+            label: 'Anasayfa',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.star),

@@ -29,6 +29,7 @@ class FortuneTeller {
 
   Map<String, dynamic> toJson() {
     return {
+      'id': id,
       'firstName': firstName,
       'lastName': lastName,
       'gender': gender,
