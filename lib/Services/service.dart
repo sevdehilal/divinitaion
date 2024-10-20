@@ -1,4 +1,5 @@
 import 'dart:convert'; // JSON işlemleri için
+import 'package:divinitaion/Models/fortune_categories_entity.dart';
 import 'package:divinitaion/Models/fortune_teller_entity.dart';
 import 'package:divinitaion/Models/register_client.dart';
 import 'package:http/http.dart' as http; // HTTP istekleri için
@@ -106,6 +107,18 @@ class ApiService {
     if (response.statusCode == 200) {
       List<dynamic> jsonList = json.decode(response.body);
       return jsonList.map((json) => FortuneTeller.fromJson(json)).toList();
+    } else {
+      throw Exception('Failed to load users');
+    }
+  }
+
+  Future<List<FortuneCategories>> fetchFortuneCategories() async {
+    final response = await http.get(Uri.parse(
+        "http://fallinfal.com/api/Client/GetAllFortuneTeller")); // api hazır olmadığından şuanlık falcıları çekiyor dropdown içine
+
+    if (response.statusCode == 200) {
+      List<dynamic> jsonList = json.decode(response.body);
+      return jsonList.map((json) => FortuneCategories.fromJson(json)).toList();
     } else {
       throw Exception('Failed to load users');
     }

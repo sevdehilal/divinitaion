@@ -1,8 +1,9 @@
+import 'package:divinitaion/Page/Client/client_fortune_telling_page.dart';
 import 'package:flutter/material.dart';
 
 class CustomFortuneTellerCard extends StatelessWidget {
   final String firstName;
-  final String lastName; // Puan
+  final String lastName;
 
   CustomFortuneTellerCard({required this.firstName, required this.lastName});
 
@@ -57,9 +58,9 @@ class CustomFortuneTellerCard extends StatelessWidget {
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                // Fal baktırma işlemi
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('$firstName için fal baktırıldı!')),
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => FortuneTellingPage(firstName: firstName, lastName: lastName)),
                 );
               },
               child: Text('Fal Baktır'),
