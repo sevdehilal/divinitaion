@@ -41,16 +41,16 @@ class FortuneCategoriesPage extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                _imageCardButton(context, 'assets/resim1.jpg', ''),
-                _imageCardButton(context, 'assets/resim2.jpg', ''),
+                _imageCardButton(context, 'lib/assets/kahvefali.png'),
+                _imageCardButton(context, 'lib/assets/el.png'),
               ],
             ),
             SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                _imageCardButton(context, 'assets/resim3.jpg', ''),
-                _imageCardButton(context, 'assets/resim4.jpg', ''),
+                _imageCardButton(context, 'lib/assets/kahvefali.png'),
+                _imageCardButton(context, 'lib/assets/tarot.png'),
               ],
             ),
           ],
@@ -60,8 +60,7 @@ class FortuneCategoriesPage extends StatelessWidget {
   }
 
   // Kart şeklinde resim buton fonksiyonu
-  Widget _imageCardButton(
-      BuildContext context, String imagePath, String title) {
+  Widget _imageCardButton(BuildContext context, String imagePath) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -84,20 +83,15 @@ class FortuneCategoriesPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Container(
-                width: 120,
-                height: 100,
+                width: 140,
+                height: 140,
                 decoration: BoxDecoration(
                   image: DecorationImage(
                     image: AssetImage(imagePath),
-                    fit: BoxFit.cover,
+                    fit: BoxFit.fill,
                   ),
                   borderRadius: BorderRadius.circular(12),
                 ),
-              ),
-              SizedBox(height: 8),
-              Text(
-                title,
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
             ],
           ),

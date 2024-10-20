@@ -1,10 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:divinitaion/Models/register_client.dart';
-import 'package:divinitaion/Services/service.dart';
-import 'package:divinitaion/Widgets/client_fortune_teller_card.dart';
-import 'package:divinitaion/Widgets/client_button_navigation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class ClientProfilePage extends StatefulWidget {
   final User user;

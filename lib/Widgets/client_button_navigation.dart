@@ -1,5 +1,6 @@
 import 'package:divinitaion/Page/Client/client_fortune_teller_list.dart';
 import 'package:divinitaion/Page/Client/client_profil_page.dart';
+import 'package:divinitaion/Widgets/fortune_card.dart';
 import 'package:flutter/material.dart';
 import 'package:divinitaion/Models/register_client.dart';
 // User modelinizi içe aktardığınızdan emin olun.
@@ -29,7 +30,10 @@ class _CustomBottomNavigationState extends State<CustomBottomNavigation> {
   // Sayfa listesini burada tanımlıyoruz
   List<Widget> get _pages => [
         FortuneCategoriesPage(), // Falcı listesi burada çağrılıyor
-        Center(child: Text('Fallarım', style: TextStyle(fontSize: 24))),
+        FortuneCard(
+            fortuneType: "kahve falı",
+            fortuneTeller: "fortuneTeller",
+            userName: "userName"),
         ClientProfilePage(
             user: currentUser), // currentUser'ı buraya geçiriyoruz
       ];
@@ -51,7 +55,7 @@ class _CustomBottomNavigationState extends State<CustomBottomNavigation> {
             label: 'Anasayfa',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.star),
+            icon: Icon(Icons.coffee),
             label: 'Fallarım',
           ),
           BottomNavigationBarItem(
