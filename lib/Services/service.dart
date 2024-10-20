@@ -101,7 +101,7 @@ class ApiService {
 
   Future<List<FortuneTeller>> FetchFortuneTeller() async {
     final response = await http.get(Uri.parse(
-        "https://fallinfal.com/api/FortuneTeller/GetAllFortuneTeller"));
+        "http://fallinfal.com/api/Client/GetAllFortuneTeller"));
 
     if (response.statusCode == 200) {
       List<dynamic> jsonList = json.decode(response.body);
