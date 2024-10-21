@@ -19,20 +19,23 @@ class CustomFortuneTellerCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              firstName,
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
+            Row(children: [
+              Text(
+                firstName,
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
-            Text(
-              lastName,
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
+              SizedBox(width: 5),
+              Text(
+                lastName,
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
+            ]),
             SizedBox(height: 10),
             Row(
               children: [
@@ -44,7 +47,6 @@ class CustomFortuneTellerCard extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 10),
             Row(
               children: [
                 Icon(Icons.monetization_on, color: Colors.yellow),
@@ -53,17 +55,19 @@ class CustomFortuneTellerCard extends StatelessWidget {
                   '0 Altın',
                   style: TextStyle(fontSize: 18),
                 ),
+                SizedBox(width: 150),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => FortuneTellingPage(
+                              firstName: firstName, lastName: lastName)),
+                    );
+                  },
+                  child: Text('Fal Baktır'),
+                ),
               ],
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => FortuneTellingPage(firstName: firstName, lastName: lastName)),
-                );
-              },
-              child: Text('Fal Baktır'),
             ),
           ],
         ),

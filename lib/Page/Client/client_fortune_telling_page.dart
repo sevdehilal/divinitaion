@@ -1,3 +1,8 @@
+import 'package:divinitaion/Page/Client/client_fortune_teller_list.dart';
+import 'package:divinitaion/Page/Common/fortune_categories_page.dart';
+import 'package:divinitaion/Page/Common/welcome.dart';
+import 'package:divinitaion/Widgets/client_button_navigation.dart';
+import 'package:divinitaion/Widgets/fortune_card.dart';
 import 'package:divinitaion/Widgets/fortune_categories_dropdown.dart';
 import 'package:flutter/material.dart';
 
@@ -47,22 +52,22 @@ class _FortuneTellingPageState extends State<FortuneTellingPage> {
 
             // FortuneCategoriesDropdown 1
             FortuneCategoriesDropdown(
-                    onChanged: (int? newValue) {
-                      setState(() {
-                        selectedTopic1 = newValue; // İlk seçilen konuyu güncelle
-                      });
-                    },
-                  ),
+              onChanged: (int? newValue) {
+                setState(() {
+                  selectedTopic1 = newValue; // İlk seçilen konuyu güncelle
+                });
+              },
+            ),
             SizedBox(height: 8),
 
             // FortuneCategoriesDropdown 2
             FortuneCategoriesDropdown(
-                    onChanged: (int? newValue) {
-                      setState(() {
-                        selectedTopic2 = newValue; // İkinci seçilen konuyu güncelle
-                      });
-                    },
-                  ),
+              onChanged: (int? newValue) {
+                setState(() {
+                  selectedTopic2 = newValue; // İkinci seçilen konuyu güncelle
+                });
+              },
+            ),
 
             // Fotoğraflar
             Text(
@@ -90,7 +95,8 @@ class _FortuneTellingPageState extends State<FortuneTellingPage> {
                 ),
               ],
             ),
-            SizedBox(height: 20), // Buton ile diğer içerikler arasında biraz boşluk
+            SizedBox(
+                height: 20), // Buton ile diğer içerikler arasında biraz boşluk
 
             // Gönder butonu
             Center(
@@ -99,11 +105,22 @@ class _FortuneTellingPageState extends State<FortuneTellingPage> {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text('Fal gönderildi!')),
                   );
+                  Future.delayed(Duration(seconds: 1), () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CustomBottomNavigation(),
+                      ),
+                    );
+                  });
                 },
                 child: Text('Gönder'),
                 style: ElevatedButton.styleFrom(
-                  padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15), // Butonun boyutunu ayarlamak için
-                  textStyle: TextStyle(fontSize: 20), // Butonun yazı boyutunu ayarlamak için
+                  padding: EdgeInsets.symmetric(
+                      horizontal: 30,
+                      vertical: 15), // Butonun boyutunu ayarlamak için
+                  textStyle: TextStyle(
+                      fontSize: 20), // Butonun yazı boyutunu ayarlamak için
                 ),
               ),
             ),

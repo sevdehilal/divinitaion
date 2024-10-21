@@ -33,7 +33,8 @@ class _CustomBottomNavigationState extends State<CustomBottomNavigation> {
         FortuneCard(
             fortuneType: "kahve falı",
             fortuneTeller: "fortuneTeller",
-            userName: "userName"),
+            userName: "userName",
+            date: '20 Ekim 2024'),
         ClientProfilePage(
             user: currentUser), // currentUser'ı buraya geçiriyoruz
       ];

@@ -4,12 +4,14 @@ class FortuneCard extends StatefulWidget {
   final String fortuneType;
   final String fortuneTeller;
   final String userName;
+  final String date;
 
   const FortuneCard({
     Key? key,
     required this.fortuneType,
     required this.fortuneTeller,
     required this.userName,
+    required this.date,
   }) : super(key: key);
 
   @override
@@ -38,7 +40,7 @@ class _FortuneCardState extends State<FortuneCard> {
         elevation: 4, // Gölge efekti
       ),
       body: Padding(
-        padding: const EdgeInsets.all(20.0),
+        padding: const EdgeInsets.all(7.0),
         child: SizedBox(
           height: 150,
           child: Card(
@@ -54,7 +56,7 @@ class _FortuneCardState extends State<FortuneCard> {
                 children: [
                   Icon(
                     Icons.coffee,
-                    size: 40,
+                    size: 50,
                   ),
                   SizedBox(width: 25),
                   Expanded(
@@ -73,6 +75,7 @@ class _FortuneCardState extends State<FortuneCard> {
                         SizedBox(height: 8),
                         Text('Falcı: ${widget.fortuneTeller}'),
                         Text('İsim: ${widget.userName}'),
+                        Text('Tarih: ${widget.date}'),
                       ],
                     ),
                   ),

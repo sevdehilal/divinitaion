@@ -27,4 +27,5 @@ flutter:
     - lib/assets/logo1.png 
     - lib/assets/kahvefali.png 
     - lib/assets/tarot.png
-    - lib/assets/el.png # Burada logonuzun doğru yolunu eklediğinizden emin olun.
+    - lib/assets/hand.png 
+    - lib/assets/dharita.png # Burada logonuzun doğru yolunu eklediğinizden emin olun.
