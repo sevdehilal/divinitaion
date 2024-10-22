@@ -24,81 +24,150 @@ class _FortuneTellingPageState extends State<FortuneTellingPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Falcı Bilgileri'),
+        title: Text(''),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(10.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Falcı adı ve puanı
             Text(
-              '${widget.firstName} ${widget.lastName} adlı falcıya fal baktırılacak.',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              'Falcı',
+              style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 8),
-            Text(
-              'Falcı Puanı: 4.5/5',
-              style: TextStyle(fontSize: 16),
-            ),
-            SizedBox(height: 16),
-
-            // Merak ettiğin konular
-            Text(
-              'Merak Ettiğin Konular:',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 8),
-
-            // FortuneCategoriesDropdown 1
-            FortuneCategoriesDropdown(
-              onChanged: (int? newValue) {
-                setState(() {
-                  selectedTopic1 = newValue; // İlk seçilen konuyu güncelle
-                });
-              },
-            ),
-            SizedBox(height: 8),
-
-            // FortuneCategoriesDropdown 2
-            FortuneCategoriesDropdown(
-              onChanged: (int? newValue) {
-                setState(() {
-                  selectedTopic2 = newValue; // İkinci seçilen konuyu güncelle
-                });
-              },
-            ),
-
-            // Fotoğraflar
-            Text(
-              'Fotoğraflar:',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 8),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Image.network(
-                  'https://via.placeholder.com/100',
-                  width: 100,
-                  height: 100,
+            SizedBox(height: 10),
+            // Falcı Kartı
+            Card(
+              elevation: 4,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(0),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Row(
+                  children: [
+                    CircleAvatar(
+                      radius: 30,
+                      backgroundImage: NetworkImage(
+                          'https://via.placeholder.com/100'), // Dummy image
+                    ),
+                    SizedBox(width: 10),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "${widget.firstName} ${widget.lastName}",
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold),
+                        ),
+                        Row(
+                          children: [
+                            Text('4.2', style: TextStyle(fontSize: 16)),
+                            Icon(Icons.star, color: Colors.amber),
+                            Icon(Icons.star, color: Colors.amber),
+                            Icon(Icons.star, color: Colors.amber),
+                            Icon(Icons.star, color: Colors.amber),
+                            Icon(Icons.star_half, color: Colors.amber),
+                          ],
+                        ),
+                      ],
+                    ),
+                    Spacer(),
+                    Icon(Icons.arrow_forward_ios),
+                  ],
                 ),
-                Image.network(
-                  'https://via.placeholder.com/100',
-                  width: 100,
-                  height: 100,
-                ),
-                Image.network(
-                  'https://via.placeholder.com/100',
-                  width: 100,
-                  height: 100,
-                ),
-              ],
+              ),
             ),
-            SizedBox(
-                height: 20), // Buton ile diğer içerikler arasında biraz boşluk
+            SizedBox(height: 20),
+            Text(
+              'Merak Ettiğin Konular ?',
+              style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 10),
 
-            // Gönder butonu
+            // Merak Ettiğin Konular Kartı
+            Card(
+              elevation: 4,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(0),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 8),
+
+                    // FortuneCategoriesDropdown 1
+                    FortuneCategoriesDropdown(
+                      onChanged: (int? newValue) {
+                        setState(() {
+                          selectedTopic1 =
+                              newValue; // İlk seçilen konuyu güncelle
+                        });
+                      },
+                    ),
+                    SizedBox(height: 8),
+
+                    // FortuneCategoriesDropdown 2
+                    FortuneCategoriesDropdown(
+                      onChanged: (int? newValue) {
+                        setState(() {
+                          selectedTopic2 =
+                              newValue; // İkinci seçilen konuyu güncelle
+                        });
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(height: 20),
+            Text(
+              'Fotoğraflar',
+              style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 10),
+
+            // Fotoğraflar Kartı
+            Card(
+              elevation: 4,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(0),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 10),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Image.network(
+                          'https://via.placeholder.com/100',
+                          width: 100,
+                          height: 100,
+                        ),
+                        Image.network(
+                          'https://via.placeholder.com/100',
+                          width: 100,
+                          height: 100,
+                        ),
+                        Image.network(
+                          'https://via.placeholder.com/100',
+                          width: 100,
+                          height: 100,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(height: 30),
+
+            // Gönder Butonu
             Center(
               child: ElevatedButton(
                 onPressed: () {
@@ -116,11 +185,8 @@ class _FortuneTellingPageState extends State<FortuneTellingPage> {
                 },
                 child: Text('Gönder'),
                 style: ElevatedButton.styleFrom(
-                  padding: EdgeInsets.symmetric(
-                      horizontal: 30,
-                      vertical: 15), // Butonun boyutunu ayarlamak için
-                  textStyle: TextStyle(
-                      fontSize: 20), // Butonun yazı boyutunu ayarlamak için
+                  padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                  textStyle: TextStyle(fontSize: 20),
                 ),
               ),
             ),
