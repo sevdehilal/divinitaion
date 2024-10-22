@@ -53,10 +53,10 @@ class _PhotoSelectionPageState extends State<PhotoSelectionPage> {
       context,
       MaterialPageRoute(
         builder: (context) => FortuneTellingPage(
-        firstName: widget.fortuneTeller.firstName,
-        lastName: widget.fortuneTeller.lastName,
-        selectedFiles: _selectedFiles, // Pass selected files here
-      ),
+          firstName: widget.fortuneTeller.firstName,
+          lastName: widget.fortuneTeller.lastName,
+          selectedFiles: _selectedFiles, // Pass selected files here
+        ),
       ),
     );
   }
