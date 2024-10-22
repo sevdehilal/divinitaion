@@ -41,14 +41,15 @@ class _ClientFortuneTellerListPageState extends State<ClientFortuneTellerList> {
             return Center(child: Text('No users found.'));
           }
 
-          final users = snapshot.data!;
+          final fortuneTellers = snapshot.data!;
 
           return ListView.builder(
-            itemCount: users.length,
+            itemCount: fortuneTellers.length,
             itemBuilder: (context, index) {
-              final user = users[index];
+              final fortuneTeller = fortuneTellers[index];
               return CustomFortuneTellerCard(
-                  firstName: user.firstName, lastName: user.lastName);
+                fortuneTeller: fortuneTeller, // Pass the entire FortuneTeller object
+              );
             },
           );
         },

@@ -1,16 +1,24 @@
+import 'dart:io';
 import 'package:divinitaion/Page/Client/client_fortune_teller_list.dart';
 import 'package:divinitaion/Page/Common/fortune_categories_page.dart';
 import 'package:divinitaion/Page/Common/welcome.dart';
 import 'package:divinitaion/Widgets/client_button_navigation.dart';
 import 'package:divinitaion/Widgets/fortune_card.dart';
 import 'package:divinitaion/Widgets/fortune_categories_dropdown.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:file_picker/file_picker.dart'; // Import for PlatformFile
 
 class FortuneTellingPage extends StatefulWidget {
   final String firstName;
   final String lastName;
+  final List<PlatformFile> selectedFiles; // Keep this line
 
-  FortuneTellingPage({required this.firstName, required this.lastName});
+  FortuneTellingPage({
+    required this.firstName,
+    required this.lastName,
+    required this.selectedFiles, // Include selected files in the constructor
+  });
 
   @override
   _FortuneTellingPageState createState() => _FortuneTellingPageState();
@@ -24,13 +32,14 @@ class _FortuneTellingPageState extends State<FortuneTellingPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(''),
+        title: Text('Falcı Bilgileri'),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(10.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Falcı adı ve puanı
             Text(
               'Falcı',
               style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
@@ -62,7 +71,7 @@ class _FortuneTellingPageState extends State<FortuneTellingPage> {
                         ),
                         Row(
                           children: [
-                            Text('4.2', style: TextStyle(fontSize: 16)),
+                            Text('4.5', style: TextStyle(fontSize: 16)), // Static rating for now
                             Icon(Icons.star, color: Colors.amber),
                             Icon(Icons.star, color: Colors.amber),
                             Icon(Icons.star, color: Colors.amber),
@@ -79,8 +88,10 @@ class _FortuneTellingPageState extends State<FortuneTellingPage> {
               ),
             ),
             SizedBox(height: 20),
+
+            // Merak ettiğin konular
             Text(
-              'Merak Ettiğin Konular ?',
+              'Merak Ettiğin Konular:',
               style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 10),
@@ -96,14 +107,11 @@ class _FortuneTellingPageState extends State<FortuneTellingPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(height: 8),
-
                     // FortuneCategoriesDropdown 1
                     FortuneCategoriesDropdown(
                       onChanged: (int? newValue) {
                         setState(() {
-                          selectedTopic1 =
-                              newValue; // İlk seçilen konuyu güncelle
+                          selectedTopic1 = newValue; // İlk seçilen konuyu güncelle
                         });
                       },
                     ),
@@ -113,8 +121,7 @@ class _FortuneTellingPageState extends State<FortuneTellingPage> {
                     FortuneCategoriesDropdown(
                       onChanged: (int? newValue) {
                         setState(() {
-                          selectedTopic2 =
-                              newValue; // İkinci seçilen konuyu güncelle
+                          selectedTopic2 = newValue; // İkinci seçilen konuyu güncelle
                         });
                       },
                     ),
@@ -123,8 +130,10 @@ class _FortuneTellingPageState extends State<FortuneTellingPage> {
               ),
             ),
             SizedBox(height: 20),
+
+            // Fotoğraflar
             Text(
-              'Fotoğraflar',
+              'Fotoğraflar:',
               style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 10),
@@ -143,23 +152,15 @@ class _FortuneTellingPageState extends State<FortuneTellingPage> {
                     SizedBox(height: 10),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Image.network(
-                          'https://via.placeholder.com/100',
-                          width: 100,
-                          height: 100,
-                        ),
-                        Image.network(
-                          'https://via.placeholder.com/100',
-                          width: 100,
-                          height: 100,
-                        ),
-                        Image.network(
-                          'https://via.placeholder.com/100',
-                          width: 100,
-                          height: 100,
-                        ),
-                      ],
+                      children: widget.selectedFiles.isNotEmpty
+                          ? widget.selectedFiles.map((file) {
+                              return kIsWeb
+                                  ? Image.memory(file.bytes!, width: 100, height: 100)
+                                  : Image.file(File(file.path!), width: 100, height: 100);
+                            }).toList()
+                          : [
+                              Text('No images selected.', style: TextStyle(fontSize: 16)), // Feedback for empty state
+                            ],
                     ),
                   ],
                 ),

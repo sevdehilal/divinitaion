@@ -1,11 +1,11 @@
-import 'package:divinitaion/Page/Client/client_fortune_telling_page.dart';
+import 'package:divinitaion/Models/fortune_teller_entity.dart';
+import 'package:divinitaion/Page/Client/photo_selection_page.dart';
 import 'package:flutter/material.dart';
 
 class CustomFortuneTellerCard extends StatelessWidget {
-  final String firstName;
-  final String lastName;
+  final FortuneTeller fortuneTeller;
 
-  CustomFortuneTellerCard({required this.firstName, required this.lastName});
+  CustomFortuneTellerCard({required this.fortuneTeller});
 
   @override
   Widget build(BuildContext context) {
@@ -19,23 +19,25 @@ class CustomFortuneTellerCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(children: [
-              Text(
-                firstName,
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
+            Row(
+              children: [
+                Text(
+                  fortuneTeller.firstName,
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-              SizedBox(width: 5),
-              Text(
-                lastName,
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
+                SizedBox(width: 5),
+                Text(
+                  fortuneTeller.lastName,
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-            ]),
+              ],
+            ),
             SizedBox(height: 10),
             Row(
               children: [
@@ -55,14 +57,14 @@ class CustomFortuneTellerCard extends StatelessWidget {
                   '0 Altın',
                   style: TextStyle(fontSize: 18),
                 ),
-                SizedBox(width: 150),
+                Spacer(),
                 ElevatedButton(
                   onPressed: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => FortuneTellingPage(
-                              firstName: firstName, lastName: lastName)),
+                        builder: (context) => PhotoSelectionPage(fortuneTeller: fortuneTeller,),
+                      ),
                     );
                   },
                   child: Text('Fal Baktır'),
