@@ -1,3 +1,7 @@
+import 'dart:convert';
+import 'package:divinitaion/Models/fortune_teller_entity.dart';
+import 'package:divinitaion/Services/service.dart';
+import 'package:http/http.dart' as http;
 import 'dart:io';
 import 'package:divinitaion/Page/Client/fortune_teller_list.dart';
 import 'package:divinitaion/Page/Common/fortune_categories_page.dart';
@@ -10,14 +14,12 @@ import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart'; // Import for PlatformFile
 
 class FortuneTellingPage extends StatefulWidget {
-  final String firstName;
-  final String lastName;
-  final List<PlatformFile> selectedFiles; // Keep this line
+  final FortuneTeller fortuneTeller;
+  final List<PlatformFile> selectedFiles;
 
   FortuneTellingPage({
-    required this.firstName,
-    required this.lastName,
-    required this.selectedFiles, // Include selected files in the constructor
+    required this.fortuneTeller,
+    required this.selectedFiles,
   });
 
   @override
@@ -25,8 +27,14 @@ class FortuneTellingPage extends StatefulWidget {
 }
 
 class _FortuneTellingPageState extends State<FortuneTellingPage> {
-  int? selectedTopic1;
-  int? selectedTopic2;
+  int? selectedTopic1Index;
+  int? selectedTopic2Index;
+  final ApiService _apiService = ApiService();
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,13 +47,11 @@ class _FortuneTellingPageState extends State<FortuneTellingPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Falcı adı ve puanı
             Text(
               'Falcı',
               style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 10),
-            // Falcı Kartı
             Card(
               elevation: 4,
               shape: RoundedRectangleBorder(
@@ -58,20 +64,20 @@ class _FortuneTellingPageState extends State<FortuneTellingPage> {
                     CircleAvatar(
                       radius: 30,
                       backgroundImage: NetworkImage(
-                          'https://via.placeholder.com/100'), // Dummy image
+                          'https://via.placeholder.com/100'),
                     ),
                     SizedBox(width: 10),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "${widget.firstName} ${widget.lastName}",
+                          "${widget.fortuneTeller.firstName} ${widget.fortuneTeller.lastName}",
                           style: TextStyle(
                               fontSize: 20, fontWeight: FontWeight.bold),
                         ),
                         Row(
                           children: [
-                            Text('4.5', style: TextStyle(fontSize: 16)), // Static rating for now
+                            Text('4.5', style: TextStyle(fontSize: 16)),
                             Icon(Icons.star, color: Colors.amber),
                             Icon(Icons.star, color: Colors.amber),
                             Icon(Icons.star, color: Colors.amber),
@@ -88,15 +94,11 @@ class _FortuneTellingPageState extends State<FortuneTellingPage> {
               ),
             ),
             SizedBox(height: 20),
-
-            // Merak ettiğin konular
             Text(
               'Merak Ettiğin Konular:',
               style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 10),
-
-            // Merak Ettiğin Konular Kartı
             Card(
               elevation: 4,
               shape: RoundedRectangleBorder(
@@ -107,21 +109,18 @@ class _FortuneTellingPageState extends State<FortuneTellingPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // FortuneCategoriesDropdown 1
                     FortuneCategoriesDropdown(
                       onChanged: (int? newValue) {
                         setState(() {
-                          selectedTopic1 = newValue; // İlk seçilen konuyu güncelle
+                          selectedTopic1Index = newValue;
                         });
                       },
                     ),
                     SizedBox(height: 8),
-
-                    // FortuneCategoriesDropdown 2
                     FortuneCategoriesDropdown(
                       onChanged: (int? newValue) {
                         setState(() {
-                          selectedTopic2 = newValue; // İkinci seçilen konuyu güncelle
+                          selectedTopic2Index = newValue;
                         });
                       },
                     ),
@@ -130,15 +129,11 @@ class _FortuneTellingPageState extends State<FortuneTellingPage> {
               ),
             ),
             SizedBox(height: 20),
-
-            // Fotoğraflar
             Text(
               'Fotoğraflar:',
               style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 10),
-
-            // Fotoğraflar Kartı
             Card(
               elevation: 4,
               shape: RoundedRectangleBorder(
@@ -155,11 +150,14 @@ class _FortuneTellingPageState extends State<FortuneTellingPage> {
                       children: widget.selectedFiles.isNotEmpty
                           ? widget.selectedFiles.map((file) {
                               return kIsWeb
-                                  ? Image.memory(file.bytes!, width: 100, height: 100)
-                                  : Image.file(File(file.path!), width: 100, height: 100);
+                                  ? Image.memory(file.bytes!,
+                                      width: 100, height: 100)
+                                  : Image.file(File(file.path!),
+                                      width: 100, height: 100);
                             }).toList()
                           : [
-                              Text('No images selected.', style: TextStyle(fontSize: 16)), // Feedback for empty state
+                              Text('No images selected.',
+                                  style: TextStyle(fontSize: 16)),
                             ],
                     ),
                   ],
@@ -167,22 +165,44 @@ class _FortuneTellingPageState extends State<FortuneTellingPage> {
               ),
             ),
             SizedBox(height: 30),
-
-            // Gönder Butonu
             Center(
               child: ElevatedButton(
-                onPressed: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Fal gönderildi!')),
+                onPressed: () async {
+                  // List<int> categoryIds içine seçili konuları ekleyin
+                  List<int> categoryIds = [];
+                  if (selectedTopic1Index != null) {
+                    categoryIds.add(1);
+                  }
+                  if (selectedTopic2Index != null) {
+                    categoryIds.add(1);
+                  }
+
+                  // Fotoğrafları uygun parametrelere atayın
+                  PlatformFile? photo1 = widget.selectedFiles.length > 0
+                      ? widget.selectedFiles[0]
+                      : null;
+                  PlatformFile? photo2 = widget.selectedFiles.length > 1
+                      ? widget.selectedFiles[1]
+                      : null;
+                  PlatformFile? photo3 = widget.selectedFiles.length > 2
+                      ? widget.selectedFiles[2]
+                      : null;
+
+                  // API çağrısını yap
+                  bool success = await _apiService.saveFortune(
+                    clientId: 1,
+                    fortunetellerId: widget.fortuneTeller.id,
+                    categoryIds: categoryIds,
+                    photo1: photo1!,
+                    photo2: photo2!,
+                    photo3: photo3!,
                   );
-                  Future.delayed(Duration(seconds: 1), () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => CustomBottomNavigation(),
-                      ),
-                    );
-                  });
+
+                  if (success) {
+                    print("Fortune successfully saved!");
+                  } else {
+                    print("Failed to save fortune.");
+                  }
                 },
                 child: Text('Gönder'),
                 style: ElevatedButton.styleFrom(

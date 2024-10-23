@@ -20,31 +20,31 @@ class _PhotoSelectionPageState extends State<PhotoSelectionPage> {
   Future<void> _pickImage() async {
     if (_selectedFiles.length >= 3) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('You can only select up to 3 photos.')),
+        SnackBar(content: Text('Yalnızca 3 fotoğraf seçilebilir.')),
       );
       return;
     }
 
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.image,
-      allowMultiple: false,
+      allowMultiple: true, // Allow multiple selections
     );
 
     if (result != null && result.files.isNotEmpty) {
       setState(() {
-        _selectedFiles.add(result.files.first);
+        _selectedFiles.addAll(result.files.take(3 - _selectedFiles.length)); // Limit to 3 files
       });
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('No file selected.')),
+        SnackBar(content: Text('Dosya seçmelisiniz.')),
       );
     }
   }
 
   void _goToSelectedImagesPage() {
-    if (_selectedFiles.isEmpty) {
+    if (_selectedFiles.length != 3) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('No images selected.')),
+        SnackBar(content: Text('En az 3 fotoğraf seçmelisiniz.')),
       );
       return;
     }
@@ -53,8 +53,7 @@ class _PhotoSelectionPageState extends State<PhotoSelectionPage> {
       context,
       MaterialPageRoute(
         builder: (context) => FortuneTellingPage(
-          firstName: widget.fortuneTeller.firstName,
-          lastName: widget.fortuneTeller.lastName,
+          fortuneTeller: widget.fortuneTeller,
           selectedFiles: _selectedFiles, // Pass selected files here
         ),
       ),
