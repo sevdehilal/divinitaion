@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:divinitaion/Page/Client/client_fortune_teller_list.dart'; // Falcı listesi için gerekli import
+import 'package:divinitaion/Page/Client/fortune_teller_list.dart'; // Falcı listesi için gerekli import
 
 class FortuneCategoriesPage extends StatelessWidget {
   @override

@@ -1,9 +1,9 @@
-import 'package:divinitaion/Widgets/client_button_navigation.dart';
+import 'package:divinitaion/Widgets/client_navigation_bar.dart';
 import 'package:divinitaion/Models/login.dart';
 import 'package:divinitaion/Page/Common/email_verification.dart';
 import 'package:divinitaion/Page/Common/register.dart';
 import 'package:divinitaion/Services/service.dart';
-import 'package:divinitaion/Widgets/fortune_teller_navigation.dart';
+import 'package:divinitaion/Widgets/fortune_teller_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 

@@ -1,4 +1,4 @@
-import 'package:divinitaion/Page/Client/client_fortune_teller_list.dart';
+import 'package:divinitaion/Page/Client/fortune_teller_list.dart';
 import 'package:divinitaion/Page/Client/client_profil_page.dart';
 import 'package:divinitaion/Widgets/fortune_card.dart';
 import 'package:flutter/material.dart';
@@ -30,13 +30,8 @@ class _CustomBottomNavigationState extends State<CustomBottomNavigation> {
   // Sayfa listesini burada tanımlıyoruz
   List<Widget> get _pages => [
         FortuneCategoriesPage(), // Falcı listesi burada çağrılıyor
-        FortuneCard(
-            fortuneType: "kahve falı",
-            fortuneTeller: "fortuneTeller",
-            userName: "userName",
-            date: '20 Ekim 2024'),
         ClientProfilePage(
-            user: currentUser), // currentUser'ı buraya geçiriyoruz
+            user: currentUser), // currentUser'ı buraya geçiriyoruz 
       ];
 
   void _onItemTapped(int index) {

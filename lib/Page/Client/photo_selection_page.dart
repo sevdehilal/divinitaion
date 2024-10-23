@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:divinitaion/Page/Client/client_fortune_telling_page.dart';
+import 'package:divinitaion/Page/Client/fortune_telling_page.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';

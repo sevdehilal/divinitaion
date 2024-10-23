@@ -1,17 +1,12 @@
+import 'package:divinitaion/Models/fortune_entity.dart';
 import 'package:flutter/material.dart';
 
 class FortuneCard extends StatefulWidget {
-  final String fortuneType;
-  final String fortuneTeller;
-  final String userName;
-  final String date;
+  final Fortune fortune;
 
   const FortuneCard({
     Key? key,
-    required this.fortuneType,
-    required this.fortuneTeller,
-    required this.userName,
-    required this.date,
+    required this.fortune,
   }) : super(key: key);
 
   @override
@@ -65,17 +60,9 @@ class _FortuneCardState extends State<FortuneCard> {
                       mainAxisAlignment:
                           MainAxisAlignment.center, // Dikeyde ortalamak için
                       children: [
-                        Text(
-                          widget.fortuneType,
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
                         SizedBox(height: 8),
-                        Text('Falcı: ${widget.fortuneTeller}'),
-                        Text('İsim: ${widget.userName}'),
-                        Text('Tarih: ${widget.date}'),
+                        Text('Falcı: ${widget.fortune.fortuneTeller.firstName}'),
+                        Text('Tarih: ${widget.fortune.date}'),
                       ],
                     ),
                   ),

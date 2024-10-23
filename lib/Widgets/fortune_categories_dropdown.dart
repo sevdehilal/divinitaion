@@ -1,4 +1,3 @@
-import 'package:divinitaion/Models/fortune_categories_entity.dart';
 import 'package:divinitaion/Models/fortune_teller_entity.dart';
 import 'package:divinitaion/Services/service.dart';
 import 'package:flutter/material.dart';
