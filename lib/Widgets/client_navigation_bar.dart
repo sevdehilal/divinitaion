@@ -1,3 +1,4 @@
+import 'package:divinitaion/Page/Client/fortune_list.dart';
 import 'package:divinitaion/Page/Client/fortune_teller_list.dart';
 import 'package:divinitaion/Page/Client/client_profil_page.dart';
 import 'package:divinitaion/Widgets/fortune_card.dart';
@@ -30,6 +31,7 @@ class _CustomBottomNavigationState extends State<CustomBottomNavigation> {
   // Sayfa listesini burada tanımlıyoruz
   List<Widget> get _pages => [
         FortuneCategoriesPage(), // Falcı listesi burada çağrılıyor
+        FortuneList(),
         ClientProfilePage(
             user: currentUser), // currentUser'ı buraya geçiriyoruz 
       ];

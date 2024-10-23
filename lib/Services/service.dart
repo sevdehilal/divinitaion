@@ -129,13 +129,13 @@ class ApiService {
 
    Future<List<Fortune>> FetchFortunes() async {
     final response = await http.get(Uri.parse(
-        "http://fallinfal.com/api/Client/GetAllFortuneTeller"));
+        "http://fallinfal.com/api/Client/GetAllFortune"));
 
     if (response.statusCode == 200) {
       List<dynamic> jsonList = json.decode(response.body);
       return jsonList.map((json) => Fortune.fromJson(json)).toList();
     } else {
-      throw Exception('Failed to load users');
+      throw Exception('Failed to load fortunes');
     }
   }
 
