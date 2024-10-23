@@ -71,7 +71,9 @@ class _FortuneTellingPageState extends State<FortuneTellingPage> {
                         ),
                         Row(
                           children: [
-                            Text('4.5', style: TextStyle(fontSize: 16)), // Static rating for now
+                            Text('4.5',
+                                style: TextStyle(
+                                    fontSize: 16)), // Static rating for now
                             Icon(Icons.star, color: Colors.amber),
                             Icon(Icons.star, color: Colors.amber),
                             Icon(Icons.star, color: Colors.amber),
@@ -111,7 +113,8 @@ class _FortuneTellingPageState extends State<FortuneTellingPage> {
                     FortuneCategoriesDropdown(
                       onChanged: (int? newValue) {
                         setState(() {
-                          selectedTopic1 = newValue; // İlk seçilen konuyu güncelle
+                          selectedTopic1 =
+                              newValue; // İlk seçilen konuyu güncelle
                         });
                       },
                     ),
@@ -121,7 +124,8 @@ class _FortuneTellingPageState extends State<FortuneTellingPage> {
                     FortuneCategoriesDropdown(
                       onChanged: (int? newValue) {
                         setState(() {
-                          selectedTopic2 = newValue; // İkinci seçilen konuyu güncelle
+                          selectedTopic2 =
+                              newValue; // İkinci seçilen konuyu güncelle
                         });
                       },
                     ),
@@ -155,17 +159,33 @@ class _FortuneTellingPageState extends State<FortuneTellingPage> {
                       children: widget.selectedFiles.isNotEmpty
                           ? widget.selectedFiles.map((file) {
                               return kIsWeb
-                                  ? Image.memory(file.bytes!, width: 100, height: 100)
-                                  : Image.file(File(file.path!), width: 100, height: 100);
+                                  ? Image.memory(
+                                      file.bytes!,
+                                      width: 100,
+                                      height: 100,
+                                      fit: BoxFit
+                                          .cover, // Resimleri aynı boyutta yapmak için
+                                    )
+                                  : Image.file(
+                                      File(file.path!),
+                                      width: 100,
+                                      height: 100,
+                                      fit: BoxFit
+                                          .cover, // Resimleri aynı boyutta yapmak için
+                                    );
                             }).toList()
                           : [
-                              Text('No images selected.', style: TextStyle(fontSize: 16)), // Feedback for empty state
+                              Text(
+                                'No images selected.',
+                                style: TextStyle(fontSize: 16),
+                              ), // Feedback for empty state
                             ],
                     ),
                   ],
                 ),
               ),
             ),
+
             SizedBox(height: 30),
 
             // Gönder Butonu
