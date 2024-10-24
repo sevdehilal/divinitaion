@@ -11,7 +11,8 @@ import 'package:divinitaion/Widgets/fortune_card.dart';
 import 'package:divinitaion/Widgets/fortune_categories_dropdown.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:file_picker/file_picker.dart'; // Import for PlatformFile
+import 'package:file_picker/file_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart'; // Import for PlatformFile
 
 class FortuneTellingPage extends StatefulWidget {
   final FortuneTeller fortuneTeller;
@@ -188,9 +189,11 @@ class _FortuneTellingPageState extends State<FortuneTellingPage> {
                       ? widget.selectedFiles[2]
                       : null;
 
-                  // API çağrısını yap
+                  
+                  final SharedPreferences prefs = await SharedPreferences.getInstance();
+                  final int? id = prefs.getInt('id');
                   bool success = await _apiService.saveFortune(
-                    clientId: 1,
+                    clientId: id,
                     fortunetellerId: widget.fortuneTeller.id,
                     categoryIds: categoryIds,
                     photo1: photo1!,

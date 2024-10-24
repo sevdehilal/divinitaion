@@ -1,3 +1,4 @@
+import 'package:divinitaion/Page/FortuneTeller/pending_fortune_list.dart';
 import 'package:divinitaion/Widgets/logout_button.dart';
 import 'package:flutter/material.dart';
 
@@ -12,7 +13,7 @@ class _FortuneTellerBottomNavigationState
   int _selectedIndex = 0;
 
   static List<Widget> _pages = <Widget>[
-    Center(child: Text('Bekleyen Fallar', style: TextStyle(fontSize: 24))),
+    PendingFortuneList(),
     Center(child: Text('Profil', style: TextStyle(fontSize: 24))),
   ];
 

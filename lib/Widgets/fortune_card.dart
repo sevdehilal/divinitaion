@@ -61,7 +61,7 @@ class _FortuneCardState extends State<FortuneCard> {
                           MainAxisAlignment.center, // Dikeyde ortalamak için
                       children: [
                         SizedBox(height: 8),
-                        Text('Falcı: ${widget.fortune.fortuneTeller.firstName}'),
+                        Text('Falcı: ${widget.fortune.fortuneTellerId}'),
                         Text('Tarih: ${widget.fortune.date}'),
                       ],
                     ),

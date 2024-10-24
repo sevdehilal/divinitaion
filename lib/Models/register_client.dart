@@ -21,6 +21,20 @@ class User {
     required this.password,
   });
 
+  factory User.fromJson(Map<String, dynamic> json) {
+    return User(
+      firstName: json['firstName'] as String,
+      lastName: json['lastName'] as String,
+      gender: json['gender'] as String,
+      dateOfBirth: DateTime.parse(json['dateofBirth']),
+      occupation: json['occupation'] as String,
+      maritalStatus: json['maritalStatus'] as String,
+      userName: json['userName'] as String,
+      email: json['email'] as String,
+      password: json['password'] as String,
+    );
+  }
+
   Map<String, dynamic> toJson() {
     return {
       'firstName': firstName,

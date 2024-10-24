@@ -1,14 +1,14 @@
-class FortuneCategories {
+class FortuneCategory {
   final int? id;
   final String categoryName;
 
-  FortuneCategories({
+  FortuneCategory({
     this.id,
     required this.categoryName,
   });
 
-  factory FortuneCategories.fromJson(Map<String, dynamic> json) {
-    return FortuneCategories(
+  factory FortuneCategory.fromJson(Map<String, dynamic> json) {
+    return FortuneCategory(
       id: json['id'],
       categoryName: json['categoryName'],
     );

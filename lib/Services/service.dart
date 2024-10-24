@@ -1,9 +1,13 @@
 import 'dart:convert'; // JSON işlemleri için
+import 'dart:io';
+import 'dart:math';
 import 'package:divinitaion/Models/fortune_categories_entity.dart';
 import 'package:divinitaion/Models/fortune_entity.dart';
+import 'package:divinitaion/Models/fortune_model_for_fortune_teller.dart';
 import 'package:divinitaion/Models/fortune_teller_entity.dart';
 import 'package:divinitaion/Models/register_client.dart';
 import 'package:http/http.dart' as http; // HTTP istekleri için
+import 'package:shared_preferences/shared_preferences.dart';
 import '../Models/login.dart'; // Login modeliniz
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:file_picker/file_picker.dart';
@@ -21,12 +25,13 @@ class ApiService {
         },
         body: jsonEncode(loginModel.toJson()), // loginModel'i JSON'a çevirme
       );
-
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
       if (response.statusCode == 200) {
         print('Login successful');
         print(response.body);
         final Map<String, dynamic> data = jsonDecode(response.body);
         final loginResponse = LoginResponse.fromJson(data);
+        await prefs.setInt('id', loginResponse.userId);
         return loginResponse;
       } else {
         return null;
@@ -104,8 +109,8 @@ class ApiService {
   }
 
   Future<List<FortuneTeller>> FetchFortuneTeller() async {
-    final response = await http.get(Uri.parse(
-        "http://fallinfal.com/api/Client/GetAllFortuneTeller"));
+    final response = await http
+        .get(Uri.parse("http://fallinfal.com/api/Client/GetAllFortuneTeller"));
 
     if (response.statusCode == 200) {
       List<dynamic> jsonList = json.decode(response.body);
@@ -115,21 +120,21 @@ class ApiService {
     }
   }
 
-  Future<List<FortuneCategories>> fetchFortuneCategories() async {
-    final response = await http.get(Uri.parse(
-        "http://fallinfal.com/api/Client/GetAllFortuneTeller")); // api hazır olmadığından şuanlık falcıları çekiyor dropdown içine
+  Future<List<FortuneCategory>> fetchFortuneCategories() async {
+    final response = await http
+        .get(Uri.parse("http://fallinfal.com/api/Category/GetAllCategory"));
 
     if (response.statusCode == 200) {
       List<dynamic> jsonList = json.decode(response.body);
-      return jsonList.map((json) => FortuneCategories.fromJson(json)).toList();
+      return jsonList.map((json) => FortuneCategory.fromJson(json)).toList();
     } else {
-      throw Exception('Failed to load users');
+      throw Exception('Failed to load categories');
     }
   }
 
-   Future<List<Fortune>> FetchFortunes() async {
-    final response = await http.get(Uri.parse(
-        "http://fallinfal.com/api/Client/GetAllFortune"));
+  Future<List<Fortune>> FetchFortunes() async {
+    final response = await http
+        .get(Uri.parse("http://fallinfal.com/api/Client/GetAllFortune"));
 
     if (response.statusCode == 200) {
       List<dynamic> jsonList = json.decode(response.body);
@@ -148,37 +153,39 @@ class ApiService {
     required PlatformFile photo3,
   }) async {
     try {
-      // Prepare the multipart request
-      var request = http.MultipartRequest(
-        'POST',
-        Uri.parse("http://fallinfal.com/api/Application/AddApplication"),
+      // Prepare the request URL
+      var url =
+          Uri.parse("http://fallinfal.com/api/Application/AddApplication");
+
+      // Convert photos to base64
+      String base64Photo1 = kIsWeb
+          ? base64Encode(photo1.bytes!)
+          : base64Encode(File(photo1.path!).readAsBytesSync());
+
+      String base64Photo2 = kIsWeb
+          ? base64Encode(photo2.bytes!)
+          : base64Encode(File(photo2.path!).readAsBytesSync());
+
+      String base64Photo3 = kIsWeb
+          ? base64Encode(photo3.bytes!)
+          : base64Encode(File(photo3.path!).readAsBytesSync());
+
+      // Create the request body
+      var requestBody = {
+        'ClientId': clientId,
+        'FortunetellerId': fortunetellerId,
+        'CategoryIds': categoryIds,
+        'Photo1': base64Photo1,
+        'Photo2': base64Photo2,
+        'Photo3': base64Photo3,
+      };
+
+      print(base64Photo2.length);
+      var response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(requestBody),
       );
-
-      // Add form fields
-      request.fields['ClientId'] = jsonEncode(clientId);
-      request.fields['FortunetellerId'] = jsonEncode(fortunetellerId);
-      request.fields['CategoryIds'] = jsonEncode(categoryIds);
-
-      // Add photo1
-      var multipartFile1 = kIsWeb
-          ? http.MultipartFile.fromBytes('Photo1', photo1.bytes!, filename: photo1.name)
-          : await http.MultipartFile.fromPath('Photo1', photo1.path!);
-      request.files.add(multipartFile1);
-
-      // Add photo2
-      var multipartFile2 = kIsWeb
-          ? http.MultipartFile.fromBytes('Photo2', photo2.bytes!, filename: photo2.name)
-          : await http.MultipartFile.fromPath('Photo2', photo2.path!);
-      request.files.add(multipartFile2);
-
-      // Add photo3
-      var multipartFile3 = kIsWeb
-          ? http.MultipartFile.fromBytes('Photo3', photo3.bytes!, filename: photo3.name)
-          : await http.MultipartFile.fromPath('Photo3', photo3.path!);
-      request.files.add(multipartFile3);
-
-      // Send the request
-      var response = await request.send();
 
       // Check if the request was successful
       if (response.statusCode == 200) {
@@ -193,4 +200,44 @@ class ApiService {
       return false;
     }
   }
+
+  Future<List<FortuneForFortuneTeller>> FetchFortunesByFortuneTellerId() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    
+    // Retrieve the id from SharedPreferences
+    int? fortuneTellerId = prefs.getInt('id'); // Make sure this key is the one you used to store the id
+
+    // Check if the id is available
+    if (fortuneTellerId == null) {
+      throw Exception('No fortune teller ID found in SharedPreferences');
+    }
+
+    final response = await http.get(
+      Uri.parse("http://fallinfal.com/api/Application/GetApplicationByFortuneTeller?id=$fortuneTellerId"),
+    );
+
+    if (response.statusCode == 200) {
+      List<dynamic> jsonList = json.decode(response.body);
+      print(response.body);
+      return jsonList.map((json) => FortuneForFortuneTeller.fromJson(json)).toList();
+    } else {
+      throw Exception('Failed to load fortunes');
+    }
+  }
+
+  Future<void> sendAnswer(int fortuneId, String answer) async {
+    final response = await http.post(
+      Uri.parse("pplication/SendAnswer"),
+      headers: {"Content-Type": "application/json"},
+      body: json.encode({
+        "fortuneId": fortuneId,
+        "answer": answer,
+      }),
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to send answer');
+    }
+  }
+
 }
