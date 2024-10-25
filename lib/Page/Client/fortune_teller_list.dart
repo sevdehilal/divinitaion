@@ -1,4 +1,3 @@
-// main.dart
 import 'package:divinitaion/Models/fortune_teller_entity.dart';
 import 'package:divinitaion/Services/service.dart';
 import 'package:divinitaion/Widgets/fortune_teller_card.dart';

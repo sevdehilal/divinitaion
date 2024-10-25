@@ -1,11 +1,8 @@
-import 'package:divinitaion/Page/Client/fortune_list.dart';
-import 'package:divinitaion/Page/Client/fortune_teller_list.dart';
-import 'package:divinitaion/Page/Client/client_profil_page.dart';
-import 'package:divinitaion/Widgets/fortune_card.dart';
-import 'package:flutter/material.dart';
 import 'package:divinitaion/Models/register_client.dart';
-// User modelinizi içe aktardığınızdan emin olun.
+import 'package:divinitaion/Page/Client/client_profil_page.dart';
+import 'package:divinitaion/Page/Client/fortune_list.dart';
 import 'package:divinitaion/Page/Common/fortune_categories_page.dart';
+import 'package:flutter/material.dart';
 
 class CustomBottomNavigation extends StatefulWidget {
   @override

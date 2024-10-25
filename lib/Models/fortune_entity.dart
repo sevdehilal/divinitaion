@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:typed_data';
-import 'package:divinitaion/Models/fortune_teller_entity.dart';
-import 'package:divinitaion/Models/register_client.dart';
+
 import 'package:file_picker/file_picker.dart';
 
 class Fortune {

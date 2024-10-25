@@ -1,9 +1,7 @@
 import 'package:divinitaion/Page/Client/fortune_teller_list.dart';
 import 'package:divinitaion/Page/Common/login.dart';
-import 'package:divinitaion/Widgets/fortune_teller_card.dart';
 import 'package:divinitaion/Widgets/fortune_teller_navigation_bar.dart';
 import 'package:flutter/material.dart';
-
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class WelcomePage extends StatelessWidget {

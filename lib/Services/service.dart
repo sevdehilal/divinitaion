@@ -1,16 +1,15 @@
 import 'dart:convert'; // JSON işlemleri için
 import 'dart:io';
-import 'dart:math';
 import 'package:divinitaion/Models/fortune_categories_entity.dart';
 import 'package:divinitaion/Models/fortune_entity.dart';
 import 'package:divinitaion/Models/fortune_model_for_fortune_teller.dart';
 import 'package:divinitaion/Models/fortune_teller_entity.dart';
 import 'package:divinitaion/Models/register_client.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:http/http.dart' as http; // HTTP istekleri için
 import 'package:shared_preferences/shared_preferences.dart';
 import '../Models/login.dart'; // Login modeliniz
-import 'package:flutter/foundation.dart' show kIsWeb;
-import 'package:file_picker/file_picker.dart';
 
 class ApiService {
   final String apiUrl = "https://fallinfal.com/api/Auth/login"; // API URL
@@ -225,19 +224,36 @@ class ApiService {
     }
   }
 
-  Future<void> sendAnswer(int fortuneId, String answer) async {
-    final response = await http.post(
-      Uri.parse("pplication/SendAnswer"),
-      headers: {"Content-Type": "application/json"},
-      body: json.encode({
-        "fortuneId": fortuneId,
-        "answer": answer,
-      }),
-    );
+  Future<bool> sendAnswer({
+    required int? fortuneId,
+    required String? answer,
+  }) async {
+    try {
+      var url = Uri.parse(
+        "http://fallinfal.com/api/Application/AnswerApplication?id=$fortuneId&answer=$answer"
+      );
 
-    if (response.statusCode != 200) {
-      throw Exception('Failed to send answer');
+      var requestBody = {
+        'Answers': answer,
+        'ApplicationsId': fortuneId,
+      };
+
+      var response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(requestBody),
+      );
+
+      if (response.statusCode == 200) {
+        print('Fortune successfully saved!');
+        return true;
+      } else {
+        print('Failed to save fortune. Error: ${response.statusCode}');
+        return false;
+      }
+    } catch (e) {
+      print('Exception while saving fortune: $e');
+      return false;
     }
   }
-
 }

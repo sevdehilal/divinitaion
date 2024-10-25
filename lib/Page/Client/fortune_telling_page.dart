@@ -1,17 +1,10 @@
-import 'dart:convert';
+import 'dart:io';
 import 'package:divinitaion/Models/fortune_teller_entity.dart';
 import 'package:divinitaion/Services/service.dart';
-import 'package:http/http.dart' as http;
-import 'dart:io';
-import 'package:divinitaion/Page/Client/fortune_teller_list.dart';
-import 'package:divinitaion/Page/Common/fortune_categories_page.dart';
-import 'package:divinitaion/Page/Common/welcome.dart';
-import 'package:divinitaion/Widgets/client_navigation_bar.dart';
-import 'package:divinitaion/Widgets/fortune_card.dart';
 import 'package:divinitaion/Widgets/fortune_categories_dropdown.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart'; // Import for PlatformFile
 
 class FortuneTellingPage extends StatefulWidget {
@@ -202,9 +195,15 @@ class _FortuneTellingPageState extends State<FortuneTellingPage> {
                   );
 
                   if (success) {
-                    print("Fortune successfully saved!");
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Fortune successfully saved!'))
+                    );
+                    Navigator.pop(context);
+                    Navigator.pop(context);
                   } else {
-                    print("Failed to save fortune.");
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Failed to save fortune.'))
+                    );
                   }
                 },
                 child: Text('Gönder'),

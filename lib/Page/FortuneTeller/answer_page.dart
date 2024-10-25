@@ -101,13 +101,28 @@ class AnswerPage extends StatelessWidget {
                 child: ElevatedButton(
                   onPressed: () async {
                     try {
-                      await _apiService.sendAnswer(
-                          fortune.id!, _answerController.text);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Answer sent successfully')));
+                      // Calling the sendAnswer function with the fortune's ID and user's input
+                      bool success = await _apiService.sendAnswer(
+                        fortuneId: fortune.id, 
+                        answer: _answerController.text
+                      );
+
+                      // Display appropriate feedback based on success or failure
+                      if (success) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Answer sent successfully'))
+                        );
+                        Navigator.pop(context);
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Failed to send answer'))
+                        );
+                      }
                     } catch (e) {
+                      // Handling any exceptions that might occur
                       ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Failed to send answer')));
+                        SnackBar(content: Text('An error occurred: $e'))
+                      );
                     }
                   },
                   child: Text('Send Answer'),

@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 class FortuneForFortuneTeller {
   final int? id;
   final String? firstName;

@@ -1,7 +1,8 @@
+import 'package:flutter/material.dart';
 import 'package:divinitaion/Models/fortune_model_for_fortune_teller.dart';
 import 'package:divinitaion/Page/FortuneTeller/answer_page.dart';
 import 'package:divinitaion/Services/service.dart';
-import 'package:flutter/material.dart';
+import 'package:divinitaion/Widgets/fortune_card_for_fortune_teller.dart';
 
 class PendingFortuneList extends StatefulWidget {
   @override
@@ -21,10 +22,7 @@ class _PendingFortuneListState extends State<PendingFortuneList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Fortunes'),
-      ),
-      body: FutureBuilder<List<FortuneForFortuneTeller>>(
+        body: FutureBuilder<List<FortuneForFortuneTeller>>(
         future: _fortuneList,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -32,7 +30,7 @@ class _PendingFortuneListState extends State<PendingFortuneList> {
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text('No fortune tellers found.'));
+            return Center(child: Text('No pending fortunes found.'));
           }
 
           final fortunes = snapshot.data!;
@@ -41,9 +39,8 @@ class _PendingFortuneListState extends State<PendingFortuneList> {
             itemCount: fortunes.length,
             itemBuilder: (context, index) {
               final fortune = fortunes[index];
-              return ListTile(
-                title: Text('${fortune.firstName} ${fortune.lastName}'),
-                subtitle: Text(fortune.occupation!),
+              
+              return GestureDetector(
                 onTap: () {
                   Navigator.push(
                     context,
@@ -52,6 +49,9 @@ class _PendingFortuneListState extends State<PendingFortuneList> {
                     ),
                   );
                 },
+                child: FortuneCardForFortuneTeller(
+                  fortune: fortune,
+                ),
               );
             },
           );
