@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:divinitaion/Models/fortune_model_for_fortune_teller.dart';
 import 'package:divinitaion/Services/service.dart';
 import 'package:flutter/material.dart';
@@ -11,10 +10,28 @@ class AnswerPage extends StatelessWidget {
 
   AnswerPage({required this.fortune});
 
-  Widget _buildImage(String base64Image) {
-    return Image.memory(
-      base64Decode(base64Image),
-      fit: BoxFit.cover,
+  Widget _buildImage(BuildContext context, String base64Image) {
+    return GestureDetector(
+      onTap: () {
+        showDialog(
+          context: context,
+          builder: (_) => Dialog(
+            child: Image.memory(
+              base64Decode(base64Image),
+              fit: BoxFit.contain,
+            ),
+          ),
+        );
+      },
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(8.0),
+        child: Image.memory(
+          base64Decode(base64Image),
+          height: 100,
+          width: 100,
+          fit: BoxFit.cover,
+        ),
+      ),
     );
   }
 
@@ -26,34 +43,82 @@ class AnswerPage extends StatelessWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            _buildImage(fortune.imageData1!),
-            SizedBox(height: 10),
-            _buildImage(fortune.imageData2!),
-            SizedBox(height: 10),
-            _buildImage(fortune.imageData3!),
-            SizedBox(height: 20),
-            TextField(
-              controller: _answerController,
-              decoration: InputDecoration(
-                labelText: 'Enter your answer',
-                border: OutlineInputBorder(),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Personal Details',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () async {
-                try {
-                  await _apiService.sendAnswer(fortune.id!, _answerController.text);
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Answer sent successfully')));
-                } catch (e) {
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Failed to send answer')));
-                }
-              },
-              child: Text('Send Answer'),
-            ),
-          ],
+              SizedBox(height: 10),
+              Text('Birth Date: ${fortune.gender}'),
+              Text('Marital Status: ${fortune.maritalStatus}'),
+              Text('Occupation: ${fortune.occupation}'),
+              SizedBox(height: 20),
+              Text(
+                'Categories',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 10),
+              Wrap(
+                spacing: 8.0,
+                runSpacing: 4.0,
+                children: fortune.categories!
+                    .map((category) => Chip(
+                          label: Text(category),
+                        ))
+                    .toList(),
+              ),
+              SizedBox(height: 20),
+              ExpansionTile(
+                title: Text(
+                  'Photos',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      _buildImage(context, fortune.imageData1!),
+                      _buildImage(context, fortune.imageData2!),
+                      _buildImage(context, fortune.imageData3!),
+                    ],
+                  ),
+                ],
+              ),
+              SizedBox(height: 20),
+              TextField(
+                controller: _answerController,
+                maxLines: 5,
+                decoration: InputDecoration(
+                  labelText: 'Enter your answer',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              SizedBox(height: 20),
+              Center(
+                child: ElevatedButton(
+                  onPressed: () async {
+                    try {
+                      await _apiService.sendAnswer(
+                          fortune.id!, _answerController.text);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Answer sent successfully')));
+                    } catch (e) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Failed to send answer')));
+                    }
+                  },
+                  child: Text('Send Answer'),
+                  style: ElevatedButton.styleFrom(
+                    padding: EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                    textStyle: TextStyle(fontSize: 18),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
