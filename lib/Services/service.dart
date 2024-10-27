@@ -4,6 +4,7 @@ import 'package:divinitaion/Models/fortune_categories_entity.dart';
 import 'package:divinitaion/Models/fortune_entity.dart';
 import 'package:divinitaion/Models/fortune_model_for_fortune_teller.dart';
 import 'package:divinitaion/Models/fortune_teller_entity.dart';
+import 'package:divinitaion/Models/fortune_list.dart';
 import 'package:divinitaion/Models/register_client.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
@@ -131,13 +132,45 @@ class ApiService {
     }
   }
 
-  Future<List<Fortune>> FetchFortunes() async {
+  Future<List<FortuneListt>> fetchPendingFortunes() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    
+    // Retrieve the id from SharedPreferences
+    int? clientId = prefs.getInt('id'); // Make sure this key is the one you used to store the id
+
+    // Check if the id is available
+    if (clientId == null) {
+      throw Exception('No fortune teller ID found in SharedPreferences');
+    }
+
     final response = await http
-        .get(Uri.parse("http://fallinfal.com/api/Client/GetAllFortune"));
+        .get(Uri.parse("http://fallinfal.com/api/Application/GetApplicationByClientIdIsAnsweredFalse?id=$clientId"));
 
     if (response.statusCode == 200) {
       List<dynamic> jsonList = json.decode(response.body);
-      return jsonList.map((json) => Fortune.fromJson(json)).toList();
+      return jsonList.map((json) => FortuneListt.fromJson(json)).toList();
+    } else {
+      throw Exception('Failed to load fortunes');
+    }
+  }
+
+  Future<List<FortuneListt>> fetchAnsweredFortunes() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    
+    // Retrieve the id from SharedPreferences
+    int? clientId = prefs.getInt('id'); // Make sure this key is the one you used to store the id
+
+    // Check if the id is available
+    if (clientId == null) {
+      throw Exception('No fortune teller ID found in SharedPreferences');
+    }
+
+    final response = await http
+        .get(Uri.parse("http://fallinfal.com/api/Application/GetApplicationByClientIdIsAnsweredTrue?id=$clientId"));
+
+    if (response.statusCode == 200) {
+      List<dynamic> jsonList = json.decode(response.body);
+      return jsonList.map((json) => FortuneListt.fromJson(json)).toList();
     } else {
       throw Exception('Failed to load fortunes');
     }
@@ -200,7 +233,7 @@ class ApiService {
     }
   }
 
-  Future<List<FortuneForFortuneTeller>> FetchFortunesByFortuneTellerId() async {
+  Future<List<FortuneForFortuneTeller>> FetchPendingFortunesByFortuneTellerId() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     
     // Retrieve the id from SharedPreferences
@@ -256,4 +289,30 @@ class ApiService {
       return false;
     }
   }
+
+  
+  Future<List<FortuneForFortuneTeller>> FetchAnsweredFortunesByFortuneTellerId() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    
+    // Retrieve the id from SharedPreferences
+    int? fortuneTellerId = prefs.getInt('id'); // Make sure this key is the one you used to store the id
+
+    // Check if the id is available
+    if (fortuneTellerId == null) {
+      throw Exception('No fortune teller ID found in SharedPreferences');
+    }
+
+    final response = await http.get(
+      Uri.parse("http://fallinfal.com/api/Application/GetApplicationByFortuneTellerIsAnsweredTrue?id=$fortuneTellerId"),
+    );
+
+    if (response.statusCode == 200) {
+      List<dynamic> jsonList = json.decode(response.body);
+      print(response.body);
+      return jsonList.map((json) => FortuneForFortuneTeller.fromJson(json)).toList();
+    } else {
+      throw Exception('Failed to load fortunes');
+    }
+  }
+
 }

@@ -1,9 +1,9 @@
-import 'package:divinitaion/Widgets/client_navigation_bar.dart';
 import 'package:divinitaion/Models/login.dart';
 import 'package:divinitaion/Page/Common/email_verification.dart';
 import 'package:divinitaion/Page/Common/register.dart';
 import 'package:divinitaion/Services/service.dart';
-import 'package:divinitaion/Widgets/fortune_teller_navigation_bar.dart';
+import 'package:divinitaion/Widgets/ClientWidgets/client_navigation_bar.dart';
+import 'package:divinitaion/Widgets/FortuneWidgets/fortune_teller_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
@@ -18,6 +18,8 @@ class _LoginPageState extends State<LoginPage> {
   final ApiService _loginService = ApiService();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final FlutterSecureStorage _storage = FlutterSecureStorage();
+  final FocusNode _passwordFocusNode = FocusNode();
+
 
   Future<void> _login() async {
     if (_formKey.currentState!.validate()) {
@@ -125,6 +127,10 @@ class _LoginPageState extends State<LoginPage> {
                     }
                     return null;
                   },
+                  onFieldSubmitted: (_) {
+                    // Move focus to password field
+                    FocusScope.of(context).requestFocus(_passwordFocusNode);
+                  },
                 ),
                 const SizedBox(height: 10),
 
@@ -138,6 +144,11 @@ class _LoginPageState extends State<LoginPage> {
                       return 'Please enter your password';
                     }
                     return null;
+                  },
+                  focusNode: _passwordFocusNode,
+                  onFieldSubmitted: (_) {
+                    // Trigger login when Enter is pressed
+                    _login();
                   },
                 ),
                 const SizedBox(height: 20),

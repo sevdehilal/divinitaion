@@ -1,5 +1,6 @@
+import 'package:divinitaion/Page/FortuneTeller/answered_fortune_list.dart';
 import 'package:divinitaion/Page/FortuneTeller/pending_fortune_list.dart';
-import 'package:divinitaion/Widgets/logout_button.dart';
+import 'package:divinitaion/Widgets/CommonWidgets/logout_button.dart';
 import 'package:flutter/material.dart';
 
 class FortuneTellerBottomNavigation extends StatefulWidget {
@@ -14,6 +15,7 @@ class _FortuneTellerBottomNavigationState
 
   static List<Widget> _pages = <Widget>[
     PendingFortuneList(),
+    AnsweredFortuneList(),
     Center(child: Text('Profil', style: TextStyle(fontSize: 24))),
   ];
 
@@ -36,6 +38,10 @@ class _FortuneTellerBottomNavigationState
           BottomNavigationBarItem(
             icon: Icon(Icons.star),
             label: 'Bekleyen Fallar',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.star),
+            label: 'Baktığım Fallar',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.man),

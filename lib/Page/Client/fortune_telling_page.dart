@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:divinitaion/Models/fortune_teller_entity.dart';
 import 'package:divinitaion/Services/service.dart';
-import 'package:divinitaion/Widgets/fortune_categories_dropdown.dart';
+import 'package:divinitaion/Widgets/ClientWidgets/fortune_categories_dropdown.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';

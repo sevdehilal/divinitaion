@@ -5,6 +5,7 @@ class FortuneForFortuneTeller {
   final String? gender;
   final String? occupation;
   final String? maritalStatus;
+  final DateTime? dateOfBirth;
   final List<String>? categories;
   final DateTime? createDate;
   final String? imageData1;
@@ -18,6 +19,7 @@ class FortuneForFortuneTeller {
     this.gender,
      this.occupation,
      this.maritalStatus,
+     this.dateOfBirth,
      this.categories,
     this.createDate,
      this.imageData1,
@@ -33,6 +35,7 @@ class FortuneForFortuneTeller {
       gender: json['gender'],
       occupation: json['occupation'],
       maritalStatus: json['maritalStatus'],
+      dateOfBirth: json['birthDate'] != null ? DateTime.parse(json['birthDate']) : null,
       categories: List<String>.from(json['categories']),
       createDate: json['createDate'] != null ? DateTime.parse(json['createDate']) : null,
       imageData1: json['imageData1'],

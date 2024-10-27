@@ -1,12 +1,16 @@
-import 'package:divinitaion/Models/fortune_entity.dart';
+import 'package:divinitaion/Models/fortune_list.dart';
 import 'package:flutter/material.dart';
 
 class FortuneCard extends StatefulWidget {
-  final Fortune fortune;
+  final FortuneListt fortune;
+  final bool isTappable;
+  final VoidCallback? onTap;
 
   const FortuneCard({
     Key? key,
     required this.fortune,
+    this.isTappable = true,
+    this.onTap,
   }) : super(key: key);
 
   @override
@@ -19,22 +23,9 @@ class _FortuneCardState extends State<FortuneCard> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'fortunes',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 24, // Yazı boyutunu artırdık
-            fontWeight: FontWeight.normal, // Yazı kalınlığı
-          ),
-        ),
-        centerTitle: true,
-        backgroundColor:
-            const Color.fromARGB(255, 70, 70, 68), // AppBar arka plan rengi
-        elevation: 4, // Gölge efekti
-      ),
-      body: Padding(
+    return GestureDetector(
+      onTap: widget.isTappable ? widget.onTap : null,
+      child: Padding(
         padding: const EdgeInsets.all(7.0),
         child: SizedBox(
           height: 150,
@@ -46,8 +37,7 @@ class _FortuneCardState extends State<FortuneCard> {
             child: Padding(
               padding: const EdgeInsets.all(15.0),
               child: Row(
-                crossAxisAlignment:
-                    CrossAxisAlignment.center, // Dikeyde ortalıyoruz
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Icon(
                     Icons.coffee,
@@ -57,30 +47,25 @@ class _FortuneCardState extends State<FortuneCard> {
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment:
-                          MainAxisAlignment.center, // Dikeyde ortalamak için
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         SizedBox(height: 8),
-                        Text('Falcı: ${widget.fortune.fortuneTellerId}'),
-                        Text('Tarih: ${widget.fortune.date}'),
+                        Text('Falcı: ${widget.fortune.fortunetellerFirstName}'),
+                        Text('Tarih: ${widget.fortune.createDate}'),
                       ],
                     ),
                   ),
                   Column(
-                    mainAxisAlignment:
-                        MainAxisAlignment.center, // Dikeyde ortalamak için
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       IconButton(
                         icon: Icon(
-                          isChecked
-                              ? Icons.check_box
-                              : Icons.check_box_outline_blank,
+                          isChecked ? Icons.check_box : Icons.check_box_outline_blank,
                           size: 24,
                         ),
                         onPressed: () {
                           setState(() {
-                            isChecked =
-                                !isChecked; // Check ikonunu değiştiriyoruz
+                            isChecked = !isChecked;
                           });
                         },
                       ),
@@ -92,8 +77,7 @@ class _FortuneCardState extends State<FortuneCard> {
                         ),
                         onPressed: () {
                           setState(() {
-                            isFavorite =
-                                !isFavorite; // Favori ikonunu değiştiriyoruz
+                            isFavorite = !isFavorite;
                           });
                         },
                       ),

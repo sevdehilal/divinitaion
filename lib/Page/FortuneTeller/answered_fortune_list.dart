@@ -1,29 +1,29 @@
-import 'package:divinitaion/Widgets/FortuneWidgets/fortune_card_for_fortune_teller.dart';
 import 'package:flutter/material.dart';
 import 'package:divinitaion/Models/fortune_model_for_fortune_teller.dart';
 import 'package:divinitaion/Page/FortuneTeller/answer_page.dart';
 import 'package:divinitaion/Services/service.dart';
+import 'package:divinitaion/Widgets/FortuneWidgets/fortune_card_for_fortune_teller.dart';
 
-class PendingFortuneList extends StatefulWidget {
+class AnsweredFortuneList extends StatefulWidget {
   @override
-  _PendingFortuneListState createState() => _PendingFortuneListState();
+  _AnsweredFortuneListState createState() => _AnsweredFortuneListState();
 }
 
-class _PendingFortuneListState extends State<PendingFortuneList> {
+class _AnsweredFortuneListState extends State<AnsweredFortuneList> {
   final ApiService _apiService = ApiService();
-  late Future<List<FortuneForFortuneTeller>> _pendingFortuneList;
+  late Future<List<FortuneForFortuneTeller>> _answeredFortuneList;
 
   @override
   void initState() {
     super.initState();
-    _pendingFortuneList = _apiService.FetchPendingFortunesByFortuneTellerId();
+    _answeredFortuneList = _apiService.FetchAnsweredFortunesByFortuneTellerId();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         body: FutureBuilder<List<FortuneForFortuneTeller>>(
-        future: _pendingFortuneList,
+        future: _answeredFortuneList,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());

@@ -1,7 +1,7 @@
 import 'package:divinitaion/Models/fortune_teller_entity.dart';
 import 'package:divinitaion/Services/service.dart';
-import 'package:divinitaion/Widgets/fortune_teller_card.dart';
-import 'package:divinitaion/Widgets/logout_button.dart';
+import 'package:divinitaion/Widgets/ClientWidgets/fortune_teller_card.dart';
+import 'package:divinitaion/Widgets/CommonWidgets/logout_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 

@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:divinitaion/Widgets/client_navigation_bar.dart';
+import 'package:divinitaion/Widgets/ClientWidgets/client_navigation_bar.dart';
 import 'package:flutter/material.dart';
 
 void main() {
