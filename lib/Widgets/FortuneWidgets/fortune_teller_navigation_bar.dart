@@ -29,29 +29,38 @@ class _FortuneTellerBottomNavigationState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Bottom Navigation Bar Örneği'),
+        title: Text(
+          'Fortune Teller',
+          style: TextStyle(
+            color: Colors.white, // Başlık rengi beyaz yapıldı
+          ),
+        ),
+        backgroundColor: Color.fromARGB(255, 24, 18, 20), // Gece mavisi rengi
         actions: [LogoutButton()],
       ),
       body: _pages[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.star),
+            icon: Icon(Icons.coffee, color: Colors.white), // İkon rengi beyaz
             label: 'Bekleyen Fallar',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.star),
+            icon: Icon(Icons.coffee, color: Colors.white), // İkon rengi beyaz
             label: 'Baktığım Fallar',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.man),
+            icon: Icon(Icons.man, color: Colors.white), // İkon rengi beyaz
             label: 'Profil',
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.blue,
+        selectedItemColor: Colors.blue, // Seçili ikon rengi
+        unselectedItemColor: Colors.white, // Seçili olmayan ikon rengi
         onTap: _onItemTapped,
+        backgroundColor: Color.fromARGB(255, 24, 18, 20), // Gece mavisi rengi
       ),
+      backgroundColor: Color.fromARGB(255, 24, 18, 20), // Gece mavisi rengi
     );
   }
 }

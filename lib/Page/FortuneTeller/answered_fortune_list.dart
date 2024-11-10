@@ -22,40 +22,47 @@ class _AnsweredFortuneListState extends State<AnsweredFortuneList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: FutureBuilder<List<FortuneForFortuneTeller>>(
-        future: _answeredFortuneList,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text('No pending fortunes found.'));
-          }
+      body: Container(
+        color:
+            Color.fromARGB(103, 57, 2, 60), // Arka plan rengi burada ayarlandı
+        child: FutureBuilder<List<FortuneForFortuneTeller>>(
+          future: _answeredFortuneList,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Center(child: Text('Error: ${snapshot.error}'));
+            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+              return Center(
+                  child: Text('No answered fortunes found.',
+                      style: TextStyle(
+                          color: Colors.white))); // Yazı rengini ayarladık
+            }
 
-          final fortunes = snapshot.data!;
+            final fortunes = snapshot.data!;
 
-          return ListView.builder(
-            itemCount: fortunes.length,
-            itemBuilder: (context, index) {
-              final fortune = fortunes[index];
-              
-              return GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => AnswerPage(fortune: fortune),
-                    ),
-                  );
-                },
-                child: FortuneCardForFortuneTeller(
-                  fortune: fortune,
-                ),
-              );
-            },
-          );
-        },
+            return ListView.builder(
+              itemCount: fortunes.length,
+              itemBuilder: (context, index) {
+                final fortune = fortunes[index];
+
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => AnswerPage(fortune: fortune),
+                      ),
+                    );
+                  },
+                  child: FortuneCardForFortuneTeller(
+                    fortune: fortune,
+                  ),
+                );
+              },
+            );
+          },
+        ),
       ),
     );
   }
