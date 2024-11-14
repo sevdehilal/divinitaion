@@ -1,63 +1,93 @@
 import 'package:divinitaion/Models/fortune_list.dart';
 import 'package:flutter/material.dart';
 
-class FortuneAnswerPage extends StatelessWidget {
+class FortuneAnswerPage extends StatefulWidget {
   final FortuneListt fortune;
 
   const FortuneAnswerPage({Key? key, required this.fortune}) : super(key: key);
 
   @override
+  _FortuneAnswerPageState createState() => _FortuneAnswerPageState();
+}
+
+class _FortuneAnswerPageState extends State<FortuneAnswerPage> {
+  int _currentRating = 0;
+
+  void _updateRating(int rating) {
+    setState(() {
+      _currentRating = rating;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Fortune Answer'),
+        title: const Text(
+          'Fal Cevabın...',
+          style: TextStyle(
+            fontSize: 18,
+            color: Color.fromARGB(255, 255, 255, 255),
+          ),
+        ),
+        backgroundColor: Color.fromARGB(255, 24, 18, 20),
       ),
+      backgroundColor: Color.fromARGB(255, 24, 18, 20),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Display the categories as a comma-separated list
             Text(
-              'Categories: ${fortune.categories?.join(', ') ?? 'No categories available'}',
+              'Kategoriler: ${widget.fortune.categories?.join(', ') ?? ''}',
               style: const TextStyle(
                 fontSize: 16,
+                color: Color.fromARGB(255, 138, 138, 138),
                 fontWeight: FontWeight.bold,
               ),
             ),
             const SizedBox(height: 10),
-
-            // Display the creation date
             Text(
-              'Create Date: ${fortune.createDate}',
+              'Oluşturma Tarihi: ${widget.fortune.createDate}',
               style: TextStyle(
-                fontSize: 14,
-                color: Colors.grey[700],
+                fontSize: 12,
+                color: const Color.fromARGB(255, 138, 138, 138),
               ),
             ),
-            const SizedBox(height: 20),
-
-            // Divider
+            const SizedBox(height: 6),
             const Divider(),
-
-            // Large area for the fortune answer
-            Expanded(
-              child: SingleChildScrollView(
-                child: Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(16.0),
-                  decoration: BoxDecoration(
-                    color: Colors.grey[200],
-                    border: Border.all(color: Colors.grey),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Text(
-                    fortune.answer ?? 'No answer provided.',
-                    style: const TextStyle(fontSize: 18),
-                  ),
+            Text(
+              widget.fortune.answer ?? 'No answer provided.',
+              style: const TextStyle(
+                fontSize: 14,
+                color: Color.fromARGB(255, 255, 255, 255),
+              ),
+            ),
+            const Spacer(),
+            Center(
+              child: Text(
+                'Bu falı puanlamak ister misin?',
+                style: const TextStyle(
+                  fontSize: 14,
+                  color: Color.fromARGB(255, 255, 255, 255),
                 ),
               ),
             ),
+            Center(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List.generate(5, (index) {
+                  return IconButton(
+                    icon: Icon(
+                      Icons.star,
+                      color: index < _currentRating ? Colors.yellow : Colors.grey,
+                    ),
+                    onPressed: () => _updateRating(index + 1),
+                  );
+                }),
+              ),
+            ),
+            const SizedBox(height: 20),
           ],
         ),
       ),

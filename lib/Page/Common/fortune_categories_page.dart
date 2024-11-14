@@ -1,41 +1,38 @@
+import 'package:divinitaion/Widgets/CommonWidgets/logout_button.dart';
 import 'package:flutter/material.dart';
-import 'package:divinitaion/Page/Client/fortune_teller_list.dart'; // Falcı listesi için gerekli import
+import 'package:divinitaion/Page/Client/fortune_teller_list.dart';
 
 class FortuneCategoriesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'fortune categories',
+        title: Text('Fortune Categories', 
           style: TextStyle(
-            color: Colors.white,
-            fontSize: 24, // Yazı boyutunu artırdık
-            fontWeight: FontWeight.normal, // Yazı kalınlığı
-          ),
-        ),
-        centerTitle: true,
-        backgroundColor:
-            const Color.fromARGB(255, 70, 70, 68), // AppBar arka plan rengi
-        elevation: 2, // Gölge efekti
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: const Color.fromARGB(255, 255, 255, 255),
+              ),
+            ),
+        backgroundColor: Color.fromARGB(255, 24, 18, 20),
+        actions: [LogoutButton()],
       ),
+      backgroundColor: Color.fromARGB(255, 24, 18, 20),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SizedBox(height: 0),
-            // Yeni eklenen "Hemen Yeni Bir Fal Baktır" yazısı
             Text(
               'Hemen Yeni Bir Fal Baktır !',
               style: TextStyle(
                 fontSize: 19,
                 fontWeight: FontWeight.w600,
-                color: const Color.fromARGB(255, 45, 48, 51),
+                color: const Color.fromARGB(255, 255, 255, 255),
               ),
               textAlign: TextAlign.center,
             ),
-            SizedBox(height: 50), // Yazı ile resim butonları arasında boşluk
+            SizedBox(height: 50),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
@@ -59,7 +56,6 @@ class FortuneCategoriesPage extends StatelessWidget {
     );
   }
 
-  // Kart şeklinde resim buton fonksiyonu, fal isimlerini ekledik
   Widget _imageCardButton(
       BuildContext context, String imagePath, String fortuneName) {
     return GestureDetector(
@@ -68,7 +64,7 @@ class FortuneCategoriesPage extends StatelessWidget {
           context,
           MaterialPageRoute(
             builder: (context) =>
-                ClientFortuneTellerList(), // Falcı listesine yönlendirme
+                ClientFortuneTellerList(),
           ),
         );
       },
@@ -80,8 +76,8 @@ class FortuneCategoriesPage extends StatelessWidget {
             ),
             elevation: 5,
             child: Container(
-              width: 140, // Sabit genişlik
-              height: 140, // Sabit yükseklik
+              width: 140,
+              height: 140,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
@@ -100,13 +96,13 @@ class FortuneCategoriesPage extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(height: 8), // Resim ile yazı arasında boşluk
+          SizedBox(height: 8),
           Text(
-            fortuneName, // Fal adı
+            fortuneName,
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
-              color: Colors.black,
+              color: const Color.fromARGB(255, 255, 255, 255),
             ),
           ),
         ],

@@ -11,6 +11,7 @@ class FortuneForFortuneTeller {
   final String? imageData1;
   final String? imageData2;
   final String? imageData3;
+  final String? answer;
 
   FortuneForFortuneTeller({
      this.id,
@@ -25,6 +26,7 @@ class FortuneForFortuneTeller {
      this.imageData1,
      this.imageData2,
      this.imageData3,
+     this.answer
   });
 
   factory FortuneForFortuneTeller.fromJson(Map<String, dynamic> json) {
@@ -41,6 +43,7 @@ class FortuneForFortuneTeller {
       imageData1: json['imageData1'],
       imageData2: json['imageData2'],
       imageData3: json['imageData3'],
+      answer: json['answer'],
     );
   }
 }

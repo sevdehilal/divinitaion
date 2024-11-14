@@ -24,7 +24,7 @@ class _AnsweredFortuneListState extends State<AnsweredFortuneList> {
     return Scaffold(
       body: Container(
         color:
-            Color.fromARGB(103, 57, 2, 60), // Arka plan rengi burada ayarlandı
+            Color.fromARGB(103, 57, 2, 60),
         child: FutureBuilder<List<FortuneForFortuneTeller>>(
           future: _answeredFortuneList,
           builder: (context, snapshot) {
@@ -36,11 +36,18 @@ class _AnsweredFortuneListState extends State<AnsweredFortuneList> {
               return Center(
                   child: Text('No answered fortunes found.',
                       style: TextStyle(
-                          color: Colors.white))); // Yazı rengini ayarladık
+                          color: Colors.white)));
             }
 
             final fortunes = snapshot.data!;
 
+            fortunes.sort((a, b) {
+              if (a.createDate == null || b.createDate == null) {
+                return 0;
+              }
+              return b.createDate!.compareTo(a.createDate!);
+            });
+            
             return ListView.builder(
               itemCount: fortunes.length,
               itemBuilder: (context, index) {

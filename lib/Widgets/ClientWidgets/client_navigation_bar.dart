@@ -2,6 +2,7 @@ import 'package:divinitaion/Models/register_client.dart';
 import 'package:divinitaion/Page/Client/client_profil_page.dart';
 import 'package:divinitaion/Page/Client/fortune_list.dart';
 import 'package:divinitaion/Page/Common/fortune_categories_page.dart';
+import 'package:divinitaion/Widgets/CommonWidgets/logout_button.dart';
 import 'package:flutter/material.dart';
 
 class CustomBottomNavigation extends StatefulWidget {
@@ -25,12 +26,11 @@ class _CustomBottomNavigationState extends State<CustomBottomNavigation> {
     password: 'Sevdehilal.02',
   );
 
-  // Sayfa listesini burada tanımlıyoruz
   List<Widget> get _pages => [
-        FortuneCategoriesPage(), // Falcı listesi burada çağrılıyor
+        FortuneCategoriesPage(),
         FortuneList(),
         ClientProfilePage(
-            user: currentUser), // currentUser'ı buraya geçiriyoruz 
+            user: currentUser),
       ];
 
   void _onItemTapped(int index) {
@@ -39,6 +39,37 @@ class _CustomBottomNavigationState extends State<CustomBottomNavigation> {
     });
   }
 
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: _pages[_selectedIndex],
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home, color: Colors.white),
+            label: 'Anasayfa',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.coffee, color: Colors.white),
+            label: 'Fallarım',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.man, color: Colors.white),
+            label: 'Profil',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: const Color.fromARGB(255, 255, 0, 0),
+        unselectedItemColor: Colors.white,
+        onTap: _onItemTapped,
+        backgroundColor: Color.fromARGB(255, 24, 18, 20),
+      ),
+      backgroundColor: Color.fromARGB(255, 24, 18, 20),
+    );
+  }
+
+/*
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,4 +95,5 @@ class _CustomBottomNavigationState extends State<CustomBottomNavigation> {
       ),
     );
   }
+  */
 }

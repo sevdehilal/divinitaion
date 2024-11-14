@@ -3,12 +3,12 @@ import 'package:divinitaion/Page/Client/fortune_telling_page.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
-import 'package:divinitaion/Models/fortune_teller_entity.dart'; // Import your model
+import 'package:divinitaion/Models/fortune_teller_entity.dart';
 
 class PhotoSelectionPage extends StatefulWidget {
-  final FortuneTeller fortuneTeller; // Add this line
+  final FortuneTeller fortuneTeller;
 
-  PhotoSelectionPage({required this.fortuneTeller}); // Update the constructor
+  PhotoSelectionPage({required this.fortuneTeller});
 
   @override
   _PhotoSelectionPageState createState() => _PhotoSelectionPageState();
@@ -27,12 +27,12 @@ class _PhotoSelectionPageState extends State<PhotoSelectionPage> {
 
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.image,
-      allowMultiple: true, // Allow multiple selections
+      allowMultiple: true,
     );
 
     if (result != null && result.files.isNotEmpty) {
       setState(() {
-        _selectedFiles.addAll(result.files.take(3 - _selectedFiles.length)); // Limit to 3 files
+        _selectedFiles.addAll(result.files.take(3 - _selectedFiles.length));
       });
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -48,61 +48,104 @@ class _PhotoSelectionPageState extends State<PhotoSelectionPage> {
       );
       return;
     }
-    // Here, you can navigate to the next page and pass the fortuneTeller model
+
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => FortuneTellingPage(
           fortuneTeller: widget.fortuneTeller,
-          selectedFiles: _selectedFiles, // Pass selected files here
+          selectedFiles: _selectedFiles,
         ),
       ),
     );
+  }
+
+  void _removeImage(int index) {
+    setState(() {
+      _selectedFiles.removeAt(index);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Select Photos'),
+        title: Text('Fotoğraf Seç', style: TextStyle(color: Colors.white),),
+        backgroundColor: Color.fromARGB(255, 24, 18, 20),
         actions: [
           IconButton(
-            icon: Icon(Icons.arrow_forward),
+            icon: Icon(Icons.arrow_forward, color: Color.fromARGB(255, 255, 255, 255)),
             onPressed: _goToSelectedImagesPage,
           ),
         ],
       ),
       body: Column(
         children: [
-          ElevatedButton(
-            onPressed: _pickImage,
-            child: Text('Select Photo'),
-          ),
-          SizedBox(height: 10),
           Expanded(
-            child: _selectedFiles.isEmpty
-                ? Center(child: Text('No photos selected.'))
-                : GridView.builder(
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 3,
-                      crossAxisSpacing: 4,
-                      mainAxisSpacing: 4,
+            child: Container(
+              color: Color.fromARGB(255, 24, 18, 20),
+              child: Column(
+                children: [
+                  SizedBox(height: 10),
+                  OutlinedButton(
+                    onPressed: _pickImage,
+                    style: OutlinedButton.styleFrom(
+                      side: BorderSide(color: Colors.white),
                     ),
-                    itemCount: _selectedFiles.length,
-                    itemBuilder: (context, index) {
-                      if (kIsWeb) {
-                        return Image.memory(
-                          _selectedFiles[index].bytes!,
-                          fit: BoxFit.cover,
-                        );
-                      } else {
-                        return Image.file(
-                          File(_selectedFiles[index].path!),
-                          fit: BoxFit.cover,
-                        );
-                      }
-                    },
+                    child: Text(
+                      'Kahve Telvelerini Seç',
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
+                  SizedBox(height: 10),
+                  Expanded(
+                    child: _selectedFiles.isEmpty
+                        ? Center(
+                            child: Text(
+                              'Fotoğraf seçilmedi',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          )
+                        : GridView.builder(
+                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 3,
+                              crossAxisSpacing: 4,
+                              mainAxisSpacing: 4,
+                            ),
+                            itemCount: _selectedFiles.length,
+                            itemBuilder: (context, index) {
+                              return Stack(
+                                children: [
+                                  if (kIsWeb)
+                                    Image.memory(
+                                      _selectedFiles[index].bytes!,
+                                      fit: BoxFit.cover,
+                                      width: double.infinity,
+                                      height: double.infinity,
+                                    )
+                                  else
+                                    Image.file(
+                                      File(_selectedFiles[index].path!),
+                                      fit: BoxFit.cover,
+                                      width: double.infinity,
+                                      height: double.infinity,
+                                    ),
+                                  Positioned(
+                                    top: -8,
+                                    right: -8,
+                                    child: IconButton(
+                                      icon: Icon(Icons.remove_circle, color: Colors.red),
+                                      onPressed: () => _removeImage(index),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            },
+                          ),
+                  ),
+                ],
+              ),
+            ),
           ),
         ],
       ),

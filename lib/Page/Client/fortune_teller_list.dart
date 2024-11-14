@@ -26,8 +26,15 @@ class _ClientFortuneTellerListPageState extends State<ClientFortuneTellerList> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Select FortuneTeller'),
+        title: Text('Falcı Seçimi',
+        style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: const Color.fromARGB(255, 255, 255, 255),
+              ),
+        ),
         actions: [LogoutButton()],
+        backgroundColor: Color.fromARGB(255, 24, 18, 20),
       ),
       body: FutureBuilder<List<FortuneTeller>>(
         future: _userList,
@@ -42,14 +49,17 @@ class _ClientFortuneTellerListPageState extends State<ClientFortuneTellerList> {
 
           final fortuneTellers = snapshot.data!;
 
-          return ListView.builder(
-            itemCount: fortuneTellers.length,
-            itemBuilder: (context, index) {
-              final fortuneTeller = fortuneTellers[index];
-              return CustomFortuneTellerCard(
-                fortuneTeller: fortuneTeller, // Pass the entire FortuneTeller object
-              );
-            },
+          return Container(
+            color: const Color.fromARGB(255, 24, 18, 20),
+            child: ListView.builder(
+              itemCount: fortuneTellers.length,
+              itemBuilder: (context, index) {
+                final fortuneTeller = fortuneTellers[index];
+                return CustomFortuneTellerCard(
+                  fortuneTeller: fortuneTeller,
+                );
+              },
+            ),
           );
         },
       ),

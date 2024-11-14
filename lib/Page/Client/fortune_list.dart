@@ -6,7 +6,6 @@ import 'package:divinitaion/Widgets/CommonWidgets/logout_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-
 class FortuneList extends StatefulWidget {
   @override
   _FortuneListState createState() => _FortuneListState();
@@ -37,23 +36,29 @@ class _FortuneListState extends State<FortuneList> with SingleTickerProviderStat
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Fallarım'),
+        title: Text('Fallarım',
+          style: TextStyle(
+                fontSize: 18,
+                color: const Color.fromARGB(255, 255, 255, 255),
+              ),
+        ),
         actions: [LogoutButton()],
+        backgroundColor: Color.fromARGB(255, 24, 18, 20),
         bottom: TabBar(
           controller: _tabController,
+          labelColor: const Color.fromARGB(255, 224, 0, 253),
+          unselectedLabelColor: Colors.white,
           tabs: [
-            Tab(text: 'Cevap Bekleyen Fallar'),
+            Tab(text: 'Cevap Bekleyen Fallar',),
             Tab(text: 'Fallarım'),
           ],
         ),
       ),
+      backgroundColor: Color.fromARGB(255, 24, 18, 20),
       body: TabBarView(
         controller: _tabController,
         children: [
-          // Tab for Pending Fortunes
           _buildFortuneList(_pendingFortunes, 'Cevap Bekleyen Fallar yok.', false),
-          
-          // Tab for Past Fortunes
           _buildFortuneList(_pastFortunes, 'Geçmiş Fallar yok.', true),
         ],
       ),
@@ -82,7 +87,6 @@ class _FortuneListState extends State<FortuneList> with SingleTickerProviderStat
               isTappable: isTappable,
               onTap: isTappable
                   ? () {
-                      // Navigate to the Answered Fortune Page
                       Navigator.push(
                         context,
                         MaterialPageRoute(

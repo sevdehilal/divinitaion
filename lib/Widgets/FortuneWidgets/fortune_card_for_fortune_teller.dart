@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:convert'; // base64Decode için gerekli
 import 'package:divinitaion/Models/fortune_model_for_fortune_teller.dart';
 import 'package:google_fonts/google_fonts.dart'; // Google Fonts kütüphanesini ekledik
+import 'package:intl/intl.dart'; // intl paketini import etmeniz gerekiyor
 
 class FortuneCardForFortuneTeller extends StatelessWidget {
   final FortuneForFortuneTeller fortune;
@@ -15,13 +16,12 @@ class FortuneCardForFortuneTeller extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       color:
-          Color.fromARGB(255, 24, 18, 20), // Arka plan rengi burada ayarlandı
+          Color.fromARGB(255, 24, 18, 20),
       child: Container(
         decoration: BoxDecoration(
           color: Color.fromARGB(255, 42, 30, 34),
           borderRadius: BorderRadius.circular(15.0),
           border: Border.all(
-            // Altın rengi kenar rengi
             width: 1,
           ),
           boxShadow: [
@@ -39,7 +39,6 @@ class FortuneCardForFortuneTeller extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Resim Ekleme
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -59,24 +58,14 @@ class FortuneCardForFortuneTeller extends StatelessWidget {
               ),
 
               const SizedBox(height: 8),
-              // Tarih ve Ek Bilgi
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'Date: ${fortune.createDate?.toLocal().toString().split(' ')[0] ?? 'Unknown'}',
+                    fortune.createDate != null ? DateFormat('dd/MM/yyyy HH:mm:ss').format(fortune.createDate?.toLocal() ?? DateTime.now()) : "?",                    
                     style: GoogleFonts.montserrat(
-                      fontSize: 14,
-                      color: Color(0xFFD4AF37), // Altın rengi
-                    ),
-                  ),
-                  // Ek bilgi metni
-                  Text(
-                    'Bilgiler -->', // Ek bilgi
-                    style: GoogleFonts.montserrat(
-                      fontSize: 17,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFFC0C0C0), // Gümüş rengi
+                    fontSize: 14,
+                    color: Color(0xFFD4AF37),
                     ),
                   ),
                 ],

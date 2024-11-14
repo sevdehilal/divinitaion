@@ -14,6 +14,7 @@ class CustomFortuneTellerCard extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
       ),
+      color: Colors.transparent,
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -24,16 +25,18 @@ class CustomFortuneTellerCard extends StatelessWidget {
                 Text(
                   fortuneTeller.firstName,
                   style: TextStyle(
-                    fontSize: 24,
+                    fontSize: 20,
                     fontWeight: FontWeight.bold,
+                    color: Color.fromARGB(255, 255, 255, 255),
                   ),
                 ),
                 SizedBox(width: 5),
                 Text(
                   fortuneTeller.lastName,
                   style: TextStyle(
-                    fontSize: 24,
+                    fontSize: 20,
                     fontWeight: FontWeight.bold,
+                    color: Color.fromARGB(255, 255, 255, 255),
                   ),
                 ),
               ],
@@ -42,32 +45,38 @@ class CustomFortuneTellerCard extends StatelessWidget {
             Row(
               children: [
                 Icon(Icons.star, color: Colors.amber),
-                SizedBox(width: 5),
+                SizedBox(width: 2),
                 Text(
                   '0 Puan',
-                  style: TextStyle(fontSize: 18),
+                  style: TextStyle(fontSize: 16, color: Color.fromARGB(255, 255, 255, 255),),
                 ),
               ],
             ),
             Row(
               children: [
                 Icon(Icons.monetization_on, color: Colors.yellow),
-                SizedBox(width: 5),
+                SizedBox(width: 2),
                 Text(
                   '0 Altın',
-                  style: TextStyle(fontSize: 18),
+                  style: TextStyle(fontSize: 16, color: Color.fromARGB(255, 255, 255, 255),),
                 ),
                 Spacer(),
-                ElevatedButton(
+                OutlinedButton(
                   onPressed: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => PhotoSelectionPage(fortuneTeller: fortuneTeller,),
+                        builder: (context) => PhotoSelectionPage(fortuneTeller: fortuneTeller),
                       ),
                     );
                   },
-                  child: Text('Fal Baktır'),
+                  style: OutlinedButton.styleFrom(
+                    side: BorderSide(color: Colors.white),
+                  ),
+                  child: Text(
+                    'Fal Baktır',
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
               ],
             ),

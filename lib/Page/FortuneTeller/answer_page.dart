@@ -1,12 +1,11 @@
 import 'dart:convert';
 import 'package:divinitaion/Models/fortune_model_for_fortune_teller.dart';
-import 'package:divinitaion/Services/service.dart';
 import 'package:flutter/material.dart';
 import 'package:divinitaion/Page/FortuneTeller/answer_input_page.dart';
+import 'package:intl/intl.dart';
 
 class AnswerPage extends StatelessWidget {
   final FortuneForFortuneTeller fortune;
-  final ApiService _apiService = ApiService();
 
   AnswerPage({required this.fortune});
 
@@ -50,7 +49,6 @@ class AnswerPage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Fotoğraflar Kartı
               Card(
                 color: Color.fromARGB(255, 42, 30, 34),
                 elevation: 4,
@@ -63,15 +61,14 @@ class AnswerPage extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Photos',
+                        'Telveden Manzaralar',
                         style: TextStyle(
-                          fontSize: 30,
+                          fontSize: 25,
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
                         ),
                       ),
                       Divider(color: Colors.white, thickness: 1),
-                      SizedBox(height: 10),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
@@ -84,8 +81,6 @@ class AnswerPage extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(height: 20),
-              // Kullanıcı Bilgileri Kartı - Alta Alındı
               Container(
                 width: MediaQuery.of(context).size.width,
                 child: Card(
@@ -100,21 +95,20 @@ class AnswerPage extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Personal Details',
+                          'Fal meraklısı',
                           style: TextStyle(
-                            fontSize: 30,
+                            fontSize: 25,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
                           ),
                         ),
                         Divider(color: Colors.white, thickness: 1),
-                        SizedBox(height: 10),
                         Row(
                           children: [
                             Icon(Icons.family_restroom, color: Colors.white),
                             SizedBox(width: 8),
                             Text(
-                              'Marital Status: ${fortune.maritalStatus}',
+                              'Medeni Hal: ${fortune.maritalStatus}',
                               style:
                                   TextStyle(color: Colors.white, fontSize: 15),
                             ),
@@ -125,7 +119,7 @@ class AnswerPage extends StatelessWidget {
                             Icon(Icons.work, color: Colors.white),
                             SizedBox(width: 8),
                             Text(
-                              'Occupation: ${fortune.occupation}',
+                              'Meslek: ${fortune.occupation}',
                               style:
                                   TextStyle(color: Colors.white, fontSize: 15),
                             ),
@@ -136,7 +130,7 @@ class AnswerPage extends StatelessWidget {
                             Icon(Icons.accessibility, color: Colors.white),
                             SizedBox(width: 8),
                             Text(
-                              'Gender: ${fortune.gender}',
+                              'Cinsiyet: ${fortune.gender}',
                               style:
                                   TextStyle(color: Colors.white, fontSize: 15),
                             ),
@@ -147,23 +141,22 @@ class AnswerPage extends StatelessWidget {
                             Icon(Icons.calendar_today, color: Colors.white),
                             SizedBox(width: 8),
                             Text(
-                              'Birth Date: ${fortune.dateOfBirth}',
+                              'Doğum Tarihi: ${fortune.dateOfBirth != null ? DateFormat('dd/MM/yyyy').format(fortune.dateOfBirth?.toLocal() ?? DateTime.now()) : "?"}',
                               style:
                                   TextStyle(color: Colors.white, fontSize: 15),
                             ),
                           ],
                         ),
-                        SizedBox(height: 20),
+                        SizedBox(height: 10),
                         Text(
-                          'Categories',
+                          'Kategoriler',
                           style: TextStyle(
-                            fontSize: 30,
+                            fontSize: 25,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
                           ),
                         ),
                         Divider(color: Colors.white, thickness: 1),
-                        SizedBox(height: 10),
                         Wrap(
                           spacing: 8.0,
                           runSpacing: 4.0,
@@ -171,8 +164,8 @@ class AnswerPage extends StatelessWidget {
                               .map(
                                 (category) => Chip(
                                   label: Text(category,
-                                      style: TextStyle(color: Colors.white)),
-                                  backgroundColor: Colors.blueAccent,
+                                      style: TextStyle(color: Color.fromARGB(255, 43, 0, 0))),
+                                  backgroundColor: Colors.white,
                                 ),
                               )
                               .toList(),
@@ -182,25 +175,67 @@ class AnswerPage extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(height: 40),
-              // Cevap Girişi Butonu
-              Center(
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => AnswerInputPage(fortune: fortune),
+              fortune.answer != null
+                ? Container(
+                  width: MediaQuery.of(context).size.width,
+                  child: Card(
+                    color: Color.fromARGB(255, 42, 30, 34),
+                    elevation: 4,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Fal',
+                            style: TextStyle(
+                              fontSize: 25,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                          Divider(color: Colors.white, thickness: 1),
+                          SingleChildScrollView(
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 8.0),
+                              child: Text(
+                                '${fortune.answer}',
+                                style: TextStyle(color: Colors.white, fontSize: 15),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                    );
-                  },
-                  child: Text('Enter Your Answer'),
-                  style: ElevatedButton.styleFrom(
-                    padding: EdgeInsets.symmetric(horizontal: 32, vertical: 12),
-                    textStyle: TextStyle(fontSize: 18),
+                    ),
+                  ),
+                )
+                : Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(height: 20),
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => AnswerInputPage(fortune: fortune),
+                            ),
+                          );
+                        },
+                        child: Text('Hemen Cevap Ver'),
+                        style: ElevatedButton.styleFrom(
+                          padding: EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                          textStyle: TextStyle(fontSize: 18),
+                          foregroundColor: const Color.fromARGB(255, 43, 0, 0),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ),
             ],
           ),
         ),

@@ -19,7 +19,7 @@ class _LoginPageState extends State<LoginPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final FlutterSecureStorage _storage = FlutterSecureStorage();
   final FocusNode _passwordFocusNode = FocusNode();
-
+  bool _isPasswordVisible = false;
 
   Future<void> _login() async {
     if (_formKey.currentState!.validate()) {
@@ -93,31 +93,28 @@ class _LoginPageState extends State<LoginPage> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                // "Fall in Fal" başlığı
                 const Text(
                   'Fall in Fal',
                   style: TextStyle(
-                    color: Color.fromARGB(255, 138, 43, 226), // Morumsu renk
-                    fontWeight: FontWeight.bold, // Kalın yazı
-                    fontStyle: FontStyle.italic, // Eğik yazı
-                    fontSize: 40, // Yazı boyutu büyük
+                    color: Color.fromARGB(255, 138, 43, 226),
+                    fontWeight: FontWeight.bold,
+                    fontStyle: FontStyle.italic,
+                    fontSize: 40,
                   ),
                 ),
-                const SizedBox(height: 20), // Başlık ile logo arası boşluk
+                const SizedBox(height: 20),
 
-                // Yuvarlak Logo
                 ClipOval(
                   child: Image.asset(
                     'lib/assets/logo1.png',
                     height: 250,
                     width: 250,
                     fit: BoxFit
-                        .cover, // Resmin tam ortalanıp sığdırılmasını sağlar
+                        .cover,
                   ),
                 ),
                 const SizedBox(height: 15),
 
-                // Username alanı
                 TextFormField(
                   controller: _usernameController,
                   decoration: const InputDecoration(labelText: 'Username'),
@@ -128,17 +125,26 @@ class _LoginPageState extends State<LoginPage> {
                     return null;
                   },
                   onFieldSubmitted: (_) {
-                    // Move focus to password field
                     FocusScope.of(context).requestFocus(_passwordFocusNode);
                   },
                 ),
                 const SizedBox(height: 10),
 
-                // Password alanı
                 TextFormField(
                   controller: _passwordController,
-                  decoration: const InputDecoration(labelText: 'Password'),
-                  obscureText: true,
+                  decoration: InputDecoration(
+                    labelText: 'Password',
+                     suffixIcon: IconButton(
+                      icon: Icon(
+                        _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _isPasswordVisible = !_isPasswordVisible;
+                        });
+                      },
+                    ),),
+                  obscureText: !_isPasswordVisible,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter your password';
@@ -147,7 +153,6 @@ class _LoginPageState extends State<LoginPage> {
                   },
                   focusNode: _passwordFocusNode,
                   onFieldSubmitted: (_) {
-                    // Trigger login when Enter is pressed
                     _login();
                   },
                 ),
@@ -158,19 +163,18 @@ class _LoginPageState extends State<LoginPage> {
                   onPressed: _login,
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 40, vertical: 15), // Buton boyutları
+                        horizontal: 40, vertical: 15),
                   ),
                   child: const Text(
                     'Login',
                     style: TextStyle(
-                        color: Color.fromARGB(255, 175, 113, 14)), // Yazı rengi
+                        color: Color.fromARGB(255, 175, 113, 14)), 
                   ),
                 ),
                 const SizedBox(height: 10),
 
-                // Şifremi Unuttum linki
                 TextButton(
-                  onPressed: null, // Şimdilik null, işlevi yok
+                  onPressed: null,
                   child: const Text(
                     'Şifremi Unuttum',
                   ),
@@ -178,7 +182,6 @@ class _LoginPageState extends State<LoginPage> {
                 const SizedBox(height: 10),
                 Text("Hesabınız yok mu?"),
 
-                // Kayıt Ol ve Falcı Olarak Kayıt Ol linkleri
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [

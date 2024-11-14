@@ -1,5 +1,6 @@
 import 'package:divinitaion/Models/fortune_list.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class FortuneCard extends StatefulWidget {
   final FortuneListt fortune;
@@ -51,25 +52,13 @@ class _FortuneCardState extends State<FortuneCard> {
                       children: [
                         SizedBox(height: 8),
                         Text('Falcı: ${widget.fortune.fortunetellerFirstName}'),
-                        Text('Tarih: ${widget.fortune.createDate}'),
+                        Text('Tarih: ${widget.fortune.createDate != null ? DateFormat('dd/MM/yyyy HH:mm:ss').format(widget.fortune.createDate?.toLocal() ?? DateTime.now()) : "?" }'),
                       ],
                     ),
                   ),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      IconButton(
-                        icon: Icon(
-                          isChecked ? Icons.check_box : Icons.check_box_outline_blank,
-                          size: 24,
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            isChecked = !isChecked;
-                          });
-                        },
-                      ),
-                      SizedBox(height: 8),
                       IconButton(
                         icon: Icon(
                           isFavorite ? Icons.favorite : Icons.favorite_border,
