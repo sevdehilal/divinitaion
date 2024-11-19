@@ -34,7 +34,7 @@ class _PendingFortuneListState extends State<PendingFortuneList> {
               return Center(child: Text('Error: ${snapshot.error}'));
             } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
               return Center(
-                  child: Text('No pending fortunes found.',
+                  child: Text('Bekleyen fal bulunmamaktadır.',
                       style: TextStyle(
                           color: Colors.white))); // Yazı rengini ayarladık
             }

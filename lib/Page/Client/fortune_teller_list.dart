@@ -1,4 +1,5 @@
 import 'package:divinitaion/Models/fortune_teller_entity.dart';
+import 'package:divinitaion/Page/Common/backround_container';
 import 'package:divinitaion/Services/service.dart';
 import 'package:divinitaion/Widgets/ClientWidgets/fortune_teller_card.dart';
 import 'package:divinitaion/Widgets/CommonWidgets/logout_button.dart';
@@ -25,33 +26,35 @@ class _ClientFortuneTellerListPageState extends State<ClientFortuneTellerList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true, // Arka planın App Bar'ın arkasına geçmesi için.
       appBar: AppBar(
-        title: Text('Falcı Seçimi',
-        style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: const Color.fromARGB(255, 255, 255, 255),
-              ),
+        title: Text(
+          'Falcı Seçimi',
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: const Color.fromARGB(255, 255, 255, 255),
+          ),
         ),
         actions: [LogoutButton()],
-        backgroundColor: Color.fromARGB(255, 24, 18, 20),
+        backgroundColor: Colors.transparent, // App Bar'ı şeffaf yapar.
+        elevation: 0,
       ),
-      body: FutureBuilder<List<FortuneTeller>>(
-        future: _userList,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text('No users found.'));
-          }
+      body: BackgroundContainer(
+        child: FutureBuilder<List<FortuneTeller>>(
+          future: _userList,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Center(child: Text('Error: ${snapshot.error}'));
+            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+              return Center(child: Text('No users found.'));
+            }
 
-          final fortuneTellers = snapshot.data!;
+            final fortuneTellers = snapshot.data!;
 
-          return Container(
-            color: const Color.fromARGB(255, 24, 18, 20),
-            child: ListView.builder(
+            return ListView.builder(
               itemCount: fortuneTellers.length,
               itemBuilder: (context, index) {
                 final fortuneTeller = fortuneTellers[index];
@@ -59,9 +62,9 @@ class _ClientFortuneTellerListPageState extends State<ClientFortuneTellerList> {
                   fortuneTeller: fortuneTeller,
                 );
               },
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }

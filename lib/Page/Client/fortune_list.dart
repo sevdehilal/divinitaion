@@ -43,7 +43,8 @@ class _FortuneListState extends State<FortuneList> with SingleTickerProviderStat
               ),
         ),
         actions: [LogoutButton()],
-        backgroundColor: Color.fromARGB(255, 24, 18, 20),
+        backgroundColor: Colors.transparent, // Şeffaf AppBar
+        elevation: 0, // AppBar gölgesini kaldırır
         bottom: TabBar(
           controller: _tabController,
           labelColor: const Color.fromARGB(255, 224, 0, 253),
@@ -54,7 +55,7 @@ class _FortuneListState extends State<FortuneList> with SingleTickerProviderStat
           ],
         ),
       ),
-      backgroundColor: Color.fromARGB(255, 24, 18, 20),
+      backgroundColor: Colors.transparent, // Şeffaf arka plan
       body: TabBarView(
         controller: _tabController,
         children: [

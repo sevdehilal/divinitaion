@@ -14,6 +14,7 @@ dependencies:
   http: ^1.2.2
   flutter_secure_storage: ^9.2.2
   shared_preferences: ^2.3.2
+  intl: ^0.18.0
 
 dev_dependencies:
   flutter_test:
@@ -34,6 +35,7 @@ flutter:
     - lib/assets/hand.png 
     - lib/assets/dharita.png
     - lib/assets/fonts/PlaywriteGBS-Italic.ttf # Font dosyasını ekleyin
+    - lib/assets/background.png 
 
   fonts:
     - family: PlaywriteGBS

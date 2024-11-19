@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:divinitaion/Page/Client/fortune_telling_page.dart';
+import 'package:divinitaion/Page/Common/backround_container';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
@@ -70,84 +71,85 @@ class _PhotoSelectionPageState extends State<PhotoSelectionPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Fotoğraf Seç', style: TextStyle(color: Colors.white),),
-        backgroundColor: Color.fromARGB(255, 24, 18, 20),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.arrow_forward, color: Color.fromARGB(255, 255, 255, 255)),
-            onPressed: _goToSelectedImagesPage,
-          ),
-        ],
+        title: const Text(
+          'Fotoğraf Seç',
+          style: TextStyle(color: Colors.white),
+        ),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: Container(
-              color: Color.fromARGB(255, 24, 18, 20),
-              child: Column(
-                children: [
-                  SizedBox(height: 10),
-                  OutlinedButton(
-                    onPressed: _pickImage,
-                    style: OutlinedButton.styleFrom(
-                      side: BorderSide(color: Colors.white),
-                    ),
-                    child: Text(
-                      'Kahve Telvelerini Seç',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  Expanded(
-                    child: _selectedFiles.isEmpty
-                        ? Center(
-                            child: Text(
-                              'Fotoğraf seçilmedi',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          )
-                        : GridView.builder(
-                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 3,
-                              crossAxisSpacing: 4,
-                              mainAxisSpacing: 4,
-                            ),
-                            itemCount: _selectedFiles.length,
-                            itemBuilder: (context, index) {
-                              return Stack(
-                                children: [
-                                  if (kIsWeb)
-                                    Image.memory(
+      body: BackgroundContainer(
+        child: Column(
+          children: [
+            SizedBox(height: 10),
+            OutlinedButton(
+              onPressed: _pickImage,
+              style: OutlinedButton.styleFrom(
+                side: BorderSide(color: Colors.white),
+              ),
+              child: Text(
+                'Kahve Telvelerini Seç',
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+            SizedBox(height: 10),
+            Expanded(
+              child: _selectedFiles.isEmpty
+                  ? Center(
+                      child: Text(
+                        'Fotoğraf seçilmedi',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    )
+                  : GridView.builder(
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 3,
+                        crossAxisSpacing: 4,
+                        mainAxisSpacing: 4,
+                      ),
+                      itemCount: _selectedFiles.length,
+                      itemBuilder: (context, index) {
+                        return Stack(
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                color: Colors.black.withOpacity(0.6),
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                              child: kIsWeb
+                                  ? Image.memory(
                                       _selectedFiles[index].bytes!,
                                       fit: BoxFit.cover,
                                       width: double.infinity,
                                       height: double.infinity,
                                     )
-                                  else
-                                    Image.file(
+                                  : Image.file(
                                       File(_selectedFiles[index].path!),
                                       fit: BoxFit.cover,
                                       width: double.infinity,
                                       height: double.infinity,
                                     ),
-                                  Positioned(
-                                    top: -8,
-                                    right: -8,
-                                    child: IconButton(
-                                      icon: Icon(Icons.remove_circle, color: Colors.red),
-                                      onPressed: () => _removeImage(index),
-                                    ),
-                                  ),
-                                ],
-                              );
-                            },
-                          ),
-                  ),
-                ],
-              ),
+                            ),
+                            Positioned(
+                              top: -8,
+                              right: -8,
+                              child: IconButton(
+                                icon: Icon(Icons.remove_circle, color: Colors.red),
+                                onPressed: () => _removeImage(index),
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                    ),
             ),
-          ),
-        ],
+          ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _goToSelectedImagesPage,
+        backgroundColor: Colors.white,
+        child: Icon(Icons.arrow_forward, color: Colors.black),
       ),
     );
   }

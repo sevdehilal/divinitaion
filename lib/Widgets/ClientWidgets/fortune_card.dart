@@ -31,6 +31,7 @@ class _FortuneCardState extends State<FortuneCard> {
         child: SizedBox(
           height: 150,
           child: Card(
+            color: Colors.black.withOpacity(0.5),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(16.0),
             ),
@@ -43,6 +44,7 @@ class _FortuneCardState extends State<FortuneCard> {
                   Icon(
                     Icons.coffee,
                     size: 50,
+                    color: Colors.white,
                   ),
                   SizedBox(width: 25),
                   Expanded(
@@ -51,8 +53,20 @@ class _FortuneCardState extends State<FortuneCard> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         SizedBox(height: 8),
-                        Text('Falcı: ${widget.fortune.fortunetellerFirstName}'),
-                        Text('Tarih: ${widget.fortune.createDate != null ? DateFormat('dd/MM/yyyy HH:mm:ss').format(widget.fortune.createDate?.toLocal() ?? DateTime.now()) : "?" }'),
+                        Text(
+                          'Falcı: ${widget.fortune.fortunetellerFirstName}',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                          ),
+                        ),
+                        Text(
+                          'Tarih: ${widget.fortune.createDate != null ? DateFormat('dd/MM/yyyy HH:mm:ss').format(widget.fortune.createDate?.toLocal() ?? DateTime.now()) : "?" }',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -63,6 +77,7 @@ class _FortuneCardState extends State<FortuneCard> {
                         icon: Icon(
                           isFavorite ? Icons.favorite : Icons.favorite_border,
                           size: 24,
+                          color: Colors.white,
                         ),
                         onPressed: () {
                           setState(() {

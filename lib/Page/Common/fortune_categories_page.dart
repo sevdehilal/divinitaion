@@ -6,52 +6,77 @@ class FortuneCategoriesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true, // AppBar'ı arka planın üstüne yerleştirir
       appBar: AppBar(
-        title: Text('Fortune Categories', 
+        backgroundColor: Colors.black.withOpacity(0.2), // Siyah arka plan ve opaklık
+        elevation: 0, // Gölgeyi kaldırır
+        title: Text(
+          'Fal Kategorileri',
           style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: const Color.fromARGB(255, 255, 255, 255),
-              ),
-            ),
-        backgroundColor: Color.fromARGB(255, 24, 18, 20),
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: Colors.white, // Metnin net görünmesi için beyaz renk
+          ),
+        ),
         actions: [LogoutButton()],
       ),
-      backgroundColor: Color.fromARGB(255, 24, 18, 20),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              'Hemen Yeni Bir Fal Baktır !',
-              style: TextStyle(
-                fontSize: 19,
-                fontWeight: FontWeight.w600,
-                color: const Color.fromARGB(255, 255, 255, 255),
+      body: Stack(
+        children: [
+          // Arka plan resmi
+          Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('lib/assets/background.png'), // Arka plan fotoğrafınızın yolu
+                fit: BoxFit.cover,
               ),
-              textAlign: TextAlign.center,
             ),
-            SizedBox(height: 50),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                _imageCardButton(
-                    context, 'lib/assets/kahvefali.png', 'Kahve Falı'),
-                _imageCardButton(context, 'lib/assets/hand.png', 'El Falı'),
-              ],
-            ),
-            SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                _imageCardButton(
-                    context, 'lib/assets/dharita.png', 'Doğum Haritası'),
-                _imageCardButton(context, 'lib/assets/tarot.png', 'Tarot Falı'),
-              ],
-            ),
-          ],
-        ),
+          ),
+          // İçerik
+          Column(
+            children: [
+              SizedBox(height: 10), // AppBar yüksekliğini azaltmak için daha küçük bir boşluk
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Hemen Yeni Bir Fal Baktır !',
+                        style: TextStyle(
+                          fontSize: 19,
+                          fontWeight: FontWeight.w600,
+                          color: const Color.fromARGB(255, 255, 255, 255),
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      SizedBox(height: 50),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          _imageCardButton(
+                              context, 'lib/assets/kahvefali.png', 'Kahve Falı'),
+                          _imageCardButton(
+                              context, 'lib/assets/hand.png', 'El Falı'),
+                        ],
+                      ),
+                      SizedBox(height: 20),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          _imageCardButton(
+                              context, 'lib/assets/dharita.png', 'Doğum Haritası'),
+                          _imageCardButton(
+                              context, 'lib/assets/tarot.png', 'Tarot Falı'),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -63,8 +88,7 @@ class FortuneCategoriesPage extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) =>
-                ClientFortuneTellerList(),
+            builder: (context) => ClientFortuneTellerList(),
           ),
         );
       },
