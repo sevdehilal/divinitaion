@@ -1,4 +1,4 @@
-import 'dart:convert'; // JSON işlemleri için
+import 'dart:convert';
 import 'dart:io';
 import 'package:divinitaion/Models/fortune_categories_entity.dart';
 import 'package:divinitaion/Models/fortune_entity.dart';
@@ -8,12 +8,12 @@ import 'package:divinitaion/Models/fortune_list.dart';
 import 'package:divinitaion/Models/register_client.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
-import 'package:http/http.dart' as http; // HTTP istekleri için
+import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import '../Models/login.dart'; // Login modeliniz
+import '../Models/login.dart';
 
 class ApiService {
-  final String apiUrl = "https://fallinfal.com/api/Auth/login"; // API URL
+  final String apiUrl = "https://fallinfal.com/api/Auth/login";
 
   Future<LoginResponse?> login(Login loginModel) async {
     try {
@@ -23,7 +23,7 @@ class ApiService {
           "Access-Control-Allow-Origin": "*",
           'Content-Type': 'application/json',
         },
-        body: jsonEncode(loginModel.toJson()), // loginModel'i JSON'a çevirme
+        body: jsonEncode(loginModel.toJson()),
       );
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       if (response.statusCode == 200) {
@@ -37,7 +37,6 @@ class ApiService {
         return null;
       }
     } catch (e) {
-      // İstek sırasında bir hata olursa
       print('Error during login: $e');
       return null;
     }
@@ -73,10 +72,8 @@ class ApiService {
       );
 
       if (response.statusCode == 200) {
-        // Başarılı kayıt
         return true;
       } else {
-        // Kayıt başarısız
         print('Error: ${response.statusCode} - ${response.body}');
         return false;
       }
@@ -95,10 +92,8 @@ class ApiService {
       );
 
       if (response.statusCode == 200) {
-        // Başarılı kayıt
         return true;
       } else {
-        // Kayıt başarısız
         print('Error: ${response.statusCode} - ${response.body}');
         return false;
       }
@@ -135,10 +130,8 @@ class ApiService {
   Future<List<FortuneListt>> fetchPendingFortunes() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     
-    // Retrieve the id from SharedPreferences
-    int? clientId = prefs.getInt('id'); // Make sure this key is the one you used to store the id
+    int? clientId = prefs.getInt('id');
 
-    // Check if the id is available
     if (clientId == null) {
       throw Exception('No fortune teller ID found in SharedPreferences');
     }
@@ -157,10 +150,8 @@ class ApiService {
   Future<List<FortuneListt>> fetchAnsweredFortunes() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     
-    // Retrieve the id from SharedPreferences
-    int? clientId = prefs.getInt('id'); // Make sure this key is the one you used to store the id
+    int? clientId = prefs.getInt('id');
 
-    // Check if the id is available
     if (clientId == null) {
       throw Exception('No fortune teller ID found in SharedPreferences');
     }
@@ -202,7 +193,6 @@ class ApiService {
           ? base64Encode(photo3.bytes!)
           : base64Encode(File(photo3.path!).readAsBytesSync());
 
-      // Create the request body
       var requestBody = {
         'ClientId': clientId,
         'FortunetellerId': fortunetellerId,
@@ -219,7 +209,6 @@ class ApiService {
         body: jsonEncode(requestBody),
       );
 
-      // Check if the request was successful
       if (response.statusCode == 200) {
         print('Fortune successfully saved!');
         return true;
@@ -236,10 +225,8 @@ class ApiService {
   Future<List<FortuneForFortuneTeller>> FetchPendingFortunesByFortuneTellerId() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     
-    // Retrieve the id from SharedPreferences
-    int? fortuneTellerId = prefs.getInt('id'); // Make sure this key is the one you used to store the id
+    int? fortuneTellerId = prefs.getInt('id');
 
-    // Check if the id is available
     if (fortuneTellerId == null) {
       throw Exception('No fortune teller ID found in SharedPreferences');
     }
@@ -294,10 +281,8 @@ class ApiService {
   Future<List<FortuneForFortuneTeller>> FetchAnsweredFortunesByFortuneTellerId() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     
-    // Retrieve the id from SharedPreferences
-    int? fortuneTellerId = prefs.getInt('id'); // Make sure this key is the one you used to store the id
+    int? fortuneTellerId = prefs.getInt('id');
 
-    // Check if the id is available
     if (fortuneTellerId == null) {
       throw Exception('No fortune teller ID found in SharedPreferences');
     }
@@ -315,4 +300,28 @@ class ApiService {
     }
   }
 
+  Future<int> fetchClientCreditByClientId() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    int? clientId = prefs.getInt('id');
+
+    if (clientId == null) {
+      throw Exception('No client ID found in SharedPreferences');
+    }
+
+    final response = await http.get(
+      Uri.parse("http://fallinfal.com/api/Client/GetCredit?clientId=$clientId"),
+    );
+
+    if (response.statusCode == 200) {
+      try {
+        int credit = int.parse(response.body);
+        return credit;
+      } catch (e) {
+        throw Exception('Failed to parse response as integer: ${response.body}');
+      }
+    } else {
+      throw Exception('Failed to fetch client credit, status code: ${response.statusCode}');
+    }
+  }
 }

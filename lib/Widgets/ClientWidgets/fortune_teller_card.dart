@@ -4,8 +4,9 @@ import 'package:flutter/material.dart';
 
 class CustomFortuneTellerCard extends StatelessWidget {
   final FortuneTeller fortuneTeller;
+  final int clientCredit;
 
-  CustomFortuneTellerCard({required this.fortuneTeller});
+  CustomFortuneTellerCard({required this.fortuneTeller, required this.clientCredit});
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +48,7 @@ class CustomFortuneTellerCard extends StatelessWidget {
                 Icon(Icons.star, color: Colors.amber),
                 SizedBox(width: 2),
                 Text(
-                  '0 Puan',
+                  "${fortuneTeller.rating}",
                   style: TextStyle(fontSize: 16, color: Color.fromARGB(255, 255, 255, 255),),
                 ),
               ],
@@ -57,27 +58,48 @@ class CustomFortuneTellerCard extends StatelessWidget {
                 Icon(Icons.monetization_on, color: Colors.yellow),
                 SizedBox(width: 2),
                 Text(
-                  '0 Altın',
+                  "${fortuneTeller.requirementCredit}",
                   style: TextStyle(fontSize: 16, color: Color.fromARGB(255, 255, 255, 255),),
                 ),
                 Spacer(),
-                OutlinedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => PhotoSelectionPage(fortuneTeller: fortuneTeller),
-                      ),
-                    );
-                  },
-                  style: OutlinedButton.styleFrom(
-                    side: BorderSide(color: Colors.white),
+                if (fortuneTeller.requirementCredit != null && clientCredit < fortuneTeller.requirementCredit!)
+                  OutlinedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              PhotoSelectionPage(fortuneTeller: fortuneTeller),
+                        ),
+                      );
+                    },
+                    style: OutlinedButton.styleFrom(
+                      side: BorderSide(color: const Color.fromARGB(255, 255, 0, 0)),
+                    ),
+                    child: Text(
+                      'Coin Kazan',
+                      style: TextStyle(color: const Color.fromARGB(255, 255, 0, 0)),
+                    ),
+                  )
+                else
+                  OutlinedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              PhotoSelectionPage(fortuneTeller: fortuneTeller),
+                        ),
+                      );
+                    },
+                    style: OutlinedButton.styleFrom(
+                      side: BorderSide(color: Colors.white),
+                    ),
+                    child: Text(
+                      'Fal Baktır',
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
-                  child: Text(
-                    'Fal Baktır',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
               ],
             ),
           ],
