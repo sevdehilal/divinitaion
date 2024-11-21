@@ -36,6 +36,7 @@ flutter:
     - lib/assets/dharita.png
     - lib/assets/fonts/PlaywriteGBS-Italic.ttf # Font dosyasını ekleyin
     - lib/assets/background.png 
+    - lib/assets/tarot_karti.jpg 
 
   fonts:
     - family: PlaywriteGBS

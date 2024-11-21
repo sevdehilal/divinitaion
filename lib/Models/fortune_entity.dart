@@ -11,6 +11,7 @@ class Fortune {
   final List<PlatformFile> photos;
   final String date;
   final List<String>? categories;
+  final double rating;
 
   Fortune({
     this.id,
@@ -20,6 +21,7 @@ class Fortune {
     required this.photos,
     required this.date,
     this.categories,
+    required this.rating,
   });
 
   factory Fortune.fromJson(Map<String, dynamic> json) {
@@ -61,6 +63,7 @@ class Fortune {
       photos: photoList,
       date: json['date'] as String,
       categories: categoriesList,
+      rating: json['rating'] as double,
     );
   }
 
@@ -73,6 +76,7 @@ class Fortune {
       'photos': photos.map((photo) => base64Encode(photo.bytes!)).toList(),
       'date': date,
       'categories': categories,
+      'rating': rating,
     };
   }
 }

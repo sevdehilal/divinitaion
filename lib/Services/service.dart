@@ -324,4 +324,32 @@ class ApiService {
       throw Exception('Failed to fetch client credit, status code: ${response.statusCode}');
     }
   }
+
+  Future<void> UpdateFortuneRating(int? fortuneId, double rating) async {
+    final url = Uri.parse("http://fallinfal.com/api/Client/ScoreFortune?ApplicationId=$fortuneId&score=$rating");
+
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'rating': rating}),
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Puan güncellenirken hata oluştu');
+    }
+  }
+
+  Future<void> EarnCoin(int? fortuneId, double rating) async { //devam edilecek
+    final url = Uri.parse("http://fallinfal.com/api/Client/ScoreFortune?ApplicationId=$fortuneId&score=$rating");
+
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'rating': rating}),
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Puan güncellenirken hata oluştu');
+    }
+  }
 }

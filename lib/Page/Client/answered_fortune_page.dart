@@ -1,5 +1,6 @@
 import 'package:divinitaion/Models/fortune_list.dart';
 import 'package:divinitaion/Page/Common/backround_container';
+import 'package:divinitaion/Services/service.dart';
 import 'package:flutter/material.dart';
 
 class FortuneAnswerPage extends StatefulWidget {
@@ -12,35 +13,81 @@ class FortuneAnswerPage extends StatefulWidget {
 }
 
 class _FortuneAnswerPageState extends State<FortuneAnswerPage> {
-  int _currentRating = 0;
+  final ApiService _apiService = ApiService();
+  double? _currentRating;
 
-  void _updateRating(int rating) {
-    setState(() {
-      _currentRating = rating;
-    });
+  @override
+  void initState() {
+    super.initState();
+    _currentRating = widget.fortune.rating;
   }
+
+  Future<void> _showRatingDialog() async {
+  await showDialog(
+    context: context,
+    builder: (context) {
+      return StatefulBuilder(
+        builder: (context, setDialogState) {
+          return AlertDialog(
+            title: const Text('Puan Ver'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: List.generate(5, (index) {
+                    return IconButton(
+                      icon: Icon(
+                        Icons.star,
+                        color: index < (_currentRating ?? 0) ? Colors.yellow : Colors.grey,
+                      ),
+                      onPressed: () {
+                        setDialogState(() {
+                          _currentRating = index + 1;
+                        });
+                      },
+                    );
+                  }),
+                ),
+              ],
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('İptal'),
+              ),
+              TextButton(
+                onPressed: () async {
+                  await _apiService.UpdateFortuneRating(widget.fortune.id, _currentRating ?? 0);
+                  setState(() {});
+                  Navigator.pop(context);
+                },
+                child: const Text('Puan Ver'),
+              ),
+            ],
+          );
+        },
+      );
+    },
+  );
+}
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      extendBodyBehindAppBar: true, // Arka planın AppBar ile birleşmesi için.
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
         title: const Text(
           'Fal Cevabın...',
-          style: TextStyle(
-            fontSize: 18,
-            color: Color.fromARGB(255, 255, 255, 255),
-          ),
+          style: TextStyle(fontSize: 18, color: Colors.white),
         ),
-        backgroundColor: Colors.transparent, // AppBar'ı transparan yapar.
+        backgroundColor: Colors.transparent,
         elevation: 0,
         flexibleSpace: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [
-                Colors.black.withOpacity(0.6), // Gradient başı
-                Colors.transparent, // Gradient sonu
-              ],
+              colors: [Colors.black.withOpacity(0.6), Colors.transparent],
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
             ),
@@ -53,87 +100,48 @@ class _FortuneAnswerPageState extends State<FortuneAnswerPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                padding: const EdgeInsets.all(8.0),
-                decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(0.6),
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-                child: Text(
-                  'Kategoriler: ${widget.fortune.categories?.join(', ') ?? ''}',
-                  style: const TextStyle(
-                    fontSize: 16,
-                    color: Color.fromARGB(255, 255, 255, 255),
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
+              _infoContainer(
+                  'Kategoriler: ${widget.fortune.categories?.join(', ') ?? ''}'),
               const SizedBox(height: 10),
-              Container(
-                padding: const EdgeInsets.all(8.0),
-                decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(0.6),
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-                child: Text(
-                  'Oluşturma Tarihi: ${widget.fortune.createDate}',
-                  style: const TextStyle(
-                    fontSize: 12,
-                    color: Color.fromARGB(255, 255, 255, 255),
-                  ),
-                ),
-              ),
+              _infoContainer('Oluşturma Tarihi: ${widget.fortune.createDate}'),
               const SizedBox(height: 6),
               const Divider(color: Colors.grey),
-              Container(
-                padding: const EdgeInsets.all(8.0),
-                decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(0.6),
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-                child: Text(
-                  widget.fortune.answer ?? 'No answer provided.',
-                  style: const TextStyle(
-                    fontSize: 14,
-                    color: Color.fromARGB(255, 255, 255, 255),
-                  ),
-                ),
-              ),
+              _infoContainer(widget.fortune.answer ?? 'No answer provided.'),
               const Spacer(),
-              Center(
-                child: Container(
-                  padding: const EdgeInsets.all(8.0),
-                  decoration: BoxDecoration(
-                    color: Colors.black.withOpacity(0.6),
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  child: const Text(
-                    'Bu falı puanlamak ister misin?',
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Color.fromARGB(255, 255, 255, 255),
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 10),
-              Center(
-                child: Row(
+              if (_currentRating == null)
+                ElevatedButton(
+                  onPressed: _showRatingDialog,
+                  child: const Text('Puanlamak İster misiniz?'),
+                )
+              else
+                Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: List.generate(5, (index) {
-                    return IconButton(
-                      icon: Icon(
-                        Icons.star,
-                        color: index < _currentRating ? Colors.yellow : Colors.grey,
-                      ),
-                      onPressed: () => _updateRating(index + 1),
+                    return Icon(
+                      Icons.star,
+                      color: index < _currentRating! ? Colors.yellow : Colors.grey,
                     );
                   }),
                 ),
-              ),
-              const SizedBox(height: 20),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _infoContainer(String text) {
+    return Container(
+      padding: const EdgeInsets.all(8.0),
+      decoration: BoxDecoration(
+        color: Colors.black.withOpacity(0.6),
+        borderRadius: BorderRadius.circular(8.0),
+      ),
+      child: Text(
+        text,
+        style: const TextStyle(
+          fontSize: 14,
+          color: Colors.white,
         ),
       ),
     );

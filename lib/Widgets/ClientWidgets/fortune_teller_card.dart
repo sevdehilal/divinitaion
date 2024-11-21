@@ -1,12 +1,41 @@
 import 'package:divinitaion/Models/fortune_teller_entity.dart';
 import 'package:divinitaion/Page/Client/photo_selection_page.dart';
+import 'package:divinitaion/Page/Client/reward_card_selection_page.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class CustomFortuneTellerCard extends StatelessWidget {
+class CustomFortuneTellerCard extends StatefulWidget {
   final FortuneTeller fortuneTeller;
   final int clientCredit;
 
-  CustomFortuneTellerCard({required this.fortuneTeller, required this.clientCredit});
+  const CustomFortuneTellerCard({
+    Key? key,
+    required this.fortuneTeller,
+    required this.clientCredit,
+  }) : super(key: key);
+
+  @override
+  _CustomFortuneTellerCardState createState() =>
+      _CustomFortuneTellerCardState();
+}
+
+class _CustomFortuneTellerCardState extends State<CustomFortuneTellerCard> {
+  int? clientId;
+  late int currentCredit;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadClientId();
+    currentCredit = widget.clientCredit;
+  }
+
+  Future<void> _loadClientId() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      clientId = prefs.getInt('id');
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,61 +53,82 @@ class CustomFortuneTellerCard extends StatelessWidget {
             Row(
               children: [
                 Text(
-                  fortuneTeller.firstName,
-                  style: TextStyle(
+                  widget.fortuneTeller.firstName,
+                  style: const TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
-                    color: Color.fromARGB(255, 255, 255, 255),
+                    color: Colors.white,
                   ),
                 ),
-                SizedBox(width: 5),
+                const SizedBox(width: 5),
                 Text(
-                  fortuneTeller.lastName,
-                  style: TextStyle(
+                  widget.fortuneTeller.lastName,
+                  style: const TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
-                    color: Color.fromARGB(255, 255, 255, 255),
+                    color: Colors.white,
                   ),
                 ),
               ],
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Row(
               children: [
-                Icon(Icons.star, color: Colors.amber),
-                SizedBox(width: 2),
+                const Icon(Icons.star, color: Colors.amber),
+                const SizedBox(width: 2),
                 Text(
-                  "${fortuneTeller.rating}",
-                  style: TextStyle(fontSize: 16, color: Color.fromARGB(255, 255, 255, 255),),
+                  "${widget.fortuneTeller.rating}",
+                  style: const TextStyle(
+                    fontSize: 16,
+                    color: Colors.white,
+                  ),
                 ),
               ],
             ),
             Row(
               children: [
-                Icon(Icons.monetization_on, color: Colors.yellow),
-                SizedBox(width: 2),
+                const Icon(Icons.monetization_on, color: Colors.yellow),
+                const SizedBox(width: 2),
                 Text(
-                  "${fortuneTeller.requirementCredit}",
-                  style: TextStyle(fontSize: 16, color: Color.fromARGB(255, 255, 255, 255),),
+                  "${widget.fortuneTeller.requirementCredit}",
+                  style: const TextStyle(
+                    fontSize: 16,
+                    color: Colors.white,
+                  ),
                 ),
-                Spacer(),
-                if (fortuneTeller.requirementCredit != null && clientCredit < fortuneTeller.requirementCredit!)
+                const Spacer(),
+                if (widget.fortuneTeller.requirementCredit != null &&
+                    currentCredit < widget.fortuneTeller.requirementCredit!)
                   OutlinedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              PhotoSelectionPage(fortuneTeller: fortuneTeller),
-                        ),
-                      );
-                    },
+                    onPressed: clientId == null
+                        ? null
+                        : () async {
+                            final reward = await Navigator.push<int>(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    RewardCardSelectionPage(clientId: clientId),
+                              ),
+                            );
+
+                            if (reward != null) {
+                              setState(() {
+                                currentCredit += reward;
+                              });
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                      'Kazanılan ödül: $reward coin eklendi!'),
+                                ),
+                              );
+                            }
+                          },
                     style: OutlinedButton.styleFrom(
-                      side: BorderSide(color: const Color.fromARGB(255, 255, 0, 0)),
+                      side: const BorderSide(color: Colors.red),
                     ),
-                    child: Text(
+                    child: const Text(
                       'Coin Kazan',
-                      style: TextStyle(color: const Color.fromARGB(255, 255, 0, 0)),
+                      style: TextStyle(color: Colors.red),
                     ),
                   )
                 else
@@ -87,15 +137,16 @@ class CustomFortuneTellerCard extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) =>
-                              PhotoSelectionPage(fortuneTeller: fortuneTeller),
+                          builder: (context) => PhotoSelectionPage(
+                            fortuneTeller: widget.fortuneTeller,
+                          ),
                         ),
                       );
                     },
                     style: OutlinedButton.styleFrom(
-                      side: BorderSide(color: Colors.white),
+                      side: const BorderSide(color: Colors.white),
                     ),
-                    child: Text(
+                    child: const Text(
                       'Fal Baktır',
                       style: TextStyle(color: Colors.white),
                     ),
