@@ -1,5 +1,5 @@
 import 'package:divinitaion/Models/fortune_list.dart';
-import 'package:divinitaion/Page/Common/backround_container';
+import 'package:divinitaion/Page/Common/backround_container.dart';
 import 'package:divinitaion/Services/service.dart';
 import 'package:flutter/material.dart';
 
