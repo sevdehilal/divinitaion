@@ -1,54 +1,35 @@
 import 'package:divinitaion/Models/register_client.dart';
+import 'package:divinitaion/Services/service.dart';
 import 'package:flutter/material.dart';
 
 class ClientProfilePage extends StatefulWidget {
-  final User user;
 
-  ClientProfilePage({required this.user});
+  ClientProfilePage();
 
   @override
   _ClientProfilePageState createState() => _ClientProfilePageState();
 }
 
 class _ClientProfilePageState extends State<ClientProfilePage> {
+  final ApiService _apiService = ApiService();
+  late Future<User> _userFuture;
   bool _obscurePassword = true;
-  final List<String> _genders = ['Erkek', 'Kadın', 'Diğer'];
   bool _isEditing = false;
 
-  late TextEditingController _firstNameController;
-  late TextEditingController _lastNameController;
-  late TextEditingController _genderController;
-  late TextEditingController _occupationController;
-  late TextEditingController _maritalStatusController;
-  late TextEditingController _userNameController;
-  late TextEditingController _emailController;
-  late TextEditingController _passwordController;
+  // Add controllers to manage input fields
+  final TextEditingController _firstNameController = TextEditingController();
+  final TextEditingController _lastNameController = TextEditingController();
+  final TextEditingController _dateOfBirthController = TextEditingController();
+  final TextEditingController _genderController = TextEditingController();
+  final TextEditingController _occupationController = TextEditingController();
+  final TextEditingController _maritalStatusController = TextEditingController();
+  final TextEditingController _userNameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    _firstNameController = TextEditingController(text: widget.user.firstName);
-    _lastNameController = TextEditingController(text: widget.user.lastName);
-    _genderController = TextEditingController(text: widget.user.gender);
-    _occupationController = TextEditingController(text: widget.user.occupation);
-    _maritalStatusController =
-        TextEditingController(text: widget.user.maritalStatus);
-    _userNameController = TextEditingController(text: widget.user.userName);
-    _emailController = TextEditingController(text: widget.user.email);
-    _passwordController = TextEditingController(text: widget.user.password);
-  }
-
-  @override
-  void dispose() {
-    _firstNameController.dispose();
-    _lastNameController.dispose();
-    _genderController.dispose();
-    _occupationController.dispose();
-    _maritalStatusController.dispose();
-    _userNameController.dispose();
-    _emailController.dispose();
-    _passwordController.dispose();
-    super.dispose();
+    _userFuture = _apiService.getUser();
   }
 
   void _toggleEdit() {
@@ -57,37 +38,36 @@ class _ClientProfilePageState extends State<ClientProfilePage> {
     });
   }
 
-  void _saveProfile() {
-    setState(() {
-      _isEditing = false;
-    });
-
-    final updatedUser = User(
-      firstName: _firstNameController.text,
-      lastName: _lastNameController.text,
-      gender: _genderController.text,
-      dateOfBirth: widget.user.dateOfBirth,
-      occupation: _occupationController.text,
-      maritalStatus: _maritalStatusController.text,
-      userName: _userNameController.text,
-      email: _emailController.text,
-      password: _passwordController.text,
-    );
-
-    print(updatedUser.toJson());
-  }
-
   void _togglePasswordVisibility() {
     setState(() {
       _obscurePassword = !_obscurePassword;
     });
   }
 
+  void _saveProfile() {
+    Map<String, dynamic> updatedData = {
+      'userName': _userNameController.text,
+      'firstName': _firstNameController.text,
+      'lastName': _lastNameController.text,
+      'dateofBirth': _dateOfBirthController.text,
+      'occupation': _occupationController.text,
+      'maritalStatus': _maritalStatusController.text,
+      'gender': _genderController.text,
+      'email': _emailController.text,
+    };
+
+    _apiService.updateClientProfile(updatedData).then((isSuccess) {
+      if (isSuccess) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Profil başarıyla güncellendi')));
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Profil güncellenirken hata oluştu')));
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.transparent,
-      extendBodyBehindAppBar: true,
       appBar: AppBar(
         title: Text('Profilim', style: TextStyle(color: Colors.white)),
         actions: [
@@ -96,77 +76,63 @@ class _ClientProfilePageState extends State<ClientProfilePage> {
             onPressed: _isEditing ? _saveProfile : _toggleEdit,
           ),
         ],
-        backgroundColor: const Color.fromARGB(0, 255, 255, 255),
+        backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-      body: Stack(
+      body: FutureBuilder<User>(
+        future: _userFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Bir hata oluştu: ${snapshot.error}'));
+          } else if (snapshot.hasData) {
+            final user = snapshot.data!;
+            _firstNameController.text = user.firstName;
+            _lastNameController.text = user.lastName;
+            _dateOfBirthController.text = user.dateOfBirth.toIso8601String();
+            _genderController.text = user.gender;
+            _occupationController.text = user.occupation;
+            _maritalStatusController.text = user.maritalStatus;
+            _userNameController.text = user.userName;
+            _emailController.text = user.email;
+
+            return _buildProfile(user);
+          } else {
+            return Center(child: Text('Kullanıcı bilgisi bulunamadı.'));
+          }
+        },
+      ),
+    );
+  }
+
+  Widget _buildProfile(User user) {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
         children: [
-          Container(
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('assets/background.jpg'),
-                fit: BoxFit.cover,
-              ),
+          Expanded(
+            child: ListView(
+              children: [
+                _buildCard(child: _buildTextField('Adı', _firstNameController)),
+                _buildCard(child: _buildTextField('Soyadı', _lastNameController)),
+                _buildCard(child: _buildTextField('Doğum Tarihi', _dateOfBirthController)),
+                _buildCard(child: _buildTextField('Cinsiyet', _genderController)),
+                _buildCard(child: _buildTextField('Meslek', _occupationController)),
+                _buildCard(child: _buildTextField('Medeni Durum', _maritalStatusController)),
+                _buildCard(child: _buildTextField('Kullanıcı Adı', _userNameController)),
+                _buildCard(child: _buildTextField('Email', _emailController)),
+              ],
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              children: [
-                Expanded(
-                  child: ListView(
-                    children: [
-                      _buildCard(
-                        child: _buildTextField('Adı', _firstNameController,
-                            icon: Icon(Icons.person, color: Colors.white)),
-                      ),
-                      _buildCard(
-                        child: _buildTextField('Soyadı', _lastNameController,
-                            icon: Icon(Icons.person, color: Colors.white)),
-                      ),
-                      _buildCard(child: _buildGenderDropdown()),
-                      _buildCard(
-                        child: _buildTextField('Meslek', _occupationController,
-                            icon: Icon(Icons.work, color: Colors.white)),
-                      ),
-                      _buildCard(
-                        child: _buildTextField(
-                          'Medeni Durum',
-                          _maritalStatusController,
-                          icon: Icon(Icons.family_restroom, color: Colors.white),
-                        ),
-                      ),
-                      _buildCard(
-                        child: _buildTextField('Kullanıcı Adı', _userNameController,
-                            icon: Icon(Icons.person_outline, color: Colors.white)),
-                      ),
-                      _buildCard(
-                        child: _buildTextField('Email', _emailController,
-                            icon: Icon(Icons.email, color: Colors.white)),
-                      ),
-                      _buildCard(
-                        child: _buildPasswordField('Şifre', _passwordController),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: 8), // Aradaki boşluğu artır
-                Align(
-                  alignment: Alignment.center,
-                  child: ElevatedButton(
-                    onPressed: _toggleEdit,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white.withOpacity(0.9),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8)),
-                    ),
-                    child: Text(
-                      _isEditing ? 'Kaydet' : 'Düzenle',
-                      style: TextStyle(color: Colors.black),
-                    ),
-                  ),
-                ),
-              ],
+          ElevatedButton(
+            onPressed: _isEditing ? _saveProfile : _toggleEdit,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.white.withOpacity(0.9),
+            ),
+            child: Text(
+              _isEditing ? 'Kaydet' : 'Düzenle',
+              style: TextStyle(color: Colors.black),
             ),
           ),
         ],
@@ -178,40 +144,15 @@ class _ClientProfilePageState extends State<ClientProfilePage> {
     return Card(
       color: Colors.black.withOpacity(0.7),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-      margin: const EdgeInsets.symmetric(vertical: 6.0), // Daha küçük margin
+      margin: const EdgeInsets.symmetric(vertical: 6.0),
       child: Padding(
-        padding: const EdgeInsets.all(8.0), // Daha küçük padding
+        padding: const EdgeInsets.all(8.0),
         child: child,
       ),
     );
   }
 
-  Widget _buildGenderDropdown() {
-    return DropdownButtonFormField<String>(
-      value: _genderController.text.isEmpty ? null : _genderController.text,
-      items: _genders.map((String gender) {
-        return DropdownMenuItem<String>(
-          value: gender,
-          child: Text(gender, style: TextStyle(color: Colors.white)),
-        );
-      }).toList(),
-      onChanged: _isEditing
-          ? (String? newValue) {
-              setState(() {
-                _genderController.text = newValue!;
-              });
-            }
-          : null,
-      decoration: InputDecoration(
-        labelText: 'Cinsiyet',
-        labelStyle: TextStyle(color: Colors.white),
-        border: OutlineInputBorder(),
-      ),
-    );
-  }
-
-  Widget _buildTextField(String label, TextEditingController controller,
-      {Icon? icon}) {
+  Widget _buildTextField(String label, TextEditingController controller) {
     return TextFormField(
       controller: controller,
       readOnly: !_isEditing,
@@ -220,28 +161,6 @@ class _ClientProfilePageState extends State<ClientProfilePage> {
         labelText: label,
         labelStyle: TextStyle(color: Colors.white),
         border: OutlineInputBorder(),
-        prefixIcon: icon,
-      ),
-    );
-  }
-
-  Widget _buildPasswordField(String label, TextEditingController controller) {
-    return TextFormField(
-      controller: controller,
-      readOnly: !_isEditing,
-      obscureText: _obscurePassword,
-      style: TextStyle(color: Colors.white),
-      decoration: InputDecoration(
-        labelText: label,
-        labelStyle: TextStyle(color: Colors.white),
-        border: OutlineInputBorder(),
-        suffixIcon: IconButton(
-          icon: Icon(
-            _obscurePassword ? Icons.visibility : Icons.visibility_off,
-            color: Colors.white,
-          ),
-          onPressed: _togglePasswordVisibility,
-        ),
       ),
     );
   }

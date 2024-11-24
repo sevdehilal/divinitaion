@@ -1,5 +1,5 @@
 import 'package:divinitaion/Models/fortune_teller_entity.dart';
-import 'package:divinitaion/Page/Common/backround_container';
+import 'package:divinitaion/Page/Common/backround_container.dart';
 import 'package:divinitaion/Services/service.dart';
 import 'package:divinitaion/Widgets/ClientWidgets/fortune_teller_card.dart';
 import 'package:divinitaion/Widgets/CommonWidgets/logout_button.dart';
@@ -11,16 +11,47 @@ class ClientFortuneTellerList extends StatefulWidget {
       _ClientFortuneTellerListPageState();
 }
 
-class _ClientFortuneTellerListPageState extends State<ClientFortuneTellerList> {
+class _ClientFortuneTellerListPageState
+    extends State<ClientFortuneTellerList> {
   final ApiService _apiService = ApiService();
   late Future<List<FortuneTeller>> _userList;
   late Future<int> _clientCreditFuture;
+  List<FortuneTeller> _filteredFortuneTellers = [];
+  TextEditingController _searchController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     _userList = _apiService.FetchFortuneTeller();
     _clientCreditFuture = _apiService.fetchClientCreditByClientId();
+
+    _userList.then((fortuneTellers) {
+      setState(() {
+        _filteredFortuneTellers = fortuneTellers;
+      });
+    });
+
+    _searchController.addListener(_filterFortuneTellers);
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  void _filterFortuneTellers() {
+    final query = _searchController.text.toLowerCase();
+
+    _userList.then((fortuneTellers) {
+      setState(() {
+        _filteredFortuneTellers = fortuneTellers
+            .where((ft) =>
+                ft.firstName.toLowerCase().contains(query) ||
+                ft.lastName.toLowerCase().contains(query))
+            .toList();
+      });
+    });
   }
 
   @override
@@ -33,7 +64,7 @@ class _ClientFortuneTellerListPageState extends State<ClientFortuneTellerList> {
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
-            color: const Color.fromARGB(255, 255, 255, 255),
+            color: Colors.white,
           ),
         ),
         actions: [
@@ -88,45 +119,74 @@ class _ClientFortuneTellerListPageState extends State<ClientFortuneTellerList> {
         ],
         backgroundColor: Colors.transparent,
         elevation: 0,
+        bottom: PreferredSize(
+          preferredSize: Size.fromHeight(60),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
+              controller: _searchController,
+              style: TextStyle(color: Colors.white),
+              decoration: InputDecoration(
+                hintText: 'Falcı Ara',
+                hintStyle: TextStyle(color: Colors.white54),
+                prefixIcon: Icon(Icons.search, color: Colors.white),
+                filled: true,
+                fillColor: Colors.black.withOpacity(0.5),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: BorderSide.none,
+                ),
+              ),
+            ),
+          ),
+        ),
       ),
       body: BackgroundContainer(
-        child: FutureBuilder<List<FortuneTeller>>(
-          future: _userList,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator());
-            } else if (snapshot.hasError) {
-              return Center(child: Text('Error: ${snapshot.error}'));
-            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-              return Center(child: Text('No users found.'));
-            }
+        child: Column(
+          children: [
+            Expanded(
+              child: FutureBuilder<List<FortuneTeller>>(
+                future: _userList,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Center(child: Text('Error: ${snapshot.error}'));
+                  } else if (_filteredFortuneTellers.isEmpty) {
+                    return Center(child: Text('Arama sonuçları bulunamadı.'));
+                  }
 
-            final fortuneTellers = snapshot.data!;
+                  return ListView.builder(
+                    itemCount: _filteredFortuneTellers.length,
+                    itemBuilder: (context, index) {
+                      final fortuneTeller = _filteredFortuneTellers[index];
+                      return FutureBuilder<int>(
+                        future: _clientCreditFuture,
+                        builder: (context, clientSnapshot) {
+                          if (clientSnapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return Center(child: CircularProgressIndicator());
+                          } else if (clientSnapshot.hasError ||
+                              !clientSnapshot.hasData) {
+                            return Center(
+                                child:
+                                    Text('Error: ${clientSnapshot.error}'));
+                          }
 
-            return ListView.builder(
-              itemCount: fortuneTellers.length,
-              itemBuilder: (context, index) {
-                final fortuneTeller = fortuneTellers[index];
-                return FutureBuilder<int>(
-                  future: _clientCreditFuture,
-                  builder: (context, clientSnapshot) {
-                    if (clientSnapshot.connectionState == ConnectionState.waiting) {
-                      return Center(child: CircularProgressIndicator());
-                    } else if (clientSnapshot.hasError || !clientSnapshot.hasData) {
-                      return Center(child: Text('Error: ${clientSnapshot.error}'));
-                    }
+                          final clientCredit = clientSnapshot.data!;
 
-                    final clientCredit = clientSnapshot.data!;
-
-                    return CustomFortuneTellerCard(
-                      fortuneTeller: fortuneTeller,
-                      clientCredit: clientCredit,
-                    );
-                  },
-                );
-              },
-            );
-          },
+                          return CustomFortuneTellerCard(
+                            fortuneTeller: fortuneTeller,
+                            clientCredit: clientCredit,
+                          );
+                        },
+                      );
+                    },
+                  );
+                },
+              ),
+            ),
+          ],
         ),
       ),
     );

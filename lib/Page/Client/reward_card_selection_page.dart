@@ -1,3 +1,4 @@
+import 'package:divinitaion/Services/service.dart';
 import 'package:flutter/material.dart';
 
 class RewardCardSelectionPage extends StatefulWidget {
@@ -10,12 +11,12 @@ class RewardCardSelectionPage extends StatefulWidget {
 }
 
 class _RewardCardSelectionPageState extends State<RewardCardSelectionPage> {
+  final ApiService _apiService = ApiService();
   int? selectedReward;
   List<int> rewards = [5, 10, 15, 20, 25, 30];
 
   bool isRevealed = false;
-  bool isConfirmed =
-      false;
+  bool isConfirmed = false;
 
   Future<void> _sendRewardToApi(int clientId, int reward) async {
     await Future.delayed(Duration(seconds: 2));
@@ -102,20 +103,43 @@ class _RewardCardSelectionPageState extends State<RewardCardSelectionPage> {
                           fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                     ElevatedButton(
-                      onPressed: () async {
-                        if (widget.clientId == null) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                content: Text("Client ID bulunamadı!")),
-                          );
-                          return;
-                        }
+                      onPressed: isConfirmed
+                          ? null
+                          : () async {
+                              setState(() {
+                                isConfirmed = true;
+                              });
 
-                        await _sendRewardToApi(
-                            widget.clientId!, selectedReward!);
+                              if (widget.clientId == null) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text("Client ID bulunamadı!")),
+                                );
+                                setState(() {
+                                  isConfirmed = false;
+                                });
+                                return;
+                              }
 
-                        Navigator.pop(context);
-                      },
+                              try {
+                                await _apiService.earnCoin(selectedReward!);
+
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                      content: Text(
+                                          "Ödül başarıyla gönderildi: $selectedReward Coin!")),
+                                );
+
+                                Navigator.pop(context);
+                              } catch (e) {
+                                setState(() {
+                                  isConfirmed = false;
+                                });
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text("Bir hata oluştu: $e")),
+                                );
+                              }
+                            },
                       child: const Text('Ödülü Al'),
                     ),
                   ],

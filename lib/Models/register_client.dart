@@ -22,19 +22,20 @@ class User {
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
-    return User(
-      firstName: json['firstName'] as String,
-      lastName: json['lastName'] as String,
-      gender: json['gender'] as String,
-      dateOfBirth: DateTime.parse(json['dateofBirth']),
-      occupation: json['occupation'] as String,
-      maritalStatus: json['maritalStatus'] as String,
-      userName: json['userName'] as String,
-      email: json['email'] as String,
-      password: json['password'] as String,
-    );
-  }
-
+  return User(
+    firstName: json['firstName'] as String? ?? '',
+    lastName: json['lastName'] as String? ?? '',
+    gender: json['gender'] as String? ?? 'Belirtilmemiş',
+    dateOfBirth: json['dateofBirth'] != null
+        ? DateTime.parse(json['dateofBirth'])
+        : DateTime(1900, 1, 1),
+    occupation: json['occupation'] as String? ?? '',
+    maritalStatus: json['maritalStatus'] as String? ?? 'Belirtilmemiş',
+    userName: json['userName'] as String? ?? '',
+    email: json['email'] as String? ?? '',
+    password: json['password'] as String? ?? '',
+  );
+}
   Map<String, dynamic> toJson() {
     return {
       'firstName': firstName,

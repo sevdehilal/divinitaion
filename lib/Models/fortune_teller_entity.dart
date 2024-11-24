@@ -9,6 +9,7 @@ class FortuneTeller {
   final String? password;
   final double? rating;
   final int? requirementCredit;
+  final int? totalCredit;
 
   FortuneTeller({
     this.id,
@@ -21,15 +22,21 @@ class FortuneTeller {
     this.password,
     this.rating,
     this.requirementCredit,
+    this.totalCredit,
   });
 
   factory FortuneTeller.fromJson(Map<String, dynamic> json) {
     return FortuneTeller(
       id: json['id'],
+      userName: json['userName'],
       firstName: json['firstName'],
       lastName: json['lastName'],
+      gender: json['gender'],
+      experience: json['experience'],
       rating: json['rating'],
       requirementCredit: json['requirementCredit'],
+      totalCredit: json['totalCredit'],
+      email: json['email'],
     );
   }
 
@@ -45,6 +52,7 @@ class FortuneTeller {
       'password': password,
       'rating': rating,
       'requirementCredit': requirementCredit,
+      'totalCredit': totalCredit,
     };
   }
 }

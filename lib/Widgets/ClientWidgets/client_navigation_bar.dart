@@ -28,7 +28,7 @@ class _CustomBottomNavigationState extends State<CustomBottomNavigation> {
   List<Widget> get _pages => [
         FortuneCategoriesPage(),
         FortuneList(),
-        ClientProfilePage(user: currentUser),
+        ClientProfilePage(),
       ];
 
   void _onItemTapped(int index) {

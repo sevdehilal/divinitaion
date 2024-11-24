@@ -32,6 +32,7 @@ class ApiService {
         final Map<String, dynamic> data = jsonDecode(response.body);
         final loginResponse = LoginResponse.fromJson(data);
         await prefs.setInt('id', loginResponse.userId);
+        await prefs.setString('token', loginResponse.token);
         return loginResponse;
       } else {
         return null;
@@ -129,15 +130,14 @@ class ApiService {
 
   Future<List<FortuneListt>> fetchPendingFortunes() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    
     int? clientId = prefs.getInt('id');
 
     if (clientId == null) {
       throw Exception('No fortune teller ID found in SharedPreferences');
     }
 
-    final response = await http
-        .get(Uri.parse("http://fallinfal.com/api/Application/GetApplicationByClientIdIsAnsweredFalse?id=$clientId"));
+    final response = await http.get(Uri.parse(
+        "http://fallinfal.com/api/Application/GetApplicationByClientIdIsAnsweredFalse?id=$clientId"));
 
     if (response.statusCode == 200) {
       List<dynamic> jsonList = json.decode(response.body);
@@ -149,15 +149,15 @@ class ApiService {
 
   Future<List<FortuneListt>> fetchAnsweredFortunes() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    
-    int? clientId = prefs.getInt('id');
+
+    int? clientId = prefs.getInt('id'); 
 
     if (clientId == null) {
       throw Exception('No fortune teller ID found in SharedPreferences');
     }
 
-    final response = await http
-        .get(Uri.parse("http://fallinfal.com/api/Application/GetApplicationByClientIdIsAnsweredTrue?id=$clientId"));
+    final response = await http.get(Uri.parse(
+        "http://fallinfal.com/api/Application/GetApplicationByClientIdIsAnsweredTrue?id=$clientId"));
 
     if (response.statusCode == 200) {
       List<dynamic> jsonList = json.decode(response.body);
@@ -222,9 +222,10 @@ class ApiService {
     }
   }
 
-  Future<List<FortuneForFortuneTeller>> FetchPendingFortunesByFortuneTellerId() async {
+  Future<List<FortuneForFortuneTeller>>
+      FetchPendingFortunesByFortuneTellerId() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    
+
     int? fortuneTellerId = prefs.getInt('id');
 
     if (fortuneTellerId == null) {
@@ -232,13 +233,16 @@ class ApiService {
     }
 
     final response = await http.get(
-      Uri.parse("http://fallinfal.com/api/Application/GetApplicationByFortuneTeller?id=$fortuneTellerId"),
+      Uri.parse(
+          "http://fallinfal.com/api/Application/GetApplicationByFortuneTeller?id=$fortuneTellerId"),
     );
 
     if (response.statusCode == 200) {
       List<dynamic> jsonList = json.decode(response.body);
       print(response.body);
-      return jsonList.map((json) => FortuneForFortuneTeller.fromJson(json)).toList();
+      return jsonList
+          .map((json) => FortuneForFortuneTeller.fromJson(json))
+          .toList();
     } else {
       throw Exception('Failed to load fortunes');
     }
@@ -250,8 +254,7 @@ class ApiService {
   }) async {
     try {
       var url = Uri.parse(
-        "http://fallinfal.com/api/Application/AnswerApplication?id=$fortuneId&answer=$answer"
-      );
+          "http://fallinfal.com/api/Application/AnswerApplication?id=$fortuneId&answer=$answer");
 
       var requestBody = {
         'Answers': answer,
@@ -277,10 +280,10 @@ class ApiService {
     }
   }
 
-  
-  Future<List<FortuneForFortuneTeller>> FetchAnsweredFortunesByFortuneTellerId() async {
+  Future<List<FortuneForFortuneTeller>>
+      FetchAnsweredFortunesByFortuneTellerId() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    
+
     int? fortuneTellerId = prefs.getInt('id');
 
     if (fortuneTellerId == null) {
@@ -288,13 +291,16 @@ class ApiService {
     }
 
     final response = await http.get(
-      Uri.parse("http://fallinfal.com/api/Application/GetApplicationByFortuneTellerIsAnsweredTrue?id=$fortuneTellerId"),
+      Uri.parse(
+          "http://fallinfal.com/api/Application/GetApplicationByFortuneTellerIsAnsweredTrue?id=$fortuneTellerId"),
     );
 
     if (response.statusCode == 200) {
       List<dynamic> jsonList = json.decode(response.body);
       print(response.body);
-      return jsonList.map((json) => FortuneForFortuneTeller.fromJson(json)).toList();
+      return jsonList
+          .map((json) => FortuneForFortuneTeller.fromJson(json))
+          .toList();
     } else {
       throw Exception('Failed to load fortunes');
     }
@@ -318,15 +324,18 @@ class ApiService {
         int credit = int.parse(response.body);
         return credit;
       } catch (e) {
-        throw Exception('Failed to parse response as integer: ${response.body}');
+        throw Exception(
+            'Failed to parse response as integer: ${response.body}');
       }
     } else {
-      throw Exception('Failed to fetch client credit, status code: ${response.statusCode}');
+      throw Exception(
+          'Failed to fetch client credit, status code: ${response.statusCode}');
     }
   }
 
   Future<void> UpdateFortuneRating(int? fortuneId, double rating) async {
-    final url = Uri.parse("http://fallinfal.com/api/Client/ScoreFortune?ApplicationId=$fortuneId&score=$rating");
+    final url = Uri.parse(
+        "http://fallinfal.com/api/Client/ScoreFortune?ApplicationId=$fortuneId&score=$rating");
 
     final response = await http.post(
       url,
@@ -339,17 +348,132 @@ class ApiService {
     }
   }
 
-  Future<void> EarnCoin(int? fortuneId, double rating) async { //devam edilecek
-    final url = Uri.parse("http://fallinfal.com/api/Client/ScoreFortune?ApplicationId=$fortuneId&score=$rating");
+  Future<void> earnCoin(int credit) async {
+  try {
+    // SharedPreferences'den token alıyoruz
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+    if (token == null) {
+      throw Exception("Token bulunamadı");
+    }
+
+    // API çağrısı
+    final url = Uri.parse(
+        "http://fallinfal.com/api/Client/EarnCredit?credit=$credit");
 
     final response = await http.post(
       url,
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({'rating': rating}),
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({'credit': credit}),
     );
 
-    if (response.statusCode != 200) {
+    if (response.statusCode == 200) {
+      print("Puan başarıyla güncellendi");
+    } else {
+      print("Puan güncelleme hatası: ${response.body}");
       throw Exception('Puan güncellenirken hata oluştu');
+    }
+  } catch (e) {
+    print("Bir hata oluştu: $e");
+    throw e;
+  }
+}
+
+
+  Future<User> getUser() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    int? clientId = prefs.getInt('id');
+
+    final response = await http.get(Uri.parse(
+        "http://fallinfal.com/api/Auth/GetClientById?clientId=$clientId"));
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      return User.fromJson(data);
+    } else {
+      throw Exception('Failed to load user profile');
+    }
+  }
+
+  Future<FortuneTeller> getFortuneTeller() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    int? fortuneTellerId = prefs.getInt('id');
+
+    final response = await http.get(Uri.parse(
+        "http://fallinfal.com/api/Auth/GetFortuneTellerById?fortuneTellerId=$fortuneTellerId"));
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      return FortuneTeller.fromJson(data);
+    } else {
+      throw Exception('Failed to load user profile');
+    }
+  }
+
+  Future<bool> updateFortuneTellerProfile(
+      Map<String, dynamic> updatedData) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString('token');
+
+      if (token == null) {
+        throw Exception("Token bulunamadı");
+      }
+
+      final response = await http.post(
+        Uri.parse('http://fallinfal.com/api/Auth/UpdateFortune'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode(updatedData),
+      );
+
+      if (response.statusCode == 200) {
+        print("Profil başarıyla güncellendi");
+        return true;
+      } else {
+        print("Profil güncelleme hatası: ${response.body}");
+        return false;
+      }
+    } catch (e) {
+      print("Bir hata oluştu: $e");
+      return false;
+    }
+  }
+
+  Future<bool> updateClientProfile(
+      Map<String, dynamic> updatedData) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString('token');
+
+      if (token == null) {
+        throw Exception("Token bulunamadı");
+      }
+
+      final response = await http.post(
+        Uri.parse('http://fallinfal.com/api/Auth/UpdateClient'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode(updatedData),
+      );
+
+      if (response.statusCode == 200) {
+        print("Profil başarıyla güncellendi");
+        return true;
+      } else {
+        print("Profil güncelleme hatası: ${response.body}");
+        return false;
+      }
+    } catch (e) {
+      print("Bir hata oluştu: $e");
+      return false;
     }
   }
 }
