@@ -7,7 +7,7 @@ class FortuneTeller {
   final String? userName;
   final String? email;
   final String? password;
-  final double? rating;
+  final num? rating;
   final int? requirementCredit;
   final int? totalCredit;
 
