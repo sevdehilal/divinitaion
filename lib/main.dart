@@ -1,11 +1,12 @@
 import 'dart:io';
+import 'package:divinitaion/Services/twitter.dart';
 import 'package:divinitaion/Widgets/ClientWidgets/client_navigation_bar.dart';
 import 'package:flutter/material.dart';
 
 void main() {
   HttpOverrides.global = MyHttpOverrides();
   runApp(MaterialApp(
-    home: CustomBottomNavigation(),
+    home: MyApp(),
     debugShowCheckedModeBanner: false,
   ));
 }
