@@ -1,3 +1,4 @@
+import 'package:divinitaion/Page/Common/backround_container.dart';
 import 'package:flutter/material.dart';
 import 'package:divinitaion/Models/fortune_model_for_fortune_teller.dart';
 import 'package:divinitaion/Page/FortuneTeller/answer_page.dart';
@@ -22,9 +23,7 @@ class _AnsweredFortuneListState extends State<AnsweredFortuneList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        color:
-            Color.fromARGB(103, 57, 2, 60),
+      body: BackgroundContainer( // BackgroundContainer burada kullanılıyor
         child: FutureBuilder<List<FortuneForFortuneTeller>>(
           future: _answeredFortuneList,
           builder: (context, snapshot) {
@@ -34,20 +33,23 @@ class _AnsweredFortuneListState extends State<AnsweredFortuneList> {
               return Center(child: Text('Error: ${snapshot.error}'));
             } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
               return Center(
-                  child: Text('No answered fortunes found.',
-                      style: TextStyle(
-                          color: Colors.white)));
+                child: Text(
+                  'No answered fortunes found.',
+                  style: TextStyle(color: Colors.white),
+                ),
+              );
             }
 
             final fortunes = snapshot.data!;
 
+            // Tarih sıralaması
             fortunes.sort((a, b) {
               if (a.createDate == null || b.createDate == null) {
                 return 0;
               }
               return b.createDate!.compareTo(a.createDate!);
             });
-            
+
             return ListView.builder(
               itemCount: fortunes.length,
               itemBuilder: (context, index) {

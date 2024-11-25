@@ -1,4 +1,3 @@
-import 'package:divinitaion/Models/register_client.dart';
 import 'package:divinitaion/Page/Client/CustomScaffold';
 import 'package:divinitaion/Page/Client/client_profil_page.dart';
 import 'package:divinitaion/Page/Client/fortune_list.dart';
@@ -12,18 +11,6 @@ class CustomBottomNavigation extends StatefulWidget {
 
 class _CustomBottomNavigationState extends State<CustomBottomNavigation> {
   int _selectedIndex = 0;
-
-  final User currentUser = User(
-    firstName: 'Sevde Hilal',
-    lastName: 'Durak',
-    gender: 'Kadın',
-    dateOfBirth: DateTime(1990, 1, 1),
-    occupation: 'Öğrenci',
-    maritalStatus: 'Single',
-    userName: 'sevdehilal',
-    email: 'sevdehilald@gmail.com',
-    password: 'Sevdehilal.02',
-  );
 
   List<Widget> get _pages => [
         FortuneCategoriesPage(),

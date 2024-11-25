@@ -1,7 +1,7 @@
+import 'package:divinitaion/Page/Client/CustomScaffold.dart';
 import 'package:divinitaion/Page/FortuneTeller/answered_fortune_list.dart';
 import 'package:divinitaion/Page/FortuneTeller/fortune_teller_profile_page.dart';
 import 'package:divinitaion/Page/FortuneTeller/pending_fortune_list.dart';
-import 'package:divinitaion/Widgets/CommonWidgets/logout_button.dart';
 import 'package:flutter/material.dart';
 
 class FortuneTellerBottomNavigation extends StatefulWidget {
@@ -28,40 +28,38 @@ class _FortuneTellerBottomNavigationState
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return CustomScaffold(
       appBar: AppBar(
-        title: Text(
-          'Fortune Teller',
-          style: TextStyle(
-            color: Colors.white,
-          ),
-        ),
-        backgroundColor: Color.fromARGB(255, 24, 18, 20),
-        actions: [LogoutButton()],
+        backgroundColor: Colors.black.withOpacity(0.2),
+        elevation: 0,
       ),
       body: _pages[_selectedIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.coffee, color: Colors.white),
-            label: 'Bekleyen Fallar',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.coffee, color: Colors.white),
-            label: 'Baktığım Fallar',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.man, color: Colors.white),
-            label: 'Profil',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.blue,
-        unselectedItemColor: Colors.white,
-        onTap: _onItemTapped,
-        backgroundColor: Color.fromARGB(255, 24, 18, 20),
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          color: Colors.black.withOpacity(0.2), // Hafif transparan arka plan
+        ),
+        child: BottomNavigationBar(
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(Icons.coffee, color: Colors.white),
+              label: 'Bekleyen Fallar',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.coffee, color: Colors.white),
+              label: 'Baktığım Fallar',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person, color: Colors.white),
+              label: 'Profil',
+            ),
+          ],
+          currentIndex: _selectedIndex,
+          selectedItemColor: const Color.fromARGB(255, 255, 0, 0),
+          unselectedItemColor: Colors.white,
+          onTap: _onItemTapped,
+          backgroundColor: Colors.transparent, // Şeffaf alt çubuk
+        ),
       ),
-      backgroundColor: Color.fromARGB(255, 24, 18, 20),
     );
   }
 }

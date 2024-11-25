@@ -1,4 +1,5 @@
 import 'package:divinitaion/Models/fortune_teller_entity.dart';
+import 'package:divinitaion/Page/Common/backround_container.dart';
 import 'package:flutter/material.dart';
 import 'package:divinitaion/Services/service.dart';
 
@@ -57,7 +58,7 @@ class _FortuneTellerProfilePageState extends State<FortuneTellerProfilePage> {
     _emailController.text = fortuneTeller.email ?? '';
     _ratingController.text = fortuneTeller.rating?.toString() ?? '0.0';
     _totalCreditController.text = fortuneTeller.totalCredit?.toString() ?? '0.0';
-    _dateOfBirthController.text = DateTime(2017, 9, 7, 17, 30) as String;
+    _dateOfBirthController.text = DateTime(2017, 9, 7, 17, 30).toIso8601String();
   }
 
   void _toggleEdit() async {
@@ -102,7 +103,6 @@ class _FortuneTellerProfilePageState extends State<FortuneTellerProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Falcı Profili', style: TextStyle(color: Colors.white)),
         actions: [
           IconButton(
             icon: Icon(_isEditing ? Icons.save : Icons.edit, color: Colors.white),
@@ -112,23 +112,25 @@ class _FortuneTellerProfilePageState extends State<FortuneTellerProfilePage> {
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-      body: FutureBuilder<FortuneTeller>(
-        future: _fortuneTellerFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Bir hata oluştu: ${snapshot.error}'));
-          } else if (snapshot.hasData) {
-            final fortuneTeller = snapshot.data!;
-            if (!_isEditing) {
-              _populateFields(fortuneTeller);
+      body: BackgroundContainer(
+        child: FutureBuilder<FortuneTeller>(
+          future: _fortuneTellerFuture,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Center(child: Text('Bir hata oluştu: ${snapshot.error}'));
+            } else if (snapshot.hasData) {
+              final fortuneTeller = snapshot.data!;
+              if (!_isEditing) {
+                _populateFields(fortuneTeller);
+              }
+              return _buildProfile();
+            } else {
+              return Center(child: Text('Falcı bilgisi bulunamadı.'));
             }
-            return _buildProfile();
-          } else {
-            return Center(child: Text('Falcı bilgisi bulunamadı.'));
-          }
-        },
+          },
+        ),
       ),
     );
   }
@@ -141,27 +143,21 @@ class _FortuneTellerProfilePageState extends State<FortuneTellerProfilePage> {
           Expanded(
             child: ListView(
               children: [
-                _buildCard(child: _buildTextField('Kullanıcı Adı', _userNameController)),
                 _buildCard(child: _buildTextField('Adı', _firstNameController)),
                 _buildCard(child: _buildTextField('Soyadı', _lastNameController)),
                 _buildCard(child: _buildTextField('Cinsiyet', _genderController)),
                 _buildCard(child: _buildTextField('Doğum Tarihi', _dateOfBirthController)),
-                _buildCard(child: _buildTextField('E-Posta', _emailController)),
                 _buildCard(child: _buildTextField('Deneyim', _experienceController)),
                 _buildCard(child: _buildTextField('Gereken Coin', _requirementCreditController)),
-                _buildCard(child: _buildTextField('Rating', _ratingController)),
-                _buildCard(child: _buildTextField('Toplam Coin', _totalCreditController)),
+                _buildCard(child: _buildTextField('Rating', _ratingController,
+                        isEditable: false)),
+                _buildCard(child: _buildTextField('Toplam Coin', _totalCreditController,
+                        isEditable: false)),
+                _buildCard(child: _buildTextField('Kullanıcı Adı', _userNameController,
+                        isEditable: false)),
+                _buildCard(child: _buildTextField('E-Posta', _emailController,
+                        isEditable: false)),
               ],
-            ),
-          ),
-          ElevatedButton(
-            onPressed: _toggleEdit,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.white.withOpacity(0.9),
-            ),
-            child: Text(
-              _isEditing ? 'Kaydet' : 'Düzenle',
-              style: TextStyle(color: Colors.black),
             ),
           ),
         ],
@@ -181,10 +177,11 @@ class _FortuneTellerProfilePageState extends State<FortuneTellerProfilePage> {
     );
   }
 
-  Widget _buildTextField(String label, TextEditingController controller) {
+  Widget _buildTextField(String label, TextEditingController controller,
+      {bool isEditable = true}) {
     return TextFormField(
       controller: controller,
-      readOnly: !_isEditing,
+      readOnly: !_isEditing || !isEditable,
       style: TextStyle(color: Colors.white),
       decoration: InputDecoration(
         labelText: label,
