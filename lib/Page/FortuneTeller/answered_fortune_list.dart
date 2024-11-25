@@ -1,4 +1,5 @@
 import 'package:divinitaion/Page/Common/backround_container.dart';
+import 'package:divinitaion/Widgets/CommonWidgets/logout_button.dart';
 import 'package:flutter/material.dart';
 import 'package:divinitaion/Models/fortune_model_for_fortune_teller.dart';
 import 'package:divinitaion/Page/FortuneTeller/answer_page.dart';
@@ -23,7 +24,22 @@ class _AnsweredFortuneListState extends State<AnsweredFortuneList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BackgroundContainer( // BackgroundContainer burada kullanılıyor
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        backgroundColor: Colors.black.withOpacity(0.2),
+        elevation: 0,
+        title: Text(
+          'Baktığım Fallar',
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
+        actions: [LogoutButton()],
+
+      ),
+      body: BackgroundContainer(
         child: FutureBuilder<List<FortuneForFortuneTeller>>(
           future: _answeredFortuneList,
           builder: (context, snapshot) {

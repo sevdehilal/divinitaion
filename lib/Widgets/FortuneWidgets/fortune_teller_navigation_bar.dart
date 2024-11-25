@@ -29,14 +29,17 @@ class _FortuneTellerBottomNavigationState
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.black.withOpacity(0.2),
-        elevation: 0,
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(0),
+        child: AppBar(
+          backgroundColor: Colors.black.withOpacity(0.2),
+          elevation: 0,
+        ),
       ),
       body: _pages[_selectedIndex],
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
-          color: Colors.black.withOpacity(0.2), // Hafif transparan arka plan
+          color: Colors.black.withOpacity(0.2),
         ),
         child: BottomNavigationBar(
           items: const <BottomNavigationBarItem>[
@@ -57,7 +60,7 @@ class _FortuneTellerBottomNavigationState
           selectedItemColor: const Color.fromARGB(255, 255, 0, 0),
           unselectedItemColor: Colors.white,
           onTap: _onItemTapped,
-          backgroundColor: Colors.transparent, // Şeffaf alt çubuk
+          backgroundColor: Colors.transparent,
         ),
       ),
     );

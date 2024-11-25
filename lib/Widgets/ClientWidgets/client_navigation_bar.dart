@@ -1,4 +1,4 @@
-import 'package:divinitaion/Page/Client/CustomScaffold';
+import 'package:divinitaion/Page/Client/CustomScaffold.dart';
 import 'package:divinitaion/Page/Client/client_profil_page.dart';
 import 'package:divinitaion/Page/Client/fortune_list.dart';
 import 'package:divinitaion/Page/Common/fortune_categories_page.dart';
