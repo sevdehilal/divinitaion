@@ -1,3 +1,5 @@
+import 'package:divinitaion/Page/Common/backround_container.dart';
+import 'package:divinitaion/Widgets/CommonWidgets/logout_button.dart';
 import 'package:divinitaion/Widgets/FortuneWidgets/fortune_card_for_fortune_teller.dart';
 import 'package:flutter/material.dart';
 import 'package:divinitaion/Models/fortune_model_for_fortune_teller.dart';
@@ -22,9 +24,21 @@ class _PendingFortuneListState extends State<PendingFortuneList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        color:
-            Color.fromARGB(255, 24, 18, 20), // Arka plan rengi burada ayarlandı
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        backgroundColor: Colors.black.withOpacity(0.2),
+        elevation: 0,
+        title: Text(
+          'Bekleyen Fallar',
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
+        actions: [LogoutButton()],
+      ),
+      body: BackgroundContainer(
         child: FutureBuilder<List<FortuneForFortuneTeller>>(
           future: _pendingFortuneList,
           builder: (context, snapshot) {
@@ -34,9 +48,11 @@ class _PendingFortuneListState extends State<PendingFortuneList> {
               return Center(child: Text('Error: ${snapshot.error}'));
             } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
               return Center(
-                  child: Text('Bekleyen fal bulunmamaktadır.',
-                      style: TextStyle(
-                          color: Colors.white))); // Yazı rengini ayarladık
+                child: Text(
+                  'Bekleyen fal bulunmamaktadır.',
+                  style: TextStyle(color: Colors.white),
+                ),
+              );
             }
 
             final fortunes = snapshot.data!;

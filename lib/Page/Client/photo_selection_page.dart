@@ -5,6 +5,8 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:divinitaion/Models/fortune_teller_entity.dart';
+import 'package:image_picker/image_picker.dart';
+
 
 class PhotoSelectionPage extends StatefulWidget {
   final FortuneTeller fortuneTeller;
@@ -19,28 +21,70 @@ class _PhotoSelectionPageState extends State<PhotoSelectionPage> {
   List<PlatformFile> _selectedFiles = [];
 
   Future<void> _pickImage() async {
-    if (_selectedFiles.length >= 3) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Yalnızca 3 fotoğraf seçilebilir.')),
-      );
-      return;
-    }
-
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
-      type: FileType.image,
-      allowMultiple: true,
+  if (_selectedFiles.length >= 3) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Yalnızca 3 fotoğraf seçilebilir.')),
     );
+    return;
+  }
 
-    if (result != null && result.files.isNotEmpty) {
+  final source = await showModalBottomSheet<ImageSource>(
+    context: context,
+    builder: (context) {
+      return Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ListTile(
+            leading: Icon(Icons.camera_alt),
+            title: Text('Kamera'),
+            onTap: () => Navigator.pop(context, ImageSource.camera),
+          ),
+          ListTile(
+            leading: Icon(Icons.photo_library),
+            title: Text('Galeri'),
+            onTap: () => Navigator.pop(context, ImageSource.gallery),
+          ),
+        ],
+      );
+    },
+  );
+
+  if (source == null) {
+    return;
+  }
+
+  try {
+    final imagePicker = ImagePicker();
+    final pickedFile = await imagePicker.pickImage(source: source);
+
+    if (pickedFile != null) {
+      // Senkron olmayan işlemi `setState` dışına al
+      final fileBytes = kIsWeb ? await pickedFile.readAsBytes() : null;
+      final fileSize = File(pickedFile.path).lengthSync();
+
       setState(() {
-        _selectedFiles.addAll(result.files.take(3 - _selectedFiles.length));
+        _selectedFiles.add(
+          PlatformFile(
+            path: pickedFile.path,
+            name: pickedFile.name,
+            size: fileSize,
+            bytes: fileBytes,
+          ),
+        );
       });
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Dosya seçmelisiniz.')),
+        SnackBar(content: Text('Fotoğraf seçilmedi.')),
       );
     }
+  } catch (e) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Fotoğraf seçilirken bir hata oluştu: $e')),
+    );
   }
+}
+
+
 
   void _goToSelectedImagesPage() {
     if (_selectedFiles.length != 3) {

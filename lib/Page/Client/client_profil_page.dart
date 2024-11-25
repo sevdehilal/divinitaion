@@ -1,9 +1,9 @@
 import 'package:divinitaion/Models/register_client.dart';
+import 'package:divinitaion/Page/Common/backround_container.dart';
 import 'package:divinitaion/Services/service.dart';
 import 'package:flutter/material.dart';
 
 class ClientProfilePage extends StatefulWidget {
-
   ClientProfilePage();
 
   @override
@@ -22,7 +22,8 @@ class _ClientProfilePageState extends State<ClientProfilePage> {
   final TextEditingController _dateOfBirthController = TextEditingController();
   final TextEditingController _genderController = TextEditingController();
   final TextEditingController _occupationController = TextEditingController();
-  final TextEditingController _maritalStatusController = TextEditingController();
+  final TextEditingController _maritalStatusController =
+      TextEditingController();
   final TextEditingController _userNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
 
@@ -58,50 +59,60 @@ class _ClientProfilePageState extends State<ClientProfilePage> {
 
     _apiService.updateClientProfile(updatedData).then((isSuccess) {
       if (isSuccess) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Profil başarıyla güncellendi')));
+        setState(() {
+          _isEditing = false;
+          _userFuture = _apiService.getUser(); // güncel verileri getir
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Profil başarıyla güncellendi')));
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Profil güncellenirken hata oluştu')));
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Profil güncellenirken hata oluştu')));
       }
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Profilim', style: TextStyle(color: Colors.white)),
-        actions: [
-          IconButton(
-            icon: Icon(_isEditing ? Icons.save : Icons.edit, color: Colors.white),
-            onPressed: _isEditing ? _saveProfile : _toggleEdit,
-          ),
-        ],
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
-      body: FutureBuilder<User>(
-        future: _userFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Bir hata oluştu: ${snapshot.error}'));
-          } else if (snapshot.hasData) {
-            final user = snapshot.data!;
-            _firstNameController.text = user.firstName;
-            _lastNameController.text = user.lastName;
-            _dateOfBirthController.text = user.dateOfBirth.toIso8601String();
-            _genderController.text = user.gender;
-            _occupationController.text = user.occupation;
-            _maritalStatusController.text = user.maritalStatus;
-            _userNameController.text = user.userName;
-            _emailController.text = user.email;
+    return BackgroundContainer(
+      child: Scaffold(
+        backgroundColor: Colors.transparent, // Arka planı saydam yap
+        appBar: AppBar(
+          title: Text('Profilim', style: TextStyle(color: Colors.white)),
+          actions: [
+            IconButton(
+              icon: Icon(_isEditing ? Icons.save : Icons.edit,
+                  color: Colors.white),
+              onPressed: _isEditing ? _saveProfile : _toggleEdit,
+            ),
+          ],
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+        ),
+        body: FutureBuilder<User>(
+          future: _userFuture,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Center(child: Text('Bir hata oluştu: ${snapshot.error}'));
+            } else if (snapshot.hasData) {
+              final user = snapshot.data!;
+              _firstNameController.text = user.firstName;
+              _lastNameController.text = user.lastName;
+              _dateOfBirthController.text = user.dateOfBirth.toIso8601String();
+              _genderController.text = user.gender;
+              _occupationController.text = user.occupation;
+              _maritalStatusController.text = user.maritalStatus;
+              _userNameController.text = user.userName;
+              _emailController.text = user.email;
 
-            return _buildProfile(user);
-          } else {
-            return Center(child: Text('Kullanıcı bilgisi bulunamadı.'));
-          }
-        },
+              return _buildProfile(user);
+            } else {
+              return Center(child: Text('Kullanıcı bilgisi bulunamadı.'));
+            }
+          },
+        ),
       ),
     );
   }
@@ -120,19 +131,11 @@ class _ClientProfilePageState extends State<ClientProfilePage> {
                 _buildCard(child: _buildTextField('Cinsiyet', _genderController)),
                 _buildCard(child: _buildTextField('Meslek', _occupationController)),
                 _buildCard(child: _buildTextField('Medeni Durum', _maritalStatusController)),
-                _buildCard(child: _buildTextField('Kullanıcı Adı', _userNameController)),
-                _buildCard(child: _buildTextField('Email', _emailController)),
+                _buildCard(child: _buildTextField('Kullanıcı Adı', _userNameController,
+                        isEditable: false)),
+                _buildCard(child: _buildTextField('Email', _emailController,
+                        isEditable: false)),
               ],
-            ),
-          ),
-          ElevatedButton(
-            onPressed: _isEditing ? _saveProfile : _toggleEdit,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.white.withOpacity(0.9),
-            ),
-            child: Text(
-              _isEditing ? 'Kaydet' : 'Düzenle',
-              style: TextStyle(color: Colors.black),
             ),
           ),
         ],
@@ -152,10 +155,11 @@ class _ClientProfilePageState extends State<ClientProfilePage> {
     );
   }
 
-  Widget _buildTextField(String label, TextEditingController controller) {
+  Widget _buildTextField(String label, TextEditingController controller,
+      {bool isEditable = true}) {
     return TextFormField(
       controller: controller,
-      readOnly: !_isEditing,
+      readOnly: !_isEditing || !isEditable,
       style: TextStyle(color: Colors.white),
       decoration: InputDecoration(
         labelText: label,

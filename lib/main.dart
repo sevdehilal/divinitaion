@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 void main() {
   HttpOverrides.global = MyHttpOverrides();
   runApp(MaterialApp(
-    home: MyApp(),
+    home: CustomBottomNavigation(),
     debugShowCheckedModeBanner: false,
   ));
 }

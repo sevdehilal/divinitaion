@@ -15,11 +15,10 @@ class FortuneCardForFortuneTeller extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color:
-          Color.fromARGB(255, 24, 18, 20),
+      color: Colors.transparent,
       child: Container(
         decoration: BoxDecoration(
-          color: Color.fromARGB(255, 42, 30, 34),
+          color: Colors.black.withOpacity(0.5),
           borderRadius: BorderRadius.circular(15.0),
           border: Border.all(
             width: 1,
