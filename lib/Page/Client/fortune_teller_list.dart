@@ -151,9 +151,26 @@ class _ClientFortuneTellerListPageState
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return Center(child: CircularProgressIndicator());
                   } else if (snapshot.hasError) {
-                    return Center(child: Text('Error: ${snapshot.error}'));
+                    return Center(
+                      child: Text(
+                        'Error: ${snapshot.error}',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    );
                   } else if (_filteredFortuneTellers.isEmpty) {
-                    return Center(child: Text('Arama sonuçları bulunamadı.'));
+                    return Center(
+                      child: Text(
+                        'Arama sonuçları bulunamadı.',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                        ),
+                      ),
+                    );
                   }
 
                   return ListView.builder(
@@ -169,8 +186,14 @@ class _ClientFortuneTellerListPageState
                           } else if (clientSnapshot.hasError ||
                               !clientSnapshot.hasData) {
                             return Center(
-                                child:
-                                    Text('Error: ${clientSnapshot.error}'));
+                              child: Text(
+                                'Error: ${clientSnapshot.error}',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            );
                           }
 
                           final clientCredit = clientSnapshot.data!;

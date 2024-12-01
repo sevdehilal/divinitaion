@@ -20,12 +20,15 @@ class _ClientProfilePageState extends State<ClientProfilePage> {
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _dateOfBirthController = TextEditingController();
-  final TextEditingController _genderController = TextEditingController();
   final TextEditingController _occupationController = TextEditingController();
-  final TextEditingController _maritalStatusController =
-      TextEditingController();
   final TextEditingController _userNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
+
+  String _gender = 'Belirtmek İstemiyorum'; // Default value for gender
+  String _maritalStatus = 'Bekar'; // Default value for marital status
+
+  List<String> _genderOptions = ['Kadın', 'Erkek', 'Belirtmek İstemiyor'];
+  List<String> _maritalStatusOptions = ['Evli', 'İlişkisi Var', 'Bekar'];
 
   @override
   void initState() {
@@ -39,12 +42,6 @@ class _ClientProfilePageState extends State<ClientProfilePage> {
     });
   }
 
-  void _togglePasswordVisibility() {
-    setState(() {
-      _obscurePassword = !_obscurePassword;
-    });
-  }
-
   void _saveProfile() {
     Map<String, dynamic> updatedData = {
       'userName': _userNameController.text,
@@ -52,9 +49,9 @@ class _ClientProfilePageState extends State<ClientProfilePage> {
       'lastName': _lastNameController.text,
       'dateofBirth': _dateOfBirthController.text,
       'occupation': _occupationController.text,
-      'maritalStatus': _maritalStatusController.text,
-      'gender': _genderController.text,
-      'email': _emailController.text,
+      'gender': _gender,
+      'maritalStatus': _maritalStatus,
+      'email':  _emailController.text,
     };
 
     _apiService.updateClientProfile(updatedData).then((isSuccess) {
@@ -101,11 +98,11 @@ class _ClientProfilePageState extends State<ClientProfilePage> {
               _firstNameController.text = user.firstName;
               _lastNameController.text = user.lastName;
               _dateOfBirthController.text = user.dateOfBirth.toIso8601String();
-              _genderController.text = user.gender;
               _occupationController.text = user.occupation;
-              _maritalStatusController.text = user.maritalStatus;
               _userNameController.text = user.userName;
               _emailController.text = user.email;
+              _gender = user.gender;
+              _maritalStatus = user.maritalStatus;
 
               return _buildProfile(user);
             } else {
@@ -128,13 +125,11 @@ class _ClientProfilePageState extends State<ClientProfilePage> {
                 _buildCard(child: _buildTextField('Adı', _firstNameController)),
                 _buildCard(child: _buildTextField('Soyadı', _lastNameController)),
                 _buildCard(child: _buildTextField('Doğum Tarihi', _dateOfBirthController)),
-                _buildCard(child: _buildTextField('Cinsiyet', _genderController)),
+                _buildCard(child: _buildGenderDropdown()),
+                _buildCard(child: _buildMaritalStatusDropdown()),
                 _buildCard(child: _buildTextField('Meslek', _occupationController)),
-                _buildCard(child: _buildTextField('Medeni Durum', _maritalStatusController)),
-                _buildCard(child: _buildTextField('Kullanıcı Adı', _userNameController,
-                        isEditable: false)),
-                _buildCard(child: _buildTextField('Email', _emailController,
-                        isEditable: false)),
+                _buildCard(child: _buildTextField('Kullanıcı Adı', _userNameController, isEditable: false)),
+                _buildCard(child: _buildTextField('Email', _emailController, isEditable: false)),
               ],
             ),
           ),
@@ -168,4 +163,56 @@ class _ClientProfilePageState extends State<ClientProfilePage> {
       ),
     );
   }
+
+ Widget _buildGenderDropdown() {
+  return DropdownButtonFormField<String>(
+    value: _gender,
+    onChanged: _isEditing
+        ? (String? newValue) {
+            setState(() {
+              _gender = newValue!;
+            });
+          }
+        : null,
+    items: _genderOptions.map((String gender) {
+      return DropdownMenuItem<String>(
+        value: gender,
+        child: Text(gender, style: TextStyle(color: Colors.white)),
+      );
+    }).toList(),
+    decoration: InputDecoration(
+      labelText: 'Cinsiyet',
+      labelStyle: TextStyle(color: Colors.white),
+      border: OutlineInputBorder(),
+    ),
+    dropdownColor: Colors.black.withOpacity(0.7),
+  );
+}
+
+Widget _buildMaritalStatusDropdown() {
+  return DropdownButtonFormField<String>(
+    value: _maritalStatus,
+    onChanged: _isEditing
+        ? (String? newValue) {
+            setState(() {
+              _maritalStatus = newValue!;
+            });
+          }
+        : null,
+    items: _maritalStatusOptions.map((String status) {
+      return DropdownMenuItem<String>(
+        value: status,
+        child: Text(status, style: TextStyle(color: Colors.white)),
+      );
+    }).toList(),
+    decoration: InputDecoration(
+      labelText: 'Medeni Durum',
+      labelStyle: TextStyle(color: Colors.white),
+      border: OutlineInputBorder(),
+    ),
+    dropdownColor: Colors.black.withOpacity(0.7),
+  );
+}
+
+
 }

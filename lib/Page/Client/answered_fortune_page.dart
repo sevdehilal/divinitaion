@@ -106,72 +106,91 @@ class _FortuneAnswerPageState extends State<FortuneAnswerPage> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        title: const Text(
-          'Fal Cevabın...',
-          style: TextStyle(fontSize: 18, color: Colors.white),
-        ),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        flexibleSpace: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Colors.black.withOpacity(0.6), Colors.transparent],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-            ),
+Widget build(BuildContext context) {
+  return Scaffold(
+    extendBodyBehindAppBar: true,
+    appBar: AppBar(
+      title: const Text(
+        'Fal Cevabın...',
+        style: TextStyle(fontSize: 18, color: Colors.white),
+      ),
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      flexibleSpace: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.black.withOpacity(0.6), Colors.transparent],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
           ),
         ),
       ),
-      body: BackgroundContainer(
-        child: RepaintBoundary(
-          key: _screenshotKey,
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _infoContainer(
-                    'Kategoriler: ${widget.fortune.categories?.join(', ') ?? ''}'),
-                const SizedBox(height: 10),
-                _infoContainer(
-                    'Oluşturma Tarihi: ${widget.fortune.createDate}'),
-                const SizedBox(height: 6),
-                const Divider(color: Colors.grey),
-                _infoContainer(widget.fortune.answer ?? 'No answer provided.'),
-                const Spacer(),
-                if (_currentRating == null)
-                  ElevatedButton(
+    ),
+    body: BackgroundContainer(
+      child: RepaintBoundary(
+        key: _screenshotKey,
+        child: Padding(
+          // AppBar yüksekliği kadar boşluk bırakıyoruz
+          padding: EdgeInsets.only(
+            top: MediaQuery.of(context).padding.top + kToolbarHeight,
+            left: 16.0,
+            right: 16.0,
+            bottom: 16.0,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _infoContainer(
+                  'Kategoriler: ${widget.fortune.categories?.join(', ') ?? ''}'),
+              const SizedBox(height: 10),
+              _infoContainer(
+                  'Oluşturma Tarihi: ${widget.fortune.createDate}'),
+              const SizedBox(height: 6),
+              const Divider(color: Colors.grey),
+              _infoContainer(widget.fortune.answer ?? 'No answer provided.'),
+              const Spacer(),
+              if (_currentRating == null)
+                OutlinedButton(
                     onPressed: _showRatingDialog,
-                    child: const Text('Puanlamak İster misiniz?'),
+                    style: OutlinedButton.styleFrom(
+                      side: const BorderSide(color: Colors.white),
+                    ),
+                    child: const Text(
+                      'Puanlamak İster misiniz?',
+                      style: TextStyle(color: Colors.white),
+                    ),
                   )
-                else
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: List.generate(5, (index) {
-                      return Icon(
-                        Icons.star,
-                        color: index < _currentRating!
-                            ? Colors.yellow
-                            : Colors.grey,
-                      );
-                    }),
-                  ),
-                const SizedBox(height: 10),
-                ElevatedButton(
-                  onPressed: _captureAndShareScreenshot,
-                  child: const Text('Ekran Görüntüsünü Paylaş'),
+              else
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: List.generate(5, (index) {
+                    return Icon(
+                      Icons.star,
+                      color: index < _currentRating!
+                          ? Colors.yellow
+                          : Colors.grey,
+                    );
+                  }),
                 ),
-              ],
-            ),
+              const SizedBox(height: 10),
+              OutlinedButton(
+                onPressed: _captureAndShareScreenshot,
+                style: OutlinedButton.styleFrom(
+                  side: const BorderSide(color: Colors.white),
+                ),
+                child: const Text(
+                  'Ekran Görüntüsünü Paylaş',
+                  style: TextStyle(color: Colors.white),
+                ),
+              )
+            ],
           ),
         ),
       ),
-    );
-  }
+    ),
+  );
+}
+
 
   Widget _infoContainer(String text) {
     return Container(
