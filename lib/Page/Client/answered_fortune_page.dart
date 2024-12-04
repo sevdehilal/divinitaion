@@ -19,13 +19,13 @@ class FortuneAnswerPage extends StatefulWidget {
 
 class _FortuneAnswerPageState extends State<FortuneAnswerPage> {
   final ApiService _apiService = ApiService();
-  double? _currentRating;
+  double? _currentScore;
   final GlobalKey _screenshotKey = GlobalKey();
 
   @override
   void initState() {
     super.initState();
-    _currentRating = widget.fortune.rating;
+    _currentScore = widget.fortune.score;
   }
 
   Future<void> _showRatingDialog() async {
@@ -45,13 +45,13 @@ class _FortuneAnswerPageState extends State<FortuneAnswerPage> {
                       return IconButton(
                         icon: Icon(
                           Icons.star,
-                          color: index < (_currentRating ?? 0)
+                          color: index < (_currentScore ?? 0)
                               ? Colors.yellow
                               : Colors.grey,
                         ),
                         onPressed: () {
                           setDialogState(() {
-                            _currentRating = index + 1;
+                            _currentScore = index + 1;
                           });
                         },
                       );
@@ -67,7 +67,7 @@ class _FortuneAnswerPageState extends State<FortuneAnswerPage> {
                 TextButton(
                   onPressed: () async {
                     await _apiService.UpdateFortuneRating(
-                        widget.fortune.id, _currentRating ?? 0);
+                        widget.fortune.id, _currentScore ?? 0);
                     setState(() {});
                     Navigator.pop(context);
                   },
@@ -149,7 +149,7 @@ Widget build(BuildContext context) {
               const Divider(color: Colors.grey),
               _infoContainer(widget.fortune.answer ?? 'No answer provided.'),
               const Spacer(),
-              if (_currentRating == null)
+              if (_currentScore == null)
                 OutlinedButton(
                     onPressed: _showRatingDialog,
                     style: OutlinedButton.styleFrom(
@@ -166,7 +166,7 @@ Widget build(BuildContext context) {
                   children: List.generate(5, (index) {
                     return Icon(
                       Icons.star,
-                      color: index < _currentRating!
+                      color: index < _currentScore!
                           ? Colors.yellow
                           : Colors.grey,
                     );

@@ -1,3 +1,4 @@
+import 'package:divinitaion/Services/admop_service.dart';
 import 'package:divinitaion/Services/service.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -14,68 +15,46 @@ class RewardCardSelectionPage extends StatefulWidget {
 
 class _RewardCardSelectionPageState extends State<RewardCardSelectionPage> {
   final ApiService _apiService = ApiService();
+  final AdMobService _adMobService = AdMobService();
+
   int? selectedReward;
   List<int> rewards = [5, 10, 15, 20, 25, 30];
 
   bool isRevealed = false;
   bool isConfirmed = false;
-  bool isAdLoaded = false;
-  late RewardedAd _rewardedAd;  // Ödüllü reklam
+  bool isAdCompleted = false;
 
-  // Reklamı yüklemek için fonksiyon
-  Future<void> _loadAd() async {
-    RewardedAd.load(
-      adUnitId: 'ca-app-pub-2442587495670415/3394104117', // Burada reklam birimi kimliğini kullanıyorsunuz
-      request: AdRequest(),
-      rewardedAdLoadCallback: RewardedAdLoadCallback(
-        onAdLoaded: (RewardedAd ad) {
-          setState(() {
-            _rewardedAd = ad;
-            isAdLoaded = true;
-          });
-        },
-        onAdFailedToLoad: (LoadAdError error) {
-          print('Ad failed to load: $error');
-        },
-      ),
-    );
-  }
+  @override
+void initState() {
+  super.initState();
+  // AdMob servisini başlat ve ödüllü geçiş reklamını yükle
+  _adMobService.initialize().then((_) {
+    _adMobService.loadRewardedInterstitialAd((RewardItem reward) {
+      setState(() {
+        isAdCompleted = true;
+      });
+      print('User earned reward: ${reward.amount} ${reward.type}');
+    }).then((_) {
+      // Reklamı otomatik olarak göster
+      _adMobService.showRewardedInterstitialAd((RewardItem reward) {
+        setState(() {
+          isAdCompleted = true;
+        });
+        print('User earned reward: ${reward.amount} ${reward.type}');
+      });
+    });
+  });
+}
 
-  // Ödüllü reklamı göstermek için fonksiyon
-  void _showAd() {
-    if (isAdLoaded) {
-      _rewardedAd.show(
-        onUserEarnedReward: (AdWithoutView ad, RewardItem reward) {
-          // Kullanıcı ödül kazandığında yapılacak işlemler
-          print('User earned reward: ${reward.amount} ${reward.type}');
-        },
-      );
-    } else {
-      print('Ad is not loaded yet.');
-    }
-  }
-
-  Future<void> _sendRewardToApi(int clientId, int reward) async {
-    await Future.delayed(Duration(seconds: 2));
-    print("Reward $reward sent to client $clientId");
+  @override
+  void dispose() {
+    // Reklam nesnesini serbest bırak
+    _adMobService.dispose();
+    super.dispose();
   }
 
   void shuffleRewards() {
     rewards.shuffle();
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    // Reklamı yüklemek
-    _loadAd();
-  }
-
-  @override
-  void dispose() {
-    // Reklamı serbest bırakmak
-    _rewardedAd.dispose();
-    super.dispose();
   }
 
   @override
@@ -86,18 +65,13 @@ class _RewardCardSelectionPageState extends State<RewardCardSelectionPage> {
         backgroundColor: Colors.black,
       ),
       body: Center(
-        child: isAdLoaded
+        child: isAdCompleted
             ? Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Text(
                     'Bir Kart Seç ve Coin Kazan!',
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: _showAd,  // Reklamı göster butonu
-                    child: const Text('Reklamı Göster'),
                   ),
                   const SizedBox(height: 20),
                   GridView.builder(
@@ -107,7 +81,7 @@ class _RewardCardSelectionPageState extends State<RewardCardSelectionPage> {
                       crossAxisSpacing: 10,
                       mainAxisSpacing: 10,
                     ),
-                    itemCount: 6,
+                    itemCount: rewards.length,
                     itemBuilder: (context, index) {
                       return GestureDetector(
                         onTap: isRevealed || isConfirmed
@@ -203,9 +177,7 @@ class _RewardCardSelectionPageState extends State<RewardCardSelectionPage> {
                     ),
                 ],
               )
-            : Center(
-                child: CircularProgressIndicator(),
-              ),
+            : const CircularProgressIndicator(),
       ),
     );
   }

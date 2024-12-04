@@ -5,7 +5,7 @@ class FortuneListt {
   final String? answer;
   final DateTime? createDate;
   final List<String>? categories;
-  final double? rating;
+  final double? score;
 
   FortuneListt({
     this.id,
@@ -14,7 +14,7 @@ class FortuneListt {
     this.answer,
     this.createDate,
     this.categories,
-    this.rating,
+    this.score,
   });
 
   factory FortuneListt.fromJson(Map<String, dynamic> json) {
@@ -32,7 +32,7 @@ class FortuneListt {
           ? DateTime.parse(json['createDate'])
           : null,
       categories: categoriesList,
-      rating: json['rating'] as double?,
+      score: json['score'] as double?,
     );
   }
 
@@ -44,7 +44,7 @@ class FortuneListt {
       'answer': answer,
       'createDate': createDate?.toIso8601String(),
       'categories': categories,
-      'rating': rating,
+      'score': score,
     };
   }
 }

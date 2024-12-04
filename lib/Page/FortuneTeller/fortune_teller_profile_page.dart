@@ -2,6 +2,8 @@ import 'package:divinitaion/Models/fortune_teller_entity.dart';
 import 'package:divinitaion/Page/Common/backround_container.dart';
 import 'package:flutter/material.dart';
 import 'package:divinitaion/Services/service.dart';
+import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 
 class FortuneTellerProfilePage extends StatefulWidget {
   @override
@@ -145,17 +147,26 @@ class _FortuneTellerProfilePageState extends State<FortuneTellerProfilePage> {
               children: [
                 _buildCard(child: _buildTextField('Adı', _firstNameController)),
                 _buildCard(child: _buildTextField('Soyadı', _lastNameController)),
-                _buildCard(child: _buildTextField('Cinsiyet', _genderController)),
-                _buildCard(child: _buildTextField('Doğum Tarihi', _dateOfBirthController)),
-                _buildCard(child: _buildTextField('Deneyim', _experienceController)),
-                _buildCard(child: _buildTextField('Gereken Coin', _requirementCreditController)),
-                _buildCard(child: _buildTextField('Rating', _ratingController,
+                _buildCard(child: _buildDropdownField('Cinsiyet', _genderController)),
+                _buildCard(
+                    child: _buildTextField('Doğum Tarihi', _dateOfBirthController)),
+                _buildCard(
+                    child: _buildTextField('Deneyim (Yıl)', _experienceController,
+                        isNumber: true)),
+                _buildCard(
+                    child: _buildTextField('Gereken Coin', _requirementCreditController,
+                        isNumber: true)),
+                _buildCard(
+                    child: _buildTextField('Rating', _ratingController,
                         isEditable: false)),
-                _buildCard(child: _buildTextField('Toplam Coin', _totalCreditController,
+                _buildCard(
+                    child: _buildTextField('Toplam Coin', _totalCreditController,
                         isEditable: false)),
-                _buildCard(child: _buildTextField('Kullanıcı Adı', _userNameController,
+                _buildCard(
+                    child: _buildTextField('Kullanıcı Adı', _userNameController,
                         isEditable: false)),
-                _buildCard(child: _buildTextField('E-Posta', _emailController,
+                _buildCard(
+                    child: _buildTextField('E-Posta', _emailController,
                         isEditable: false)),
               ],
             ),
@@ -178,16 +189,56 @@ class _FortuneTellerProfilePageState extends State<FortuneTellerProfilePage> {
   }
 
   Widget _buildTextField(String label, TextEditingController controller,
-      {bool isEditable = true}) {
+      {bool isEditable = true, bool isNumber = false}) {
     return TextFormField(
       controller: controller,
       readOnly: !_isEditing || !isEditable,
-      style: TextStyle(color: Colors.white),
+      keyboardType: isNumber ? TextInputType.number : TextInputType.text,
+      inputFormatters: isNumber
+          ? [FilteringTextInputFormatter.digitsOnly]
+          : null,
+      style: const TextStyle(color: Colors.white),
       decoration: InputDecoration(
         labelText: label,
-        labelStyle: TextStyle(color: Colors.white),
-        border: OutlineInputBorder(),
+        labelStyle: const TextStyle(color: Colors.white),
+        border: const OutlineInputBorder(),
       ),
+    );
+  }
+
+  Widget _buildDropdownField(String label, TextEditingController controller) {
+    const genderOptions = ['Kadın', 'Erkek', 'Belirtmek İstemiyor'];
+
+    // Dropdown'da kullanılacak değer için kontrol
+    String? dropdownValue = genderOptions.contains(controller.text)
+        ? controller.text
+        : null;
+
+    return DropdownButtonFormField<String>(
+      value: dropdownValue,
+      items: genderOptions
+          .map((gender) => DropdownMenuItem(
+                value: gender,
+                child: Text(
+                  gender,
+                  style: const TextStyle(color: Colors.white),
+                ),
+              ))
+          .toList(),
+      onChanged: _isEditing
+          ? (value) {
+              setState(() {
+                controller.text = value ?? '';
+              });
+            }
+          : null,
+      style: const TextStyle(color: Colors.white),
+      decoration: InputDecoration(
+        labelText: label,
+        labelStyle: const TextStyle(color: Colors.white),
+        border: const OutlineInputBorder(),
+      ),
+      dropdownColor: Colors.black.withOpacity(0.9),
     );
   }
 }

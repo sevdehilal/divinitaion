@@ -144,12 +144,19 @@ class ApiService {
         "http://fallinfal.com/api/Application/GetApplicationByClientIdIsAnsweredFalse?id=$clientId"));
 
     if (response.statusCode == 200) {
-      List<dynamic> jsonList = json.decode(response.body);
-      return jsonList.map((json) => FortuneListt.fromJson(json)).toList();
+      final Map<String, dynamic> responseJson = json.decode(response.body);
+
+      if (responseJson['success'] == true) {
+        List<dynamic> dataList = responseJson['data'];
+        return dataList.map((json) => FortuneListt.fromJson(json)).toList();
+      } else {
+        throw Exception(responseJson['message'] ?? 'Unexpected API error');
+      }
     } else {
       throw Exception('Failed to load fortunes');
     }
   }
+
 
   Future<List<FortuneListt>> fetchAnsweredFortunes() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -164,12 +171,19 @@ class ApiService {
         "http://fallinfal.com/api/Application/GetApplicationByClientIdIsAnsweredTrue?id=$clientId"));
 
     if (response.statusCode == 200) {
-      List<dynamic> jsonList = json.decode(response.body);
-      return jsonList.map((json) => FortuneListt.fromJson(json)).toList();
+      final Map<String, dynamic> responseJson = json.decode(response.body);
+
+      if (responseJson['success'] == true) {
+        List<dynamic> dataList = responseJson['data'];
+        return dataList.map((json) => FortuneListt.fromJson(json)).toList();
+      } else {
+        throw Exception(responseJson['message'] ?? 'Unexpected API error');
+      }
     } else {
       throw Exception('Failed to load fortunes');
     }
   }
+
 
   Future<bool> saveFortune({
     required int? clientId,
@@ -226,8 +240,7 @@ class ApiService {
     }
   }
 
-  Future<List<FortuneForFortuneTeller>>
-      FetchPendingFortunesByFortuneTellerId() async {
+  Future<List<FortuneForFortuneTeller>> FetchPendingFortunesByFortuneTellerId() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
     int? fortuneTellerId = prefs.getInt('id');
@@ -242,15 +255,23 @@ class ApiService {
     );
 
     if (response.statusCode == 200) {
-      List<dynamic> jsonList = json.decode(response.body);
-      print(response.body);
-      return jsonList
-          .map((json) => FortuneForFortuneTeller.fromJson(json))
-          .toList();
+      final responseBody = json.decode(response.body);
+
+      if (responseBody['success'] == true) {
+        List<dynamic> dataList = responseBody['data'];
+        print(response.body);
+
+        return dataList
+            .map((json) => FortuneForFortuneTeller.fromJson(json))
+            .toList();
+      } else {
+        throw Exception('Failed to load fortunes: ${responseBody['message']}');
+      }
     } else {
-      throw Exception('Failed to load fortunes');
+      throw Exception('Failed to load fortunes: HTTP ${response.statusCode}');
     }
   }
+
 
   Future<bool> sendAnswer({
     required int? fortuneId,
@@ -284,8 +305,7 @@ class ApiService {
     }
   }
 
-  Future<List<FortuneForFortuneTeller>>
-      FetchAnsweredFortunesByFortuneTellerId() async {
+  Future<List<FortuneForFortuneTeller>> FetchAnsweredFortunesByFortuneTellerId() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
     int? fortuneTellerId = prefs.getInt('id');
@@ -300,15 +320,23 @@ class ApiService {
     );
 
     if (response.statusCode == 200) {
-      List<dynamic> jsonList = json.decode(response.body);
-      print(response.body);
-      return jsonList
-          .map((json) => FortuneForFortuneTeller.fromJson(json))
-          .toList();
+      final responseBody = json.decode(response.body);
+
+      if (responseBody['success'] == true) {
+        List<dynamic> dataList = responseBody['data'];
+        print(response.body);
+
+        return dataList
+            .map((json) => FortuneForFortuneTeller.fromJson(json))
+            .toList();
+      } else {
+        throw Exception('Failed to load answered fortunes: ${responseBody['message']}');
+      }
     } else {
-      throw Exception('Failed to load fortunes');
+      throw Exception('Failed to load answered fortunes: HTTP ${response.statusCode}');
     }
   }
+
 
   Future<int> fetchClientCreditByClientId() async {
   final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -400,31 +428,53 @@ class ApiService {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     int? clientId = prefs.getInt('id');
 
+    if (clientId == null) {
+      throw Exception('No client ID found in SharedPreferences');
+    }
+
     final response = await http.get(Uri.parse(
         "http://fallinfal.com/api/Auth/GetClientById?clientId=$clientId"));
 
     if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      return User.fromJson(data);
+      final Map<String, dynamic> responseJson = jsonDecode(response.body);
+
+      if (responseJson['success'] == true) {
+        final userData = responseJson['data'];
+        return User.fromJson(userData);
+      } else {
+        throw Exception(responseJson['message'] ?? 'Unexpected API error');
+      }
     } else {
       throw Exception('Failed to load user profile');
     }
   }
+
 
   Future<FortuneTeller> getFortuneTeller() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     int? fortuneTellerId = prefs.getInt('id');
 
+    if (fortuneTellerId == null) {
+      throw Exception('No fortune teller ID found in SharedPreferences');
+    }
+
     final response = await http.get(Uri.parse(
         "http://fallinfal.com/api/Auth/GetFortuneTellerById?fortuneTellerId=$fortuneTellerId"));
 
     if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      return FortuneTeller.fromJson(data);
+      final responseBody = jsonDecode(response.body);
+
+      if (responseBody['success'] == true) {
+        final data = responseBody['data'];
+        return FortuneTeller.fromJson(data);
+      } else {
+        throw Exception('Failed to load fortune teller: ${responseBody['message']}');
+      }
     } else {
-      throw Exception('Failed to load user profile');
+      throw Exception('Failed to load fortune teller: HTTP ${response.statusCode}');
     }
   }
+
 
   Future<bool> updateFortuneTellerProfile(
       Map<String, dynamic> updatedData) async {
@@ -437,7 +487,7 @@ class ApiService {
       }
 
       final response = await http.post(
-        Uri.parse('http://fallinfal.com/api/Auth/UpdateFortune'),
+        Uri.parse('https://fallinfal.com/api/Auth/UpdateFortune'),
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
@@ -469,7 +519,7 @@ class ApiService {
       }
 
       final response = await http.post(
-        Uri.parse('http://fallinfal.com/api/Auth/UpdateClient'),
+        Uri.parse('https://fallinfal.com/api/Auth/UpdateClient'),
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',

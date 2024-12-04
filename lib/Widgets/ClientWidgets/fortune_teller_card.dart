@@ -137,9 +137,7 @@ class _CustomFortuneTellerCardState extends State<CustomFortuneTellerCard> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => PhotoSelectionPage(
-                            fortuneTeller: widget.fortuneTeller,
-                          ),
+                          builder: (context) => RewardCardSelectionPage(clientId: clientId),
                         ),
                       );
                     },

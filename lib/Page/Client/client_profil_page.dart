@@ -2,10 +2,9 @@ import 'package:divinitaion/Models/register_client.dart';
 import 'package:divinitaion/Page/Common/backround_container.dart';
 import 'package:divinitaion/Services/service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class ClientProfilePage extends StatefulWidget {
-  ClientProfilePage();
-
   @override
   _ClientProfilePageState createState() => _ClientProfilePageState();
 }
@@ -13,22 +12,16 @@ class ClientProfilePage extends StatefulWidget {
 class _ClientProfilePageState extends State<ClientProfilePage> {
   final ApiService _apiService = ApiService();
   late Future<User> _userFuture;
-  bool _obscurePassword = true;
   bool _isEditing = false;
 
-  // Add controllers to manage input fields
-  final TextEditingController _firstNameController = TextEditingController();
+final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _dateOfBirthController = TextEditingController();
   final TextEditingController _occupationController = TextEditingController();
   final TextEditingController _userNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
-
-  String _gender = 'Belirtmek İstemiyorum'; // Default value for gender
-  String _maritalStatus = 'Bekar'; // Default value for marital status
-
-  List<String> _genderOptions = ['Kadın', 'Erkek', 'Belirtmek İstemiyor'];
-  List<String> _maritalStatusOptions = ['Evli', 'İlişkisi Var', 'Bekar'];
+  final TextEditingController _genderController = TextEditingController();
+  final TextEditingController _maritalStatusController = TextEditingController();
 
   @override
   void initState() {
@@ -36,57 +29,80 @@ class _ClientProfilePageState extends State<ClientProfilePage> {
     _userFuture = _apiService.getUser();
   }
 
-  void _toggleEdit() {
-    setState(() {
-      _isEditing = !_isEditing;
-    });
+  @override
+  void dispose() {
+    _userNameController.dispose();
+    _firstNameController.dispose();
+    _lastNameController.dispose();
+    _genderController.dispose();
+    _emailController.dispose();
+    _dateOfBirthController.dispose();
+    _occupationController.dispose();
+    _maritalStatusController.dispose();
+    super.dispose();
   }
 
-  void _saveProfile() {
-    Map<String, dynamic> updatedData = {
-      'userName': _userNameController.text,
-      'firstName': _firstNameController.text,
-      'lastName': _lastNameController.text,
-      'dateofBirth': _dateOfBirthController.text,
-      'occupation': _occupationController.text,
-      'gender': _gender,
-      'maritalStatus': _maritalStatus,
-      'email':  _emailController.text,
-    };
+  void _populateFields(User user) {
+    _userNameController.text = user.userName ?? '';
+    _firstNameController.text = user.firstName;
+    _lastNameController.text = user.lastName;
+    _genderController.text = user.gender ?? '';
+    _emailController.text = user.email ?? '';
+    _occupationController.text = user.occupation ?? '';
+    _maritalStatusController.text = user.maritalStatus ?? '';
+    _dateOfBirthController.text = DateTime(2017, 9, 7, 17, 30).toIso8601String();
+  }
 
-    _apiService.updateClientProfile(updatedData).then((isSuccess) {
-      if (isSuccess) {
+  void _toggleEdit() async {
+    if (_isEditing) {
+      final updatedData = {
+        'userName': _userNameController.text,
+        'firstName': _firstNameController.text,
+        'lastName': _lastNameController.text,
+        'dateOfBirth': _dateOfBirthController.text,
+        'gender': _genderController.text,
+        'email': _emailController.text,
+        'occupation': _occupationController.text,
+        'maritalStatus': _maritalStatusController.text,
+      };
+
+      final success = await _apiService.updateClientProfile(updatedData);
+
+      if (success) {
         setState(() {
           _isEditing = false;
-          _userFuture = _apiService.getUser(); // güncel verileri getir
+          _userFuture = _apiService.getUser();
         });
         ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Profil başarıyla güncellendi')));
+          SnackBar(content: Text("Profil başarıyla güncellendi.")),
+        );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Profil güncellenirken hata oluştu')));
+          SnackBar(content: Text("Profil güncellenemedi, tekrar deneyin.")),
+        );
       }
-    });
+    } else {
+      setState(() {
+        _isEditing = true;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return BackgroundContainer(
-      child: Scaffold(
-        backgroundColor: Colors.transparent, // Arka planı saydam yap
-        appBar: AppBar(
-          title: Text('Profilim', style: TextStyle(color: Colors.white)),
-          actions: [
-            IconButton(
-              icon: Icon(_isEditing ? Icons.save : Icons.edit,
-                  color: Colors.white),
-              onPressed: _isEditing ? _saveProfile : _toggleEdit,
-            ),
-          ],
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-        ),
-        body: FutureBuilder<User>(
+    return Scaffold(
+      appBar: AppBar(
+        actions: [
+          IconButton(
+            icon: Icon(_isEditing ? Icons.save : Icons.edit, color: Colors.white),
+            onPressed: _toggleEdit,
+          ),
+        ],
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+      ),
+      body: BackgroundContainer(
+        child: FutureBuilder<User>(
           future: _userFuture,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -95,18 +111,12 @@ class _ClientProfilePageState extends State<ClientProfilePage> {
               return Center(child: Text('Bir hata oluştu: ${snapshot.error}'));
             } else if (snapshot.hasData) {
               final user = snapshot.data!;
-              _firstNameController.text = user.firstName;
-              _lastNameController.text = user.lastName;
-              _dateOfBirthController.text = user.dateOfBirth.toIso8601String();
-              _occupationController.text = user.occupation;
-              _userNameController.text = user.userName;
-              _emailController.text = user.email;
-              _gender = user.gender;
-              _maritalStatus = user.maritalStatus;
-
-              return _buildProfile(user);
+              if (!_isEditing) {
+                _populateFields(user);
+              }
+              return _buildProfile();
             } else {
-              return Center(child: Text('Kullanıcı bilgisi bulunamadı.'));
+              return Center(child: Text('User bilgisi bulunamadı.'));
             }
           },
         ),
@@ -114,7 +124,7 @@ class _ClientProfilePageState extends State<ClientProfilePage> {
     );
   }
 
-  Widget _buildProfile(User user) {
+  Widget _buildProfile() {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
@@ -124,12 +134,12 @@ class _ClientProfilePageState extends State<ClientProfilePage> {
               children: [
                 _buildCard(child: _buildTextField('Adı', _firstNameController)),
                 _buildCard(child: _buildTextField('Soyadı', _lastNameController)),
-                _buildCard(child: _buildTextField('Doğum Tarihi', _dateOfBirthController)),
-                _buildCard(child: _buildGenderDropdown()),
-                _buildCard(child: _buildMaritalStatusDropdown()),
+                _buildCard(child: _buildGenderDropdownField('Cinsiyet', _genderController)),
+                _buildCard(child: _buildMaritalStatusDropdownField('Medeni Durum', _maritalStatusController)),
                 _buildCard(child: _buildTextField('Meslek', _occupationController)),
+                _buildCard(child: _buildTextField('Doğum Tarihi', _dateOfBirthController)),
                 _buildCard(child: _buildTextField('Kullanıcı Adı', _userNameController, isEditable: false)),
-                _buildCard(child: _buildTextField('Email', _emailController, isEditable: false)),
+                _buildCard(child: _buildTextField('E-Posta', _emailController, isEditable: false)),
               ],
             ),
           ),
@@ -151,68 +161,92 @@ class _ClientProfilePageState extends State<ClientProfilePage> {
   }
 
   Widget _buildTextField(String label, TextEditingController controller,
-      {bool isEditable = true}) {
+      {bool isEditable = true, bool isNumber = false}) {
     return TextFormField(
       controller: controller,
       readOnly: !_isEditing || !isEditable,
-      style: TextStyle(color: Colors.white),
+      keyboardType: isNumber ? TextInputType.number : TextInputType.text,
+      inputFormatters: isNumber
+          ? [FilteringTextInputFormatter.digitsOnly]
+          : null,
+      style: const TextStyle(color: Colors.white),
       decoration: InputDecoration(
         labelText: label,
-        labelStyle: TextStyle(color: Colors.white),
-        border: OutlineInputBorder(),
+        labelStyle: const TextStyle(color: Colors.white),
+        border: const OutlineInputBorder(),
       ),
     );
   }
 
- Widget _buildGenderDropdown() {
-  return DropdownButtonFormField<String>(
-    value: _gender,
-    onChanged: _isEditing
-        ? (String? newValue) {
-            setState(() {
-              _gender = newValue!;
-            });
-          }
-        : null,
-    items: _genderOptions.map((String gender) {
-      return DropdownMenuItem<String>(
-        value: gender,
-        child: Text(gender, style: TextStyle(color: Colors.white)),
-      );
-    }).toList(),
-    decoration: InputDecoration(
-      labelText: 'Cinsiyet',
-      labelStyle: TextStyle(color: Colors.white),
-      border: OutlineInputBorder(),
-    ),
-    dropdownColor: Colors.black.withOpacity(0.7),
-  );
-}
+  Widget _buildGenderDropdownField(String label, TextEditingController controller) {
+    const genderOptions = ['Kadın', 'Erkek', 'Belirtmek İstemiyor'];
 
-Widget _buildMaritalStatusDropdown() {
-  return DropdownButtonFormField<String>(
-    value: _maritalStatus,
-    onChanged: _isEditing
-        ? (String? newValue) {
-            setState(() {
-              _maritalStatus = newValue!;
-            });
-          }
-        : null,
-    items: _maritalStatusOptions.map((String status) {
-      return DropdownMenuItem<String>(
-        value: status,
-        child: Text(status, style: TextStyle(color: Colors.white)),
-      );
-    }).toList(),
-    decoration: InputDecoration(
-      labelText: 'Medeni Durum',
-      labelStyle: TextStyle(color: Colors.white),
-      border: OutlineInputBorder(),
-    ),
-    dropdownColor: Colors.black.withOpacity(0.7),
-  );
-}
+    // Dropdown'da kullanılacak değer için kontrol
+    String? dropdownValue = genderOptions.contains(controller.text)
+        ? controller.text
+        : null;
 
+    return DropdownButtonFormField<String>(
+      value: dropdownValue,
+      items: genderOptions
+          .map((gender) => DropdownMenuItem(
+                value: gender,
+                child: Text(
+                  gender,
+                  style: const TextStyle(color: Colors.white),
+                ),
+              ))
+          .toList(),
+      onChanged: _isEditing
+          ? (value) {
+              setState(() {
+                controller.text = value ?? '';
+              });
+            }
+          : null,
+      style: const TextStyle(color: Colors.white),
+      decoration: InputDecoration(
+        labelText: label,
+        labelStyle: const TextStyle(color: Colors.white),
+        border: const OutlineInputBorder(),
+      ),
+      dropdownColor: Colors.black.withOpacity(0.9),
+    );
+  }
 
+  Widget _buildMaritalStatusDropdownField(String label, TextEditingController controller) {
+    const maritalStatusOptions = ['Bekar', 'Evli', 'Belirtmek İstemiyor'];
+
+    // Dropdown'da kullanılacak değer için kontrol
+    String? dropdownValue = maritalStatusOptions.contains(controller.text)
+        ? controller.text
+        : null;
+
+    return DropdownButtonFormField<String>(
+      value: dropdownValue,
+      items: maritalStatusOptions
+          .map((gender) => DropdownMenuItem(
+                value: gender,
+                child: Text(
+                  gender,
+                  style: const TextStyle(color: Colors.white),
+                ),
+              ))
+          .toList(),
+      onChanged: _isEditing
+          ? (value) {
+              setState(() {
+                controller.text = value ?? '';
+              });
+            }
+          : null,
+      style: const TextStyle(color: Colors.white),
+      decoration: InputDecoration(
+        labelText: label,
+        labelStyle: const TextStyle(color: Colors.white),
+        border: const OutlineInputBorder(),
+      ),
+      dropdownColor: Colors.black.withOpacity(0.9),
+    );
+  }
 }
