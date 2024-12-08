@@ -1,4 +1,3 @@
-import 'package:divinitaion/Services/admop_service.dart';
 import 'package:divinitaion/Services/service.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -14,43 +13,65 @@ class RewardCardSelectionPage extends StatefulWidget {
 }
 
 class _RewardCardSelectionPageState extends State<RewardCardSelectionPage> {
-  final ApiService _apiService = ApiService();
-  final AdMobService _adMobService = AdMobService();
-
   int? selectedReward;
   List<int> rewards = [5, 10, 15, 20, 25, 30];
+  ApiService _apiService = ApiService();
 
   bool isRevealed = false;
   bool isConfirmed = false;
   bool isAdCompleted = false;
 
+  RewardedAd? _rewardedAd;
+
   @override
-void initState() {
-  super.initState();
-  // AdMob servisini başlat ve ödüllü geçiş reklamını yükle
-  _adMobService.initialize().then((_) {
-    _adMobService.loadRewardedInterstitialAd((RewardItem reward) {
-      setState(() {
-        isAdCompleted = true;
-      });
-      print('User earned reward: ${reward.amount} ${reward.type}');
-    }).then((_) {
-      // Reklamı otomatik olarak göster
-      _adMobService.showRewardedInterstitialAd((RewardItem reward) {
-        setState(() {
-          isAdCompleted = true;
-        });
-        print('User earned reward: ${reward.amount} ${reward.type}');
-      });
-    });
-  });
-}
+  void initState() {
+    super.initState();
+    // AdMob test ID'sini kullanarak reklamı yükle
+    _loadRewardedAd();
+  }
+
+  // Reklam yükleme fonksiyonu
+  void _loadRewardedAd() {
+    RewardedAd.load(
+      adUnitId:
+          'ca-app-pub-3940256099942544/5224354917', // Google'ın AdMob test ID'si
+      request: AdRequest(),
+      rewardedAdLoadCallback: RewardedAdLoadCallback(
+        onAdLoaded: (ad) {
+          setState(() {
+            _rewardedAd = ad;
+          });
+          // Reklam yüklendiğinde otomatik olarak göster
+          _showRewardedAd();
+        },
+        onAdFailedToLoad: (error) {
+          print('Failed to load rewarded ad: $error');
+        },
+      ),
+    );
+  }
+
+  // Reklamı gösterme fonksiyonu
+  void _showRewardedAd() {
+    if (_rewardedAd != null) {
+      _rewardedAd!.show(
+        onUserEarnedReward: (ad, reward) {
+          setState(() {
+            isAdCompleted = true;
+          });
+          print('User earned reward: ${reward.amount} ${reward.type}');
+        },
+      );
+    } else {
+      print('Ad is not loaded yet');
+    }
+  }
 
   @override
   void dispose() {
-    // Reklam nesnesini serbest bırak
-    _adMobService.dispose();
     super.dispose();
+    // Reklam nesnesini serbest bırak
+    _rewardedAd?.dispose();
   }
 
   void shuffleRewards() {
@@ -76,7 +97,8 @@ void initState() {
                   const SizedBox(height: 20),
                   GridView.builder(
                     shrinkWrap: true,
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 3,
                       crossAxisSpacing: 10,
                       mainAxisSpacing: 10,
@@ -97,11 +119,13 @@ void initState() {
                           duration: const Duration(seconds: 1),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(20),
-                            color: isRevealed ? Colors.white : Colors.transparent,
+                            color:
+                                isRevealed ? Colors.white : Colors.transparent,
                             image: isRevealed
                                 ? null
                                 : DecorationImage(
-                                    image: AssetImage('lib/assets/tarot_karti.jpg'),
+                                    image: AssetImage(
+                                        'lib/assets/tarot_karti.jpg'),
                                     fit: BoxFit.cover,
                                   ),
                           ),
@@ -151,7 +175,8 @@ void initState() {
                                     }
 
                                     try {
-                                      await _apiService.earnCoin(selectedReward!);
+                                      await _apiService
+                                          .earnCoin(selectedReward!);
 
                                       ScaffoldMessenger.of(context)
                                           .showSnackBar(SnackBar(
