@@ -10,7 +10,14 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 Future<void> main() async {
   HttpOverrides.global = MyHttpOverrides();
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(
+      options: FirebaseOptions(
+    apiKey: 'AIzaSyADMRiFM3ZMtHhFCUg5uCClBW0qkleOsjU',
+    appId: 'id',
+    messagingSenderId: 'sendid',
+    projectId: 'fallinfal-5bfce',
+    storageBucket: 'fallinfal-5bfce.firebasestorage.app',
+  ));
   MobileAds.instance.initialize();
   runApp(MaterialApp(
     home: MyApp(),
