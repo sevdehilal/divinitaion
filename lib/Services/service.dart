@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:divinitaion/Models/login_with_google.dart';
 import 'package:divinitaion/Models/fortune_categories_entity.dart';
 import 'package:divinitaion/Models/fortune_entity.dart';
 import 'package:divinitaion/Models/fortune_model_for_fortune_teller.dart';
