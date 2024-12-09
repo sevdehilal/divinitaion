@@ -1,3 +1,4 @@
+import 'package:divinitaion/Page/Client/fortune_teller_list.dart';
 import 'package:divinitaion/Services/service.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -183,8 +184,11 @@ class _RewardCardSelectionPageState extends State<RewardCardSelectionPage> {
                                         content: Text(
                                             "Ödül başarıyla gönderildi: $selectedReward Coin!"),
                                       ));
-
                                       Navigator.pop(context);
+                                      Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(builder: (context) => ClientFortuneTellerList()),
+                                      );
                                     } catch (e) {
                                       setState(() {
                                         isConfirmed = false;

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:divinitaion/Models/login_with_google.dart';
 import 'package:divinitaion/Models/fortune_categories_entity.dart';
 import 'package:divinitaion/Models/fortune_entity.dart';
 import 'package:divinitaion/Models/fortune_model_for_fortune_teller.dart';
@@ -107,7 +108,7 @@ class ApiService {
   }
 
   Future<List<FortuneTeller>> FetchFortuneTeller() async {
-  final response = await http.get(Uri.parse("http://fallinfal.com/api/Client/GetAllFortuneTeller"));
+  final response = await http.get(Uri.parse("https://fallinfal.com/api/Client/GetAllFortuneTeller"));
 
   if (response.statusCode == 200) {
     // Extract the 'data' field from the response
@@ -122,10 +123,11 @@ class ApiService {
 
   Future<List<FortuneCategory>> fetchFortuneCategories() async {
     final response = await http
-        .get(Uri.parse("http://fallinfal.com/api/Category/GetAllCategory"));
+        .get(Uri.parse("https://fallinfal.com/api/Category/GetAllCategory"));
 
     if (response.statusCode == 200) {
-      List<dynamic> jsonList = json.decode(response.body);
+      Map<String, dynamic> jsonResponse = json.decode(response.body);
+      List<dynamic> jsonList = jsonResponse['data']; // Use 'data' if the response is wrapped
       return jsonList.map((json) => FortuneCategory.fromJson(json)).toList();
     } else {
       throw Exception('Failed to load categories');
@@ -140,8 +142,8 @@ class ApiService {
       throw Exception('No fortune teller ID found in SharedPreferences');
     }
 
-    final response = await http.get(Uri.parse(
-        "http://fallinfal.com/api/Application/GetApplicationByClientIdIsAnsweredFalse?id=$clientId"));
+     final response = await http.get(Uri.parse(
+        "https://fallinfal.com/api/Application/GetApplicationByClientIdIsAnsweredFalse?id=$clientId"));
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> responseJson = json.decode(response.body);
@@ -168,7 +170,7 @@ class ApiService {
     }
 
     final response = await http.get(Uri.parse(
-        "http://fallinfal.com/api/Application/GetApplicationByClientIdIsAnsweredTrue?id=$clientId"));
+        "https://fallinfal.com/api/Application/GetApplicationByClientIdIsAnsweredTrue?id=$clientId"));
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> responseJson = json.decode(response.body);
@@ -196,7 +198,7 @@ class ApiService {
     try {
       // Prepare the request URL
       var url =
-          Uri.parse("http://fallinfal.com/api/Application/AddApplication");
+          Uri.parse("https://fallinfal.com/api/Application/AddApplication");
 
       // Convert photos to base64
       String base64Photo1 = kIsWeb
@@ -251,7 +253,7 @@ class ApiService {
 
     final response = await http.get(
       Uri.parse(
-          "http://fallinfal.com/api/Application/GetApplicationByFortuneTeller?id=$fortuneTellerId"),
+          "https://fallinfal.com/api/Application/GetApplicationByFortuneTeller?id=$fortuneTellerId"),
     );
 
     if (response.statusCode == 200) {
@@ -279,7 +281,7 @@ class ApiService {
   }) async {
     try {
       var url = Uri.parse(
-          "http://fallinfal.com/api/Application/AnswerApplication?id=$fortuneId&answer=$answer");
+          "https://fallinfal.com/api/Application/AnswerApplication?id=$fortuneId&answer=$answer");
 
       var requestBody = {
         'Answers': answer,
@@ -316,7 +318,7 @@ class ApiService {
 
     final response = await http.get(
       Uri.parse(
-          "http://fallinfal.com/api/Application/GetApplicationByFortuneTellerIsAnsweredTrue?id=$fortuneTellerId"),
+          "https://fallinfal.com/api/Application/GetApplicationByFortuneTellerIsAnsweredTrue?id=$fortuneTellerId"),
     );
 
     if (response.statusCode == 200) {
@@ -348,7 +350,7 @@ class ApiService {
   }
 
   final response = await http.get(
-    Uri.parse("http://fallinfal.com/api/Client/GetCredit?clientId=$clientId"),
+    Uri.parse("https://fallinfal.com/api/Client/GetCredit?clientId=$clientId"),
   );
 
   if (response.statusCode == 200) {
@@ -373,10 +375,10 @@ class ApiService {
   }
 }
 
-
+ 
   Future<void> UpdateFortuneRating(int? fortuneId, double rating) async {
     final url = Uri.parse(
-        "http://fallinfal.com/api/Client/ScoreFortune?ApplicationId=$fortuneId&score=$rating");
+        "https://fallinfal.com/api/Client/ScoreFortune?ApplicationId=$fortuneId&score=$rating");
 
     final response = await http.post(
       url,
@@ -400,7 +402,7 @@ class ApiService {
 
     // API çağrısı
     final url = Uri.parse(
-        "http://fallinfal.com/api/Client/EarnCredit?credit=$credit");
+        "https://fallinfal.com/api/Client/EarnCredit?credit=$credit");
 
     final response = await http.post(
       url,
@@ -433,7 +435,7 @@ class ApiService {
     }
 
     final response = await http.get(Uri.parse(
-        "http://fallinfal.com/api/Auth/GetClientById?clientId=$clientId"));
+        "https://fallinfal.com/api/Auth/GetClientById?clientId=$clientId"));
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> responseJson = jsonDecode(response.body);
@@ -459,7 +461,7 @@ class ApiService {
     }
 
     final response = await http.get(Uri.parse(
-        "http://fallinfal.com/api/Auth/GetFortuneTellerById?fortuneTellerId=$fortuneTellerId"));
+        "https://fallinfal.com/api/Auth/GetFortuneTellerById?fortuneTellerId=$fortuneTellerId"));
 
     if (response.statusCode == 200) {
       final responseBody = jsonDecode(response.body);
