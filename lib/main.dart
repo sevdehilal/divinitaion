@@ -1,16 +1,19 @@
 import 'dart:io';
+import 'package:divinitaion/AuthGoogle/Login.dart';
 import 'package:divinitaion/Page/Common/welcome.dart';
 import 'package:divinitaion/Services/twitter.dart';
 import 'package:divinitaion/Widgets/ClientWidgets/client_navigation_bar.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
-void main() {
+Future<void> main() async {
   HttpOverrides.global = MyHttpOverrides();
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   MobileAds.instance.initialize();
   runApp(MaterialApp(
-    home: WelcomePage(),
+    home: MyApp(),
     debugShowCheckedModeBanner: false,
   ));
 }

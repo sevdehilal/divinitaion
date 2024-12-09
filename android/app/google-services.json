@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "666472858955",
+    "project_id": "fallinfal-5bfce",
+    "storage_bucket": "fallinfal-5bfce.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:666472858955:android:33ceb089374803268014ce",
+        "android_client_info": {
+          "package_name": "com.fallinfal"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyADMRiFM3ZMtHhFCUg5uCClBW0qkleOsjU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
