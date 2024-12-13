@@ -103,13 +103,14 @@ class _CustomFortuneTellerCardState extends State<CustomFortuneTellerCard> {
                     onPressed: clientId == null
                         ? null
                         : () async {
-                            final reward = await Navigator.push<int>(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    RewardCardSelectionPage(clientId: clientId),
-                              ),
-                            );
+                            final reward = 0;
+                            // final reward = await Navigator.push<int>(
+                            //   context,
+                            //   MaterialPageRoute(
+                            //     builder: (context) =>
+                            //         RewardCardSelectionPage(clientId: clientId),
+                            //   ),
+                            // );
 
                             if (reward != null) {
                               setState(() {
@@ -137,7 +138,7 @@ class _CustomFortuneTellerCardState extends State<CustomFortuneTellerCard> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                           builder: (context) => PhotoSelectionPage(
+                          builder: (context) => PhotoSelectionPage(
                             fortuneTeller: widget.fortuneTeller,
                           ),
                         ),

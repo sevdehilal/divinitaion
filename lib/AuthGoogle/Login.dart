@@ -1,121 +1,74 @@
+import 'package:divinitaion/Models/login.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
+import 'google_auth_service.dart';
 
-class MyApp extends StatelessWidget {
+class GoogleSignInScreen extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: LoginPage(),
-    );
-  }
+  _GoogleSignInScreenState createState() => _GoogleSignInScreenState();
 }
 
-class LoginPage extends StatefulWidget {
-  @override
-  State<LoginPage> createState() => _LoginPageState();
-}
+class _GoogleSignInScreenState extends State<GoogleSignInScreen> {
+  final GoogleAuthService _googleAuthService = GoogleAuthService();
+  LoginResponse? _loginResponse;
 
-class _LoginPageState extends State<LoginPage> {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  String _apiResponse = "";
-
-  Future<void> signInWithGoogle() async {
+  Future<void> _handleSignIn() async {
     try {
-      // Google Sign-In işlemi
-      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-      if (googleUser == null) {
-        setState(() {
-          _apiResponse = "Kullanıcı giriş işlemini iptal etti.";
-        });
-        return;
-      }
-
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
-
-      // Firebase Authentication'a yetkilendirme bilgileri ile giriş
-      final AuthCredential credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
-      );
-
-      final UserCredential userCredential =
-          await _auth.signInWithCredential(credential);
-      final User? user = userCredential.user;
-
-      if (user != null) {
-        // Firebase'den kullanıcı bilgilerini al
-        final String userId = user.uid;
-        final String email = user.email ?? "No Email";
-        final String fullName = user.displayName ?? "No Name";
-
-        // Ad ve soyadı ayır
-        final List<String> nameParts = fullName.split(" ");
-        final String name = nameParts.first; // İlk parça: Ad
-        final String surname = nameParts.length > 1
-            ? nameParts.last
-            : "No Surname"; // Son parça: Soyad
-
-        // API'ye gönderilecek veri
-        final Map<String, dynamic> apiData = {
-          "id": userId,
-          "email": email,
-          "name": name,
-          "surname": surname,
-        };
-
-        // API isteği
-        final response = await http.post(
-          Uri.parse(
-              "https://your-api-endpoint.com/login"), // API URL'sini buraya ekleyin
-          headers: {"Content-Type": "application/json"},
-          body: json.encode(apiData),
-        );
-
-        // API yanıtını işleme
-        if (response.statusCode == 200) {
-          setState(() {
-            _apiResponse = "Başarılı giriş: ${response.body}";
-          });
-        } else {
-          setState(() {
-            _apiResponse = "API Hatası: ${response.body}";
-          });
-        }
-      }
-    } catch (e) {
+      final loginResponse = await _googleAuthService.signInWithGoogle();
       setState(() {
-        _apiResponse = "Google ile giriş hatası: $e";
+        _loginResponse = loginResponse;
       });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Giriş başarılı: ${loginResponse.message}')),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Hata: $e')),
+      );
     }
+  }
+
+  // Çıkış işlemi
+  Future<void> _handleSignOut() async {
+    await _googleAuthService.signOut();
+    setState(() {
+      _loginResponse = null;
+    });
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Başarıyla çıkış yapıldı.')),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Google Sign-In"),
+        title: Text('Google Sign-In'),
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ElevatedButton(
-              onPressed: signInWithGoogle,
-              child: Text("Google ile Giriş Yap"),
-            ),
-            SizedBox(height: 20),
-            Text(
-              _apiResponse,
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
+        child: _loginResponse == null
+            ? ElevatedButton(
+                onPressed: _handleSignIn,
+                child: Text('Google ile Giriş Yap'),
+              )
+            : Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(height: 10),
+                  Text(
+                    'Merhaba, ${_loginResponse?.email ?? 'Kullanıcı'}',
+                    style: TextStyle(fontSize: 18),
+                  ),
+                  Text(
+                    'Rol: ${_loginResponse?.roles.join(", ") ?? 'Bilinmiyor'}', // Kullanıcının rolleri
+                    style: TextStyle(fontSize: 14, color: Colors.grey),
+                  ),
+                  SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: _handleSignOut,
+                    child: Text('Çıkış Yap'),
+                  ),
+                ],
+              ),
       ),
     );
   }

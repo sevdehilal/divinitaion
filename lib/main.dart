@@ -1,26 +1,20 @@
 import 'dart:io';
-import 'package:divinitaion/AuthGoogle/Login.dart';
+import 'package:divinitaion/AuthGoogle/login.dart';
 import 'package:divinitaion/Page/Common/welcome.dart';
 import 'package:divinitaion/Services/twitter.dart';
 import 'package:divinitaion/Widgets/ClientWidgets/client_navigation_bar.dart';
+import 'package:divinitaion/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
+//import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 Future<void> main() async {
   HttpOverrides.global = MyHttpOverrides();
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-      options: FirebaseOptions(
-    apiKey: 'AIzaSyADMRiFM3ZMtHhFCUg5uCClBW0qkleOsjU',
-    appId: 'id',
-    messagingSenderId: 'sendid',
-    projectId: 'fallinfal-5bfce',
-    storageBucket: 'fallinfal-5bfce.firebasestorage.app',
-  ));
-  MobileAds.instance.initialize();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  //MobileAds.instance.initialize();
   runApp(MaterialApp(
-    home: MyApp(),
+    home: GoogleSignInScreen(),
     debugShowCheckedModeBanner: false,
   ));
 }
