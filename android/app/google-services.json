@@ -1,26 +1,43 @@
 {
   "project_info": {
-    "project_number": "666472858955",
-    "project_id": "fallinfal-5bfce",
-    "storage_bucket": "fallinfal-5bfce.firebasestorage.app"
+    "project_number": "667616866182",
+    "project_id": "fallinfal-38d40",
+    "storage_bucket": "fallinfal-38d40.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:666472858955:android:33ceb089374803268014ce",
+        "mobilesdk_app_id": "1:667616866182:android:08fbba8ffc104ecfd50607",
         "android_client_info": {
-          "package_name": "com.fallinfal"
+          "package_name": "com.example.divinitaion"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "667616866182-q8egumn720bn2jc0d9m0c1lj3n1vk5b6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "AIzaSyADMRiFM3ZMtHhFCUg5uCClBW0qkleOsjU"
+          "current_key": "AIzaSyBnkrvItCJP1tfbaistWO9Da50bKrDXCZs"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "667616866182-q8egumn720bn2jc0d9m0c1lj3n1vk5b6.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "667616866182-th2pn4k0ckd364b996r3b9j6e8ks5brh.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.divinitaion"
+              }
+            }
+          ]
         }
       }
     }

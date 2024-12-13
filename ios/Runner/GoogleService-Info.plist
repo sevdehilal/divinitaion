@@ -3,23 +3,21 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>666472858955-litbrtrfp6pc13dpf81bpebin82rt00l.apps.googleusercontent.com</string>
+	<string>667616866182-th2pn4k0ckd364b996r3b9j6e8ks5brh.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.666472858955-litbrtrfp6pc13dpf81bpebin82rt00l</string>
-	<key>ANDROID_CLIENT_ID</key>
-	<string>666472858955-ledtjj79fch65hvilivlrk4881ofngen.apps.googleusercontent.com</string>
+	<string>com.googleusercontent.apps.667616866182-th2pn4k0ckd364b996r3b9j6e8ks5brh</string>
 	<key>API_KEY</key>
-	<string>AIzaSyDSuSaaZJPywFzo4rfLR2XTgONGDNkD_Iw</string>
+	<string>AIzaSyAx-MlGOUqtBbaenw5wE6haQJ2za3nianI</string>
 	<key>GCM_SENDER_ID</key>
-	<string>666472858955</string>
+	<string>667616866182</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.fallinfal</string>
+	<string>com.example.divinitaion</string>
 	<key>PROJECT_ID</key>
-	<string>fallinfal-5bfce</string>
+	<string>fallinfal-38d40</string>
 	<key>STORAGE_BUCKET</key>
-	<string>fallinfal-5bfce.firebasestorage.app</string>
+	<string>fallinfal-38d40.firebasestorage.app</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -31,6 +29,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:666472858955:ios:6960c034c39e26478014ce</string>
+	<string>1:667616866182:ios:f9af819466bbaf2ed50607</string>
 </dict>
 </plist>
