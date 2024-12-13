@@ -44,7 +44,7 @@ class GoogleAuthService {
 
       // Backend isteği
       final response = await http.post(
-        Uri.parse('https://localhost:7054/api/Auth/SigninGoogleFlutter'),
+        Uri.parse('https://fallinfal.com/api/Auth/SigninGoogleFlutter'),
         headers: {'Content-Type': 'application/json'},
         body:
             jsonEncode(googleUserModel.toJson()), // Burada modeli kullanıyoruz
