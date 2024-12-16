@@ -107,18 +107,19 @@ class ApiService {
   }
 
   Future<List<FortuneTeller>> FetchFortuneTeller() async {
-  final response = await http.get(Uri.parse("https://fallinfal.com/api/Client/GetAllFortuneTeller"));
+    final response = await http
+        .get(Uri.parse("https://fallinfal.com/api/Client/GetAllFortuneTeller"));
 
-  if (response.statusCode == 200) {
-    // Extract the 'data' field from the response
-    Map<String, dynamic> jsonResponse = json.decode(response.body);
-    List<dynamic> jsonList = jsonResponse['data']; // Use 'data' if the response is wrapped
-    return jsonList.map((json) => FortuneTeller.fromJson(json)).toList();
-  } else {
-    throw Exception('Failed to load users');
+    if (response.statusCode == 200) {
+      // Extract the 'data' field from the response
+      Map<String, dynamic> jsonResponse = json.decode(response.body);
+      List<dynamic> jsonList =
+          jsonResponse['data']; // Use 'data' if the response is wrapped
+      return jsonList.map((json) => FortuneTeller.fromJson(json)).toList();
+    } else {
+      throw Exception('Failed to load users');
+    }
   }
-}
-
 
   Future<List<FortuneCategory>> fetchFortuneCategories() async {
     final response = await http
@@ -126,7 +127,8 @@ class ApiService {
 
     if (response.statusCode == 200) {
       Map<String, dynamic> jsonResponse = json.decode(response.body);
-      List<dynamic> jsonList = jsonResponse['data']; // Use 'data' if the response is wrapped
+      List<dynamic> jsonList =
+          jsonResponse['data']; // Use 'data' if the response is wrapped
       return jsonList.map((json) => FortuneCategory.fromJson(json)).toList();
     } else {
       throw Exception('Failed to load categories');
@@ -141,7 +143,7 @@ class ApiService {
       throw Exception('No fortune teller ID found in SharedPreferences');
     }
 
-     final response = await http.get(Uri.parse(
+    final response = await http.get(Uri.parse(
         "https://fallinfal.com/api/Application/GetApplicationByClientIdIsAnsweredFalse?id=$clientId"));
 
     if (response.statusCode == 200) {
@@ -158,11 +160,10 @@ class ApiService {
     }
   }
 
-
   Future<List<FortuneListt>> fetchAnsweredFortunes() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    int? clientId = prefs.getInt('id'); 
+    int? clientId = prefs.getInt('id');
 
     if (clientId == null) {
       throw Exception('No fortune teller ID found in SharedPreferences');
@@ -184,7 +185,6 @@ class ApiService {
       throw Exception('Failed to load fortunes');
     }
   }
-
 
   Future<bool> saveFortune({
     required int? clientId,
@@ -241,7 +241,8 @@ class ApiService {
     }
   }
 
-  Future<List<FortuneForFortuneTeller>> FetchPendingFortunesByFortuneTellerId() async {
+  Future<List<FortuneForFortuneTeller>>
+      FetchPendingFortunesByFortuneTellerId() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
     int? fortuneTellerId = prefs.getInt('id');
@@ -272,7 +273,6 @@ class ApiService {
       throw Exception('Failed to load fortunes: HTTP ${response.statusCode}');
     }
   }
-
 
   Future<bool> sendAnswer({
     required int? fortuneId,
@@ -306,7 +306,8 @@ class ApiService {
     }
   }
 
-  Future<List<FortuneForFortuneTeller>> FetchAnsweredFortunesByFortuneTellerId() async {
+  Future<List<FortuneForFortuneTeller>>
+      FetchAnsweredFortunesByFortuneTellerId() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
     int? fortuneTellerId = prefs.getInt('id');
@@ -331,50 +332,52 @@ class ApiService {
             .map((json) => FortuneForFortuneTeller.fromJson(json))
             .toList();
       } else {
-        throw Exception('Failed to load answered fortunes: ${responseBody['message']}');
+        throw Exception(
+            'Failed to load answered fortunes: ${responseBody['message']}');
       }
     } else {
-      throw Exception('Failed to load answered fortunes: HTTP ${response.statusCode}');
+      throw Exception(
+          'Failed to load answered fortunes: HTTP ${response.statusCode}');
     }
   }
-
 
   Future<int> fetchClientCreditByClientId() async {
-  final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
 
-  int? clientId = prefs.getInt('id');
+    int? clientId = prefs.getInt('id');
 
-  if (clientId == null) {
-    throw Exception('No client ID found in SharedPreferences');
-  }
-
-  final response = await http.get(
-    Uri.parse("https://fallinfal.com/api/Client/GetCredit?clientId=$clientId"),
-  );
-
-  if (response.statusCode == 200) {
-    try {
-      // Parse the response body as JSON
-      final Map<String, dynamic> responseBody = json.decode(response.body);
-
-      // Check if the 'success' field is true
-      if (responseBody['success'] == true) {
-        // Extract the 'data' field which contains the credit value
-        int credit = responseBody['data'];
-        return credit;
-      } else {
-        throw Exception('Failed to retrieve client credit: ${responseBody['message']}');
-      }
-    } catch (e) {
-      throw Exception('Failed to parse response: $e');
+    if (clientId == null) {
+      throw Exception('No client ID found in SharedPreferences');
     }
-  } else {
-    throw Exception(
-        'Failed to fetch client credit, status code: ${response.statusCode}');
-  }
-}
 
- 
+    final response = await http.get(
+      Uri.parse(
+          "https://fallinfal.com/api/Client/GetCredit?clientId=$clientId"),
+    );
+
+    if (response.statusCode == 200) {
+      try {
+        // Parse the response body as JSON
+        final Map<String, dynamic> responseBody = json.decode(response.body);
+
+        // Check if the 'success' field is true
+        if (responseBody['success'] == true) {
+          // Extract the 'data' field which contains the credit value
+          int credit = responseBody['data'];
+          return credit;
+        } else {
+          throw Exception(
+              'Failed to retrieve client credit: ${responseBody['message']}');
+        }
+      } catch (e) {
+        throw Exception('Failed to parse response: $e');
+      }
+    } else {
+      throw Exception(
+          'Failed to fetch client credit, status code: ${response.statusCode}');
+    }
+  }
+
   Future<void> UpdateFortuneRating(int? fortuneId, double rating) async {
     final url = Uri.parse(
         "https://fallinfal.com/api/Client/ScoreFortune?ApplicationId=$fortuneId&score=$rating");
@@ -391,39 +394,38 @@ class ApiService {
   }
 
   Future<void> earnCoin(int credit) async {
-  try {
-    // SharedPreferences'den token alıyoruz
-    final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString('token');
-    if (token == null) {
-      throw Exception("Token bulunamadı");
+    try {
+      // SharedPreferences'den token alıyoruz
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString('token');
+      if (token == null) {
+        throw Exception("Token bulunamadı");
+      }
+
+      // API çağrısı
+      final url = Uri.parse(
+          "https://fallinfal.com/api/Client/EarnCredit?credit=$credit");
+
+      final response = await http.post(
+        url,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({'credit': credit}),
+      );
+
+      if (response.statusCode == 200) {
+        print("Puan başarıyla güncellendi");
+      } else {
+        print("Puan güncelleme hatası: ${response.body}");
+        throw Exception('Puan güncellenirken hata oluştu');
+      }
+    } catch (e) {
+      print("Bir hata oluştu: $e");
+      throw e;
     }
-
-    // API çağrısı
-    final url = Uri.parse(
-        "https://fallinfal.com/api/Client/EarnCredit?credit=$credit");
-
-    final response = await http.post(
-      url,
-      headers: {
-        'Authorization': 'Bearer $token',
-        'Content-Type': 'application/json',
-      },
-      body: jsonEncode({'credit': credit}),
-    );
-
-    if (response.statusCode == 200) {
-      print("Puan başarıyla güncellendi");
-    } else {
-      print("Puan güncelleme hatası: ${response.body}");
-      throw Exception('Puan güncellenirken hata oluştu');
-    }
-  } catch (e) {
-    print("Bir hata oluştu: $e");
-    throw e;
   }
-}
-
 
   Future<User> getUser() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -450,7 +452,6 @@ class ApiService {
     }
   }
 
-
   Future<FortuneTeller> getFortuneTeller() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     int? fortuneTellerId = prefs.getInt('id');
@@ -469,13 +470,14 @@ class ApiService {
         final data = responseBody['data'];
         return FortuneTeller.fromJson(data);
       } else {
-        throw Exception('Failed to load fortune teller: ${responseBody['message']}');
+        throw Exception(
+            'Failed to load fortune teller: ${responseBody['message']}');
       }
     } else {
-      throw Exception('Failed to load fortune teller: HTTP ${response.statusCode}');
+      throw Exception(
+          'Failed to load fortune teller: HTTP ${response.statusCode}');
     }
   }
-
 
   Future<bool> updateFortuneTellerProfile(
       Map<String, dynamic> updatedData) async {
@@ -509,8 +511,7 @@ class ApiService {
     }
   }
 
-  Future<bool> updateClientProfile(
-      Map<String, dynamic> updatedData) async {
+  Future<bool> updateClientProfile(Map<String, dynamic> updatedData) async {
     try {
       final prefs = await SharedPreferences.getInstance();
       final token = prefs.getString('token');
