@@ -117,14 +117,13 @@ class _CustomFortuneTellerCardState extends State<CustomFortuneTellerCard> {
                     onPressed: clientId == null
                         ? null
                         : () async {
-                            final reward = 0;
-                            // final reward = await Navigator.push<int>(
-                            //   context,
-                            //   MaterialPageRoute(
-                            //     builder: (context) =>
-                            //         RewardCardSelectionPage(clientId: clientId),
-                            //   ),
-                            // );
+                            final reward = await Navigator.push<int>(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    RewardCardSelectionPage(clientId: clientId),
+                              ),
+                            );
 
                             if (reward != null) {
                               setState(() {
