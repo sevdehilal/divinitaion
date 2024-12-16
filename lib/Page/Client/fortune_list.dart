@@ -38,12 +38,17 @@ class _FortuneListState extends State<FortuneList> with SingleTickerProviderStat
       appBar: AppBar(
         title: Text('Fallarım',
           style: TextStyle(
-                fontSize: 18,
+                fontSize: 20,
                 color: const Color.fromARGB(255, 255, 255, 255),
               ),
         ),
-        actions: [LogoutButton()],
-        backgroundColor: Colors.transparent, // Şeffaf AppBar
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 8.0),
+            child: LogoutButton(),
+          ),
+        ],   
+        backgroundColor: Colors.transparent,
         elevation: 0, // AppBar gölgesini kaldırır
         bottom: TabBar(
           controller: _tabController,
@@ -55,7 +60,7 @@ class _FortuneListState extends State<FortuneList> with SingleTickerProviderStat
           ],
         ),
       ),
-      backgroundColor: Colors.transparent, // Şeffaf arka plan
+      backgroundColor: Colors.transparent,
       body: TabBarView(
         controller: _tabController,
         children: [

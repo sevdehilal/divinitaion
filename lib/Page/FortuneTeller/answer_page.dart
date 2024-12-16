@@ -37,16 +37,26 @@ class AnswerPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double appBarHeight = AppBar().preferredSize.height;
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
         title: Text('${fortune.firstName} ${fortune.lastName}'),
         backgroundColor: Colors.transparent,
         titleTextStyle: TextStyle(color: Colors.white, fontSize: 20),
+        iconTheme: const IconThemeData(
+          color: Colors.white,
+        ),
       ),
-      backgroundColor: Colors.black.withOpacity(0.2),
+      backgroundColor: Colors.black.withOpacity(0.3),
       body: BackgroundContainer(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: EdgeInsets.only(
+            top: appBarHeight + 16.0,
+            left: 16.0,
+            right: 16.0,
+            bottom: 16.0,
+          ),
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -65,7 +75,7 @@ class AnswerPage extends StatelessWidget {
                         Text(
                           'Telveden Manzaralar',
                           style: TextStyle(
-                            fontSize: 25,
+                            fontSize: 18,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
                           ),
@@ -99,7 +109,7 @@ class AnswerPage extends StatelessWidget {
                           Text(
                             'Fal meraklısı',
                             style: TextStyle(
-                              fontSize: 25,
+                              fontSize: 18,
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
                             ),
@@ -149,7 +159,7 @@ class AnswerPage extends StatelessWidget {
                           Text(
                             'Kategoriler',
                             style: TextStyle(
-                              fontSize: 25,
+                              fontSize: 18,
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
                             ),
@@ -190,7 +200,7 @@ class AnswerPage extends StatelessWidget {
                                 Text(
                                   'Fal',
                                   style: TextStyle(
-                                    fontSize: 25,
+                                    fontSize: 18,
                                     fontWeight: FontWeight.bold,
                                     color: Colors.white,
                                   ),
@@ -215,7 +225,7 @@ class AnswerPage extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             SizedBox(height: 20),
-                            ElevatedButton(
+                            OutlinedButton(
                               onPressed: () {
                                 Navigator.push(
                                   context,
@@ -224,11 +234,13 @@ class AnswerPage extends StatelessWidget {
                                   ),
                                 );
                               },
-                              child: Text('Hemen Cevap Ver'),
-                              style: ElevatedButton.styleFrom(
+                              child: Text(
+                                'Hemen Cevap Ver',
+                                style: TextStyle(fontSize: 18, color: Colors.white),
+                              ),
+                              style: OutlinedButton.styleFrom(
+                                side: BorderSide(color: Colors.white, width: 2, style: BorderStyle.solid),
                                 padding: EdgeInsets.symmetric(horizontal: 32, vertical: 12),
-                                textStyle: TextStyle(fontSize: 18),
-                                foregroundColor: Color.fromARGB(255, 24, 18, 20),
                               ),
                             ),
                           ],

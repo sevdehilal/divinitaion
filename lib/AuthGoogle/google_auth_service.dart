@@ -4,6 +4,7 @@ import 'package:divinitaion/Models/login.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class GoogleAuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -50,9 +51,13 @@ class GoogleAuthService {
             jsonEncode(googleUserModel.toJson()), // Burada modeli kullanıyoruz
       );
 
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+
       if (response.statusCode == 200) {
-        // ResponseUser modeline dönüştür
-        return LoginResponse.fromJson(jsonDecode(response.body));
+        LoginResponse loginResponse = LoginResponse.fromJson(jsonDecode(response.body));
+        await prefs.setInt('id', loginResponse.userId);
+        await prefs.setString('token', loginResponse.token);
+        return loginResponse;
       } else {
         throw Exception('Backend hatası: ${response.body}');
       }

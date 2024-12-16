@@ -60,7 +60,7 @@ class _FortuneTellerProfilePageState extends State<FortuneTellerProfilePage> {
     _emailController.text = fortuneTeller.email ?? '';
     _ratingController.text = fortuneTeller.rating?.toString() ?? '0.0';
     _totalCreditController.text = fortuneTeller.totalCredit?.toString() ?? '0.0';
-    _dateOfBirthController.text = DateTime(2017, 9, 7, 17, 30).toIso8601String();
+    _dateOfBirthController.text = DateFormat('dd/MM/yyyy').format(DateTime(2017, 9, 7, 17, 30));
   }
 
   void _toggleEdit() async {
@@ -114,6 +114,7 @@ class _FortuneTellerProfilePageState extends State<FortuneTellerProfilePage> {
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
+      extendBodyBehindAppBar: true,
       body: BackgroundContainer(
         child: FutureBuilder<FortuneTeller>(
           future: _fortuneTellerFuture,

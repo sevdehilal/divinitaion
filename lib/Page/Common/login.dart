@@ -1,3 +1,4 @@
+import 'package:divinitaion/AuthGoogle/google_auth_service.dart';
 import 'package:divinitaion/Models/login.dart';
 import 'package:divinitaion/Page/Common/email_verification.dart';
 import 'package:divinitaion/Page/Common/register.dart';
@@ -20,6 +21,8 @@ class _LoginPageState extends State<LoginPage> {
   final FlutterSecureStorage _storage = FlutterSecureStorage();
   final FocusNode _passwordFocusNode = FocusNode();
   bool _isPasswordVisible = false;
+  final GoogleAuthService _googleAuthService = GoogleAuthService();
+  LoginResponse? _loginResponse;
 
   Future<void> _login() async {
     if (_formKey.currentState!.validate()) {
@@ -80,6 +83,33 @@ class _LoginPageState extends State<LoginPage> {
       );
     }
   }
+
+  Future<void> _handleSignIn() async {
+    try {
+      final loginResponse = await _googleAuthService.signInWithGoogle();
+      if (loginResponse.success) {
+        await _storage.write(key: 'loggedInAs', value: "client");
+
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => CustomBottomNavigation()),
+        );
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Giriş başarılı: ${loginResponse.message}')),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Google ile giriş başarısız: ${loginResponse.message}')),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Hata: $e')),
+      );
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -198,6 +228,16 @@ class _LoginPageState extends State<LoginPage> {
                         style: TextStyle(fontSize: 13),
                       ),
                     ),
+                  ],
+                ),
+
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ElevatedButton(
+                      onPressed: _handleSignIn,
+                      child: Text('Google ile Giriş Yap'),
+                    )
                   ],
                 ),
               ],

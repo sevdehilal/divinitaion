@@ -20,7 +20,6 @@ class FortuneCard extends StatefulWidget {
 
 class _FortuneCardState extends State<FortuneCard> {
   bool isChecked = false;
-  bool isFavorite = false;
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +53,7 @@ class _FortuneCardState extends State<FortuneCard> {
                       children: [
                         SizedBox(height: 8),
                         Text(
-                          'Falcı: ${widget.fortune.fortunetellerFirstName}',
+                          'Falcı: ${widget.fortune.fortunetellerFirstName} ${widget.fortune.fortunetellerLastName}',
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 16,
@@ -69,23 +68,6 @@ class _FortuneCardState extends State<FortuneCard> {
                         ),
                       ],
                     ),
-                  ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      IconButton(
-                        icon: Icon(
-                          isFavorite ? Icons.favorite : Icons.favorite_border,
-                          size: 24,
-                          color: Colors.white,
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            isFavorite = !isFavorite;
-                          });
-                        },
-                      ),
-                    ],
                   ),
                 ],
               ),

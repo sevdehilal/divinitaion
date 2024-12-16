@@ -36,7 +36,12 @@ class _PendingFortuneListState extends State<PendingFortuneList> {
             color: Colors.white,
           ),
         ),
-        actions: [LogoutButton()],
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 8.0),
+            child: LogoutButton(),
+          ),
+        ],   
       ),
       body: BackgroundContainer(
         child: FutureBuilder<List<FortuneForFortuneTeller>>(

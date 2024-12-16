@@ -48,11 +48,37 @@ class _FortuneTellingPageState extends State<FortuneTellingPage> {
     );
   }
 
+  Widget _buildRatingStars(double rating) {
+    int fullStars = rating.toInt();
+    bool hasHalfStar = (rating - fullStars) >= 0.5;
+    int emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+
+    return Row(
+      children: [
+        ...List.generate(fullStars, (index) => Icon(Icons.star, color: Colors.amber)),
+        if (hasHalfStar) Icon(Icons.star_half, color: Colors.amber),
+        ...List.generate(emptyStars, (index) => Icon(Icons.star_border, color: Colors.amber)),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
-        title: Text('Falcı Bilgileri'),
+        title: Text('Fal Detayları',
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
+        backgroundColor: Colors.black.withOpacity(0.3),
+        elevation: 0,
+        iconTheme: IconThemeData(
+          color: Colors.white,
+        ),
       ),
       body: BackgroundContainer(
         child: Padding(
@@ -60,69 +86,50 @@ class _FortuneTellingPageState extends State<FortuneTellingPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              SizedBox(height: 80),
               _buildTextWithBackground(
                 'Falcı',
                 TextStyle(
-                  fontSize: 25,
+                  fontSize: 20,
                   fontWeight: FontWeight.bold,
-                  color: Colors.white,
+                  color: Colors.white.withOpacity(0.7),
                 ),
               ),
-              SizedBox(height: 10),
               Card(
+                color: Colors.black.withOpacity(0.5),
                 elevation: 4,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(0),
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
-                  child: Row(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      CircleAvatar(
-                        radius: 30,
-                        backgroundImage: NetworkImage(
-                            'https://via.placeholder.com/100'),
+                      Text(
+                        "${widget.fortuneTeller.firstName} ${widget.fortuneTeller.lastName}",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white.withOpacity(0.7),
+                        ),
                       ),
-                      SizedBox(width: 10),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "${widget.fortuneTeller.firstName} ${widget.fortuneTeller.lastName}",
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Row(
-                            children: [
-                              Text('4.5', style: TextStyle(fontSize: 16)),
-                              Icon(Icons.star, color: Colors.amber),
-                              Icon(Icons.star, color: Colors.amber),
-                              Icon(Icons.star, color: Colors.amber),
-                              Icon(Icons.star, color: Colors.amber),
-                              Icon(Icons.star_half, color: Colors.amber),
-                            ],
-                          ),
-                        ],
-                      ),
-                      Spacer(),
-                      Icon(Icons.arrow_forward_ios),
+                      _buildRatingStars(widget.fortuneTeller.rating?.toDouble() ?? 0.0),
                     ],
                   ),
                 ),
               ),
               SizedBox(height: 20),
               _buildTextWithBackground(
-                'Merak Ettiğin Konular:',
+                'Merak Ettiğin Konuları Seç... ',
                 TextStyle(
-                  fontSize: 25,
+                  fontSize: 20,
                   fontWeight: FontWeight.bold,
-                  color: Colors.white,
+                  color: Colors.white.withOpacity(0.7),
                 ),
               ),
-              SizedBox(height: 10),
               Card(
+                color: Colors.black.withOpacity(0.5),
                 elevation: 4,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(0),
@@ -153,15 +160,15 @@ class _FortuneTellingPageState extends State<FortuneTellingPage> {
               ),
               SizedBox(height: 20),
               _buildTextWithBackground(
-                'Fotoğraflar:',
+                'Fotoğraflar ',
                 TextStyle(
-                  fontSize: 25,
+                  fontSize: 20,
                   fontWeight: FontWeight.bold,
-                  color: Colors.white,
+                  color: Colors.white.withOpacity(0.7),
                 ),
               ),
-              SizedBox(height: 10),
               Card(
+                color: Colors.black.withOpacity(0.5),
                 elevation: 4,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(0),
@@ -177,15 +184,13 @@ class _FortuneTellingPageState extends State<FortuneTellingPage> {
                         children: widget.selectedFiles.isNotEmpty
                             ? widget.selectedFiles.map((file) {
                                 return kIsWeb
-                                    ? Image.memory(file.bytes!,
-                                        width: 100, height: 100)
-                                    : Image.file(File(file.path!),
-                                        width: 100, height: 100);
+                                    ? Image.memory(file.bytes!, width: 100, height: 100)
+                                    : Image.file(File(file.path!), width: 100, height: 100);
                               }).toList()
                             : [
                                 Text(
                                   'No images selected.',
-                                  style: TextStyle(fontSize: 16),
+                                  style: TextStyle(fontSize: 16, color: Colors.white.withOpacity(0.7)),
                                 ),
                               ],
                       ),
@@ -230,17 +235,20 @@ class _FortuneTellingPageState extends State<FortuneTellingPage> {
                     if (success) {
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                           content: Text('Fortune successfully saved!')));
+
                       Navigator.pop(context);
                       Navigator.pop(context);
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                           content: Text('Failed to save fortune.')));
+
                     }
                   },
                   child: Text('Gönder'),
                   style: ElevatedButton.styleFrom(
                     padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
                     textStyle: TextStyle(fontSize: 20),
+                    backgroundColor: Colors.black.withOpacity(0.5),
                   ),
                 ),
               ),

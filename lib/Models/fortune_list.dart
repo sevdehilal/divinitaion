@@ -32,7 +32,9 @@ class FortuneListt {
           ? DateTime.parse(json['createDate'])
           : null,
       categories: categoriesList,
-      score: json['score'] as double?,
+      score: json['score'] != null
+        ? (json['score'] is int ? (json['score'] as int).toDouble() : json['score'] as double)
+        : null,
     );
   }
 

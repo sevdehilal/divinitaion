@@ -3,7 +3,7 @@ import 'package:divinitaion/Services/service.dart';
 import 'package:flutter/material.dart';
 
 class FortuneCategoriesDropdown extends StatefulWidget {
-  final Function(int?) onChanged; // Seçilen kategorinin ID'sini döndüren callback
+  final Function(int?) onChanged;
 
   FortuneCategoriesDropdown({required this.onChanged});
 
@@ -13,13 +13,13 @@ class FortuneCategoriesDropdown extends StatefulWidget {
 
 class _FortuneCategoriesDropdown extends State<FortuneCategoriesDropdown> {
   final ApiService _apiService = ApiService();
-  late Future<List<FortuneCategory>> _items; // API'den alınan kategoriler
-  int? _selectedId; // Seçilen kategori ID'si
+  late Future<List<FortuneCategory>> _items;
+  int? _selectedId;
 
   @override
   void initState() {
     super.initState();
-    _items = _apiService.fetchFortuneCategories(); // Kategorileri yükle
+    _items = _apiService.fetchFortuneCategories();
   }
 
   @override
@@ -28,31 +28,36 @@ class _FortuneCategoriesDropdown extends State<FortuneCategoriesDropdown> {
       future: _items,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          // Veriler yükleniyor
           return Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
-          // Hata durumu
           return Center(child: Text('Hata: ${snapshot.error}'));
         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
           // Boş veri durumu
           return Center(child: Text('Kategoriler bulunamadı'));
         }
 
-        // Başarılı bir şekilde veri yüklendi
         List<FortuneCategory> categories = snapshot.data!;
         return DropdownButton<int>(
           value: _selectedId,
-          hint: Text('Bir kategori seçin'),
+          hint: Text(
+            'Bir kategori seçin',
+            style: TextStyle(color: Colors.white),
+          ),
           onChanged: (int? newValue) {
             setState(() {
               _selectedId = newValue;
-              widget.onChanged(newValue); // Seçilen ID'yi döndür
+              widget.onChanged(newValue);
             });
           },
+          dropdownColor: Colors.black,
+          style: TextStyle(color: Colors.white),
           items: categories.map<DropdownMenuItem<int>>((item) {
             return DropdownMenuItem<int>(
-              value: item.id, // ID'yi kullan
-              child: Text(item.categoryName), // Gösterilecek isim
+              value: item.id,
+              child: Text(
+                item.categoryName,
+                style: TextStyle(color: Colors.white),
+              ),
             );
           }).toList(),
         );

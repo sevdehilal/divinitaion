@@ -14,7 +14,7 @@ Future<void> main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   //MobileAds.instance.initialize();
   runApp(MaterialApp(
-    home: GoogleSignInScreen(),
+    home: WelcomePage(),
     debugShowCheckedModeBanner: false,
   ));
 }

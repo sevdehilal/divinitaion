@@ -3,6 +3,7 @@ import 'package:divinitaion/Page/Common/backround_container.dart';
 import 'package:divinitaion/Services/service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 
 class ClientProfilePage extends StatefulWidget {
   @override
@@ -50,7 +51,9 @@ final TextEditingController _firstNameController = TextEditingController();
     _emailController.text = user.email ?? '';
     _occupationController.text = user.occupation ?? '';
     _maritalStatusController.text = user.maritalStatus ?? '';
-    _dateOfBirthController.text = DateTime(2017, 9, 7, 17, 30).toIso8601String();
+    if (user.dateOfBirth != null) {
+      _dateOfBirthController.text = DateFormat('dd/MM/yyyy').format(user.dateOfBirth!);
+    }
   }
 
   void _toggleEdit() async {
@@ -59,7 +62,7 @@ final TextEditingController _firstNameController = TextEditingController();
         'userName': _userNameController.text,
         'firstName': _firstNameController.text,
         'lastName': _lastNameController.text,
-        'dateOfBirth': _dateOfBirthController.text,
+        'dateOfBirth': DateFormat('dd/MM/yyyy').parse(_dateOfBirthController.text).toIso8601String(),
         'gender': _genderController.text,
         'email': _emailController.text,
         'occupation': _occupationController.text,
@@ -94,13 +97,18 @@ final TextEditingController _firstNameController = TextEditingController();
       appBar: AppBar(
         actions: [
           IconButton(
-            icon: Icon(_isEditing ? Icons.save : Icons.edit, color: Colors.white),
+            icon: Icon(
+              _isEditing ? Icons.save : Icons.edit,
+              color: Colors.white,
+            ),
             onPressed: _toggleEdit,
           ),
         ],
         backgroundColor: Colors.transparent,
         elevation: 0,
+        automaticallyImplyLeading: false,
       ),
+      extendBodyBehindAppBar: true,
       body: BackgroundContainer(
         child: FutureBuilder<User>(
           future: _userFuture,
@@ -181,7 +189,6 @@ final TextEditingController _firstNameController = TextEditingController();
   Widget _buildGenderDropdownField(String label, TextEditingController controller) {
     const genderOptions = ['Kadın', 'Erkek', 'Belirtmek İstemiyor'];
 
-    // Dropdown'da kullanılacak değer için kontrol
     String? dropdownValue = genderOptions.contains(controller.text)
         ? controller.text
         : null;
@@ -217,7 +224,6 @@ final TextEditingController _firstNameController = TextEditingController();
   Widget _buildMaritalStatusDropdownField(String label, TextEditingController controller) {
     const maritalStatusOptions = ['Bekar', 'Evli', 'Belirtmek İstemiyor'];
 
-    // Dropdown'da kullanılacak değer için kontrol
     String? dropdownValue = maritalStatusOptions.contains(controller.text)
         ? controller.text
         : null;

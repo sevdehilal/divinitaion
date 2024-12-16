@@ -6,19 +6,24 @@ class FortuneCategoriesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      extendBodyBehindAppBar: true, // AppBar'ı arka planın üstüne yerleştirir
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
-        backgroundColor: Colors.black.withOpacity(0.2), // Siyah arka plan ve opaklık
-        elevation: 0, // Gölgeyi kaldırır
+        backgroundColor: Colors.black.withOpacity(0.2),
+        elevation: 0,
         title: Text(
           'Fal Kategorileri',
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
-            color: Colors.white, // Metnin net görünmesi için beyaz renk
+            color: Colors.white,
           ),
         ),
-        actions: [LogoutButton()],
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 8.0),
+            child: LogoutButton(),
+          ),
+        ],     
       ),
       body: Stack(
         children: [
@@ -26,7 +31,7 @@ class FortuneCategoriesPage extends StatelessWidget {
           Container(
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage('lib/assets/background.png'), // Arka plan fotoğrafınızın yolu
+                image: AssetImage('lib/assets/background.png'),
                 fit: BoxFit.cover,
               ),
             ),
@@ -34,7 +39,7 @@ class FortuneCategoriesPage extends StatelessWidget {
           // İçerik
           Column(
             children: [
-              SizedBox(height: 10), // AppBar yüksekliğini azaltmak için daha küçük bir boşluk
+              SizedBox(height: 10),
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),

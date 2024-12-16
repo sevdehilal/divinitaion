@@ -111,14 +111,17 @@ class _ClientFortuneTellerListPageState
                     Icons.monetization_on,
                     color: Colors.yellow,
                   ),
+                  SizedBox(width: 4),
                 ],
               );
             },
           ),
-          LogoutButton(),
         ],
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.black.withOpacity(0.3),
         elevation: 0,
+        iconTheme: IconThemeData(
+          color: Colors.white,
+        ),
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(60),
           child: Padding(
