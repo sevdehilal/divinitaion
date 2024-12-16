@@ -77,7 +77,21 @@ class _CustomFortuneTellerCardState extends State<CustomFortuneTellerCard> {
                 const Icon(Icons.star, color: Colors.amber),
                 const SizedBox(width: 2),
                 Text(
-                  "${widget.fortuneTeller.rating}",
+                  "${(widget.fortuneTeller.rating ?? 0).toStringAsFixed(1)}", // Virgülden sonra bir basamak
+                  style: const TextStyle(
+                    fontSize: 16,
+                    color: Colors.white,
+                  ),
+                ),
+                const SizedBox(width: 10),
+                const Icon(
+                  Icons.visibility,
+                  color: Colors.white,
+                  size: 18,
+                ),
+                const SizedBox(width: 4),
+                Text(
+                  "${widget.fortuneTeller.totalVoted ?? 0}",
                   style: const TextStyle(
                     fontSize: 16,
                     color: Colors.white,
