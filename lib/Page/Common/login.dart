@@ -7,6 +7,7 @@ import 'package:divinitaion/Widgets/ClientWidgets/client_navigation_bar.dart';
 import 'package:divinitaion/Widgets/FortuneWidgets/fortune_teller_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -21,6 +22,8 @@ class _LoginPageState extends State<LoginPage> {
   final FlutterSecureStorage _storage = FlutterSecureStorage();
   final FocusNode _passwordFocusNode = FocusNode();
   bool _isPasswordVisible = false;
+  bool _isButtonDisabled = false;
+  
   final GoogleAuthService _googleAuthService = GoogleAuthService();
   LoginResponse? _loginResponse;
 
@@ -35,7 +38,7 @@ class _LoginPageState extends State<LoginPage> {
 
       if (response != null) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Login successful')),
+          SnackBar(content: Text('Giriş Başarılı!')),
         );
         if (response.emailConfirmed == false) {
           Navigator.pushReplacement(
@@ -63,7 +66,7 @@ class _LoginPageState extends State<LoginPage> {
         }
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Login failed')),
+          SnackBar(content: Text('Giriş Başarısız!')),
         );
       }
     }
@@ -123,13 +126,21 @@ class _LoginPageState extends State<LoginPage> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const Text(
+                Text(
                   'Fall in Fal',
-                  style: TextStyle(
-                    color: Color.fromARGB(255, 138, 43, 226),
-                    fontWeight: FontWeight.bold,
-                    fontStyle: FontStyle.italic,
-                    fontSize: 40,
+                  style: GoogleFonts.dancingScript(
+                    textStyle: TextStyle(
+                      color: Color.fromARGB(255, 138, 43, 226),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 60,
+                      shadows: [
+                        Shadow(
+                          offset: Offset(2, 2),
+                          blurRadius: 4,
+                          color: Colors.black26,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -147,7 +158,7 @@ class _LoginPageState extends State<LoginPage> {
 
                 TextFormField(
                   controller: _usernameController,
-                  decoration: const InputDecoration(labelText: 'Username'),
+                  decoration: const InputDecoration(labelText: 'Kullanıcı Adı'),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter your username';
@@ -163,7 +174,7 @@ class _LoginPageState extends State<LoginPage> {
                 TextFormField(
                   controller: _passwordController,
                   decoration: InputDecoration(
-                    labelText: 'Password',
+                    labelText: 'Şifre',
                      suffixIcon: IconButton(
                       icon: Icon(
                         _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
@@ -189,29 +200,30 @@ class _LoginPageState extends State<LoginPage> {
                 const SizedBox(height: 20),
 
                 // Login butonu
-                ElevatedButton(
-                  onPressed: _login,
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 40, vertical: 15),
+                OutlinedButton(
+                  onPressed: _isButtonDisabled ? null : () async {
+                    setState(() {
+                      _isButtonDisabled = true; 
+                    });
+                    FocusScope.of(context).unfocus(); 
+                    await _login(); 
+                  },
+                  style: OutlinedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                    side: BorderSide(
+                      color: Color.fromARGB(255, 124, 7, 170), 
+                      width: 2, 
+                    ),
                   ),
                   child: const Text(
                     'Login',
                     style: TextStyle(
-                        color: Color.fromARGB(255, 175, 113, 14)), 
+                      color: Color.fromARGB(255, 124, 7, 170), 
+                    ),
                   ),
                 ),
-                const SizedBox(height: 10),
-
-                TextButton(
-                  onPressed: null,
-                  child: const Text(
-                    'Şifremi Unuttum',
-                  ),
-                ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 20),
                 Text("Hesabınız yok mu?"),
-
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -230,14 +242,27 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ],
                 ),
-
+                const SizedBox(height: 10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    ElevatedButton(
+                    OutlinedButton(
                       onPressed: _handleSignIn,
-                      child: Text('Google ile Giriş Yap'),
+                      style: OutlinedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                        side: BorderSide(
+                          color: Color.fromARGB(255, 175, 113, 14),
+                          width: 2, 
+                        ),
+                      ),
+                      child: const Text(
+                        'Google ile Giriş Yap',
+                        style: TextStyle(
+                          color: Color.fromARGB(255, 175, 113, 14),
+                        ),
+                      ),
                     )
+
                   ],
                 ),
               ],

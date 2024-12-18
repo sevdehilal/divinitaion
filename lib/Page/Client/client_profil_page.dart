@@ -145,7 +145,7 @@ final TextEditingController _firstNameController = TextEditingController();
                 _buildCard(child: _buildGenderDropdownField('Cinsiyet', _genderController)),
                 _buildCard(child: _buildMaritalStatusDropdownField('Medeni Durum', _maritalStatusController)),
                 _buildCard(child: _buildTextField('Meslek', _occupationController)),
-                _buildCard(child: _buildTextField('Doğum Tarihi', _dateOfBirthController)),
+                _buildCard(child: _buildDatePickerField('Doğum Tarihi', _dateOfBirthController)),
                 _buildCard(child: _buildTextField('Kullanıcı Adı', _userNameController, isEditable: false)),
                 _buildCard(child: _buildTextField('E-Posta', _emailController, isEditable: false)),
               ],
@@ -254,5 +254,36 @@ final TextEditingController _firstNameController = TextEditingController();
       ),
       dropdownColor: Colors.black.withOpacity(0.9),
     );
+  }
+
+  Widget _buildDatePickerField(String label, TextEditingController controller) {
+    return GestureDetector(
+      onTap: _isEditing ? () => _selectDateOfBirth(context) : null,
+      child: AbsorbPointer(
+        child: TextFormField(
+          controller: controller,
+          style: const TextStyle(color: Colors.white),
+          decoration: InputDecoration(
+            labelText: label,
+            labelStyle: const TextStyle(color: Colors.white),
+            border: const OutlineInputBorder(),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<void> _selectDateOfBirth(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(1900),
+      lastDate: DateTime.now(),
+    );
+    if (picked != null && picked != DateTime.now()) {
+      setState(() {
+        _dateOfBirthController.text = DateFormat('dd/MM/yyyy').format(picked);
+      });
+    }
   }
 }

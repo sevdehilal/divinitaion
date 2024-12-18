@@ -60,7 +60,7 @@ class _FortuneTellerProfilePageState extends State<FortuneTellerProfilePage> {
     _emailController.text = fortuneTeller.email ?? '';
     _ratingController.text = fortuneTeller.rating?.toString() ?? '0.0';
     _totalCreditController.text = fortuneTeller.totalCredit?.toString() ?? '0.0';
-    _dateOfBirthController.text = DateFormat('dd/MM/yyyy').format(DateTime(2017, 9, 7, 17, 30));
+    _dateOfBirthController.text = DateFormat('dd/MM/yyyy').format(fortuneTeller.dateOfBirth);
   }
 
   void _toggleEdit() async {
@@ -69,7 +69,7 @@ class _FortuneTellerProfilePageState extends State<FortuneTellerProfilePage> {
         'userName': _userNameController.text,
         'firstName': _firstNameController.text,
         'lastName': _lastNameController.text,
-        'dateOfBirth': _dateOfBirthController.text,
+        'dateOfBirth': DateFormat('dd/MM/yyyy').parse(_dateOfBirthController.text).toIso8601String(),
         'experience': _experienceController.text,
         'requirementCredit':
             int.tryParse(_requirementCreditController.text) ?? 0,
@@ -97,6 +97,20 @@ class _FortuneTellerProfilePageState extends State<FortuneTellerProfilePage> {
     } else {
       setState(() {
         _isEditing = true;
+      });
+    }
+  }
+
+  Future<void> _selectDateOfBirth(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(1900),
+      lastDate: DateTime.now(),
+    );
+    if (picked != null && picked != DateTime.now()) {
+      setState(() {
+        _dateOfBirthController.text = DateFormat('dd/MM/yyyy').format(picked);
       });
     }
   }
@@ -150,7 +164,7 @@ class _FortuneTellerProfilePageState extends State<FortuneTellerProfilePage> {
                 _buildCard(child: _buildTextField('Soyadı', _lastNameController)),
                 _buildCard(child: _buildDropdownField('Cinsiyet', _genderController)),
                 _buildCard(
-                    child: _buildTextField('Doğum Tarihi', _dateOfBirthController)),
+                    child: _buildDatePickerField('Doğum Tarihi', _dateOfBirthController)),
                 _buildCard(
                     child: _buildTextField('Deneyim (Yıl)', _experienceController,
                         isNumber: true)),
@@ -207,39 +221,58 @@ class _FortuneTellerProfilePageState extends State<FortuneTellerProfilePage> {
     );
   }
 
-  Widget _buildDropdownField(String label, TextEditingController controller) {
-    const genderOptions = ['Kadın', 'Erkek', 'Belirtmek İstemiyor'];
+Widget _buildDropdownField(String label, TextEditingController controller) {
+  const genderOptions = ['Kadın', 'Erkek', 'Belirtmek İstemiyor'];
 
-    // Dropdown'da kullanılacak değer için kontrol
-    String? dropdownValue = genderOptions.contains(controller.text)
-        ? controller.text
-        : null;
+  // Dropdown'da kullanılacak değer için kontrol
+  String? dropdownValue = genderOptions.contains(controller.text)
+      ? controller.text
+      : null;
 
-    return DropdownButtonFormField<String>(
-      value: dropdownValue,
-      items: genderOptions
-          .map((gender) => DropdownMenuItem(
-                value: gender,
-                child: Text(
-                  gender,
-                  style: const TextStyle(color: Colors.white),
-                ),
-              ))
-          .toList(),
-      onChanged: _isEditing
-          ? (value) {
-              setState(() {
-                controller.text = value ?? '';
-              });
-            }
-          : null,
-      style: const TextStyle(color: Colors.white),
-      decoration: InputDecoration(
-        labelText: label,
-        labelStyle: const TextStyle(color: Colors.white),
-        border: const OutlineInputBorder(),
+  return DropdownButtonFormField<String>(
+    value: dropdownValue,
+    items: genderOptions
+        .map((gender) => DropdownMenuItem(
+              value: gender,
+              child: Text(
+                gender,
+                style: const TextStyle(color: Colors.white), 
+              ),
+            ))
+        .toList(),
+    onChanged: _isEditing
+        ? (value) {
+            setState(() {
+              controller.text = value ?? '';
+            });
+          }
+        : null,
+    decoration: InputDecoration(
+      labelText: label,
+      labelStyle: const TextStyle(color: Colors.white),
+      border: const OutlineInputBorder(),
+      filled: true,
+      fillColor: Colors.transparent, 
+    ),
+    dropdownColor: Colors.black.withOpacity(0.7), 
+  );
+}
+
+
+  Widget _buildDatePickerField(String label, TextEditingController controller) {
+    return GestureDetector(
+      onTap: _isEditing ? () => _selectDateOfBirth(context) : null,
+      child: AbsorbPointer(
+        child: TextFormField(
+          controller: controller,
+          style: const TextStyle(color: Colors.white),
+          decoration: InputDecoration(
+            labelText: label,
+            labelStyle: const TextStyle(color: Colors.white),
+            border: const OutlineInputBorder(),
+          ),
+        ),
       ),
-      dropdownColor: Colors.black.withOpacity(0.9),
     );
   }
 }

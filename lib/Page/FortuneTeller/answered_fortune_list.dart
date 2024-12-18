@@ -26,7 +26,7 @@ class _AnsweredFortuneListState extends State<AnsweredFortuneList> {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-        backgroundColor: Colors.black.withOpacity(0.2),
+        backgroundColor: Colors.black.withOpacity(0.8),
         elevation: 0,
         title: Text(
           'Baktığım Fallar',
@@ -54,7 +54,7 @@ class _AnsweredFortuneListState extends State<AnsweredFortuneList> {
             } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
               return Center(
                 child: Text(
-                  'No answered fortunes found.',
+                  'Bakılan fal bulunmamaktadır.',
                   style: TextStyle(color: Colors.white),
                 ),
               );

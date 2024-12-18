@@ -52,6 +52,13 @@ class FortuneCategoriesPage extends StatelessWidget {
                           fontSize: 19,
                           fontWeight: FontWeight.w600,
                           color: const Color.fromARGB(255, 255, 255, 255),
+                          shadows: [
+                            Shadow(
+                              blurRadius: 8.0,
+                              color: Colors.black.withOpacity(0.9),
+                              offset: Offset(2.0, 2.0),
+                            ),
+                          ],
                         ),
                         textAlign: TextAlign.center,
                       ),
@@ -87,7 +94,7 @@ class FortuneCategoriesPage extends StatelessWidget {
   }
 
   Widget _imageCardButton(
-      BuildContext context, String imagePath, String fortuneName) {
+    BuildContext context, String imagePath, String fortuneName) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -101,25 +108,23 @@ class FortuneCategoriesPage extends StatelessWidget {
         children: [
           Card(
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(5.0),
+              borderRadius: BorderRadius.circular(300),
             ),
             elevation: 5,
             child: Container(
               width: 140,
               height: 140,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Container(
-                    width: 140,
-                    height: 140,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage(imagePath),
-                        fit: BoxFit.fill,
-                      ),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage(imagePath),
+                  fit: BoxFit.fill,
+                ),
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.white.withOpacity(0.9),
+                    blurRadius: 8,
+                    spreadRadius: 5,
                   ),
                 ],
               ),
@@ -132,6 +137,13 @@ class FortuneCategoriesPage extends StatelessWidget {
               fontSize: 16,
               fontWeight: FontWeight.bold,
               color: const Color.fromARGB(255, 255, 255, 255),
+              shadows: [
+                Shadow(
+                  blurRadius: 8.0,
+                  color: Colors.black.withOpacity(0.9),
+                  offset: Offset(2.0, 2.0),
+                ),
+              ],
             ),
           ),
         ],

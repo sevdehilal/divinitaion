@@ -26,7 +26,7 @@ class _PendingFortuneListState extends State<PendingFortuneList> {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-        backgroundColor: Colors.black.withOpacity(0.2),
+        backgroundColor: Colors.black.withOpacity(0.8),
         elevation: 0,
         title: Text(
           'Bekleyen Fallar',

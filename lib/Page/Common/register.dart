@@ -1,6 +1,8 @@
-import 'package:divinitaion/Models/fortune_teller_entity.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:divinitaion/Models/register_client.dart';
+import 'package:divinitaion/Models/fortune_teller_entity.dart';
 import 'package:divinitaion/Services/service.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -12,7 +14,6 @@ class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _experienceController = TextEditingController();
-  // Deneyim için
   final TextEditingController _dateOfBirthController = TextEditingController();
   final TextEditingController _occupationController = TextEditingController();
   final TextEditingController _maritalStatusController =
@@ -23,22 +24,35 @@ class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController _passwordController = TextEditingController();
 
   final ApiService _apiService = ApiService();
-  int _selectedButtonIndex = 0; // 0: Kayıt Ol, 1: Falcı Olarak Kayıt Ol
-  //sevde
+  int _selectedTabIndex = 0;
+  bool _isPasswordVisible = false;
 
-  // Falcı için seçilebilecek fal kategorileri
   List<String> _categories = ['Tarot', 'Kahve Falı', 'El Falı', 'Aşk Falı'];
   String? _selectedCategory;
 
-  List<String> _category = ['Kız', 'Erkek'];
+  List<String> _genderOptions = ['Kız', 'Erkek'];
   String? _selectedGender;
+
+  Future<void> _selectDate(BuildContext context) async {
+    DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(1900),
+      lastDate: DateTime.now(),
+    );
+    if (picked != null) {
+      setState(() {
+        _dateOfBirthController.text = DateFormat('dd-MM-yyyy').format(picked);
+      });
+    }
+  }
 
   Future<void> _register() async {
     User newUser = User(
       firstName: _firstNameController.text,
       lastName: _lastNameController.text,
       gender: _genderController.text,
-      dateOfBirth: DateTime.parse(_dateOfBirthController.text),
+      dateOfBirth: DateFormat('dd-MM-yyyy').parse(_dateOfBirthController.text),
       occupation: _occupationController.text,
       maritalStatus: _maritalStatusController.text,
       userName: _userNameController.text,
@@ -50,12 +64,12 @@ class _RegisterPageState extends State<RegisterPage> {
 
     if (success) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Registration successful!')),
+        SnackBar(content: Text('Kayıt başarılı!!')),
       );
       Navigator.pop(context);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Registration failed. Please try again.')),
+        SnackBar(content: Text('Kayıt başarısız. Lütfen tekrar deneyin.')),
       );
     }
   }
@@ -64,6 +78,7 @@ class _RegisterPageState extends State<RegisterPage> {
     FortuneTeller newFortuneTeller = FortuneTeller(
       firstName: _firstNameController.text,
       lastName: _lastNameController.text,
+      dateOfBirth: DateFormat('dd-MM-yyyy').parse(_dateOfBirthController.text),
       gender: _genderController.text,
       experience: _experienceController.text,
       userName: _userNameController.text,
@@ -75,14 +90,14 @@ class _RegisterPageState extends State<RegisterPage> {
 
     if (success) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Fortune Teller Registration successful!')),
+        SnackBar(content: Text('Falcı olarak kayıt başarılı!')),
       );
       Navigator.pop(context);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
             content:
-                Text('Fortune Teller Registration failed. Please try again.')),
+                Text('Falcı olarak kayıt başarısız. Lütfen tekrar deneyin.')),
       );
     }
   }
@@ -91,189 +106,220 @@ class _RegisterPageState extends State<RegisterPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Register'),
+        title: Text('Kayıt'),
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                padding: EdgeInsets.all(8),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      child: TextButton(
-                        onPressed: () {
-                          setState(() {
-                            _selectedButtonIndex = 0; // Kayıt Ol formu
-                          });
-                        },
-                        child: Text(
-                          'Kayıt Ol',
-                          style: TextStyle(
-                            fontSize: 13,
-                            color: _selectedButtonIndex == 0
-                                ? Colors.blue
-                                : Colors.black,
-                          ),
-                        ),
-                      ),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: _selectedTabIndex == 0
+                          ? const Color.fromARGB(123, 117, 0, 146)
+                          : Colors.grey,
                     ),
-                    SizedBox(width: 10), // Butonlar arasında boşluk
-                    Expanded(
-                      child: TextButton(
-                        onPressed: () {
-                          setState(() {
-                            _selectedButtonIndex = 1; // Falcı Kayıt formu
-                          });
-                        },
-                        child: Text(
-                          'Falcı Olarak Kayıt Ol',
-                          style: TextStyle(
-                            fontSize: 13,
-                            color: _selectedButtonIndex == 1
-                                ? Colors.blue
-                                : Colors.black,
-                          ),
-                        ),
-                      ),
+                    onPressed: () {
+                      setState(() {
+                        _selectedTabIndex = 0;
+                      });
+                    },
+                    child: Text(
+                      'Kayıt Ol',
+                      style: TextStyle(color: Colors.white),
                     ),
-                  ],
+                  ),
                 ),
-              ),
-              SizedBox(height: 20),
-
-              // Farklı form içerikleri
-              if (_selectedButtonIndex == 0) ...[
-                // Standart kullanıcı formu
-                TextField(
-                  controller: _firstNameController,
-                  decoration: InputDecoration(labelText: 'First Name'),
-                ),
-                TextField(
-                  controller: _lastNameController,
-                  decoration: InputDecoration(labelText: 'Last Name'),
-                ),
-                SizedBox(height: 16),
-                DropdownButtonFormField<String>(
-                  decoration: InputDecoration(labelText: 'Gender'),
-                  value: _selectedGender,
-                  onChanged: (newValue) {
-                    setState(() {
-                      _selectedGender = newValue;
-                    });
-                  },
-                  items: _category.map((category) {
-                    return DropdownMenuItem<String>(
-                      value: category,
-                      child: Text(category),
-                    );
-                  }).toList(),
-                ),
-
-                TextField(
-                  controller: _dateOfBirthController,
-                  decoration:
-                      InputDecoration(labelText: 'Date of Birth (YYYY-MM-DD)'),
-                  keyboardType: TextInputType.datetime,
-                ),
-                TextField(
-                  controller: _occupationController,
-                  decoration: InputDecoration(labelText: 'Occupation'),
-                ),
-                TextField(
-                  controller: _maritalStatusController,
-                  decoration: InputDecoration(labelText: 'Marital Status'),
-                ),
-                TextField(
-                  controller: _userNameController,
-                  decoration: InputDecoration(labelText: 'Username'),
-                ),
-                TextField(
-                  controller: _emailController,
-                  decoration: InputDecoration(labelText: 'Email'),
-                  keyboardType: TextInputType.emailAddress,
-                ),
-                TextField(
-                  controller: _passwordController,
-                  decoration: InputDecoration(labelText: 'Password'),
-                  obscureText: true,
-                ),
-                SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: _register,
-                  child: Text('Register'),
-                ),
-              ] else if (_selectedButtonIndex == 1) ...[
-                // Falcı kayıt formu
-                TextField(
-                  controller: _firstNameController,
-                  decoration: InputDecoration(labelText: 'First Name'),
-                ),
-                TextField(
-                  controller: _lastNameController,
-                  decoration: InputDecoration(labelText: 'Last Name'),
-                ),
-                TextField(
-                  controller: _experienceController,
-                  decoration:
-                      InputDecoration(labelText: 'Deneyim (Yıl olarak)'),
-                  keyboardType: TextInputType.number,
-                ),
-                TextField(
-                  controller: _genderController,
-                  decoration: InputDecoration(labelText: 'Cinsiyet'),
-                ),
-
-                // Fal kategorisi seçimi (Dropdown)
-                TextField(
-                  controller: _userNameController,
-                  decoration: InputDecoration(labelText: 'Username'),
-                ),
-                // Fal kategorisi seçimi (Dropdown)
-                SizedBox(height: 16),
-                DropdownButtonFormField<String>(
-                  decoration:
-                      InputDecoration(labelText: 'Bakacağı Fal Kategorisi'),
-                  value: _selectedCategory,
-                  onChanged: (newValue) {
-                    setState(() {
-                      _selectedCategory = newValue;
-                    });
-                  },
-                  items: _categories.map((category) {
-                    return DropdownMenuItem<String>(
-                      value: category,
-                      child: Text(category),
-                    );
-                  }).toList(),
-                ),
-                TextField(
-                  controller: _emailController,
-                  decoration: InputDecoration(labelText: 'Email'),
-                  keyboardType: TextInputType.emailAddress,
-                ),
-                TextField(
-                  controller: _passwordController,
-                  decoration: InputDecoration(labelText: 'Password'),
-                  obscureText: true,
-                ),
-                SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: _fortuneTellerRegister,
-                  child: Text('Onaya Sun'),
+                SizedBox(width: 10),
+                Expanded(
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: _selectedTabIndex == 1
+                          ? const Color.fromARGB(123, 117, 0, 146)
+                          : Colors.grey,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _selectedTabIndex = 1;
+                      });
+                    },
+                    child: Text(
+                      'Falcı Olarak Kayıt Ol',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
                 ),
               ],
-            ],
-          ),
+            ),
+            SizedBox(height: 20),
+            if (_selectedTabIndex == 0)
+              _buildUserForm()
+            else
+              _buildFortuneTellerForm(),
+          ],
         ),
       ),
+    );
+  }
+
+  Widget _buildUserForm() {
+    return Column(
+      children: [
+        TextField(
+          controller: _firstNameController,
+          decoration: InputDecoration(labelText: 'İsim'),
+        ),
+        TextField(
+          controller: _lastNameController,
+          decoration: InputDecoration(labelText: 'Soyisim'),
+        ),
+        DropdownButtonFormField<String>(
+          decoration: InputDecoration(labelText: 'Cinsiyet'),
+          value: _selectedGender,
+          onChanged: (newValue) {
+            setState(() {
+              _selectedGender = newValue;
+            });
+          },
+          items: _genderOptions.map((gender) {
+            return DropdownMenuItem<String>(
+              value: gender,
+              child: Text(gender),
+            );
+          }).toList(),
+        ),
+        TextField(
+          controller: _dateOfBirthController,
+          decoration: InputDecoration(
+            labelText: 'Doğum Tarihi (dd-MM-yyyy)',
+            suffixIcon: IconButton(
+              icon: Icon(Icons.calendar_today),
+              onPressed: () => _selectDate(context),
+            ),
+          ),
+          readOnly: true,
+        ),
+        TextField(
+          controller: _occupationController,
+          decoration: InputDecoration(labelText: 'Meslek'),
+        ),
+        TextField(
+          controller: _maritalStatusController,
+          decoration: InputDecoration(labelText: 'Medeni Durum'),
+        ),
+        TextField(
+          controller: _userNameController,
+          decoration: InputDecoration(labelText: 'Kullanıcı Adı'),
+        ),
+        TextField(
+          controller: _emailController,
+          decoration: InputDecoration(labelText: 'E-mail'),
+          keyboardType: TextInputType.emailAddress,
+        ),
+        TextField(
+          controller: _passwordController,
+          decoration: InputDecoration(
+            labelText: 'Şifre',
+            suffixIcon: IconButton(
+              icon: Icon(
+                _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+              ),
+              onPressed: () {
+                setState(() {
+                  _isPasswordVisible = !_isPasswordVisible;
+                });
+              },
+            ),
+          ),
+          obscureText: !_isPasswordVisible,
+        ),
+        SizedBox(height: 20),
+        ElevatedButton(
+          onPressed: _register,
+          child: Text('Kayıt Ol'),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildFortuneTellerForm() {
+    return Column(
+      children: [
+        TextField(
+          controller: _firstNameController,
+          decoration: InputDecoration(labelText: 'İsim'),
+        ),
+        TextField(
+          controller: _lastNameController,
+          decoration: InputDecoration(labelText: 'Soyisim'),
+        ),
+        TextField(
+          controller: _dateOfBirthController,
+          decoration: InputDecoration(
+            labelText: 'Doğum Tarihi (dd-MM-yyyy)',
+            suffixIcon: IconButton(
+              icon: Icon(Icons.calendar_today),
+              onPressed: () => _selectDate(context),
+            ),
+          ),
+          readOnly: true,
+        ),
+        TextField(
+          controller: _experienceController,
+          decoration: InputDecoration(labelText: 'Deneyim (Yıl)'),
+          keyboardType: TextInputType.number,
+          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+        ),
+        DropdownButtonFormField<String>(
+          decoration: InputDecoration(labelText: 'Bakacağı Fal Kategorisi'),
+          value: _selectedCategory,
+          onChanged: (newValue) {
+            setState(() {
+              _selectedCategory = newValue;
+            });
+          },
+          items: _categories.map((category) {
+            return DropdownMenuItem<String>(
+              value: category,
+              child: Text(category),
+            );
+          }).toList(),
+        ),
+        TextField(
+          controller: _userNameController,
+          decoration: InputDecoration(labelText: 'Kullanıcı Adı'),
+        ),
+        TextField(
+          controller: _emailController,
+          decoration: InputDecoration(labelText: 'E-mail'),
+          keyboardType: TextInputType.emailAddress,
+        ),
+        TextField(
+          controller: _passwordController,
+          decoration: InputDecoration(
+            labelText: 'Şifre',
+            suffixIcon: IconButton(
+              icon: Icon(
+                _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+              ),
+              onPressed: () {
+                setState(() {
+                  _isPasswordVisible = !_isPasswordVisible;
+                });
+              },
+            ),
+          ),
+          obscureText: !_isPasswordVisible,
+        ),
+        SizedBox(height: 20),
+        ElevatedButton(
+          onPressed: _fortuneTellerRegister,
+          child: Text('Onaya Sun'),
+        ),
+      ],
     );
   }
 }

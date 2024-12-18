@@ -116,6 +116,10 @@ class _ClientFortuneTellerListPageState
               );
             },
           ),
+          Padding(
+            padding: const EdgeInsets.only(right: 8.0),
+            child: LogoutButton(),
+          ),
         ],
         backgroundColor: Colors.black.withOpacity(0.3),
         elevation: 0,

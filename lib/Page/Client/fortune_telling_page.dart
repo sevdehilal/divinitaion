@@ -26,6 +26,7 @@ class _FortuneTellingPageState extends State<FortuneTellingPage> {
   int? selectedTopic1Index;
   int? selectedTopic2Index;
   final ApiService _apiService = ApiService();
+  bool _isButtonDisabled = false; 
 
   @override
   void initState() {
@@ -201,7 +202,11 @@ class _FortuneTellingPageState extends State<FortuneTellingPage> {
               SizedBox(height: 30),
               Center(
                 child: ElevatedButton(
-                  onPressed: () async {
+                  onPressed: _isButtonDisabled ? null : () async {
+                    setState(() {
+                      _isButtonDisabled = true;
+                    });
+
                     List<int> categoryIds = [];
                     if (selectedTopic1Index != null) {
                       categoryIds.add(1);
@@ -232,19 +237,26 @@ class _FortuneTellingPageState extends State<FortuneTellingPage> {
                       photo3: photo3!,
                     );
 
+                    setState(() {
+                      _isButtonDisabled = false;
+                    });
+
                     if (success) {
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: Text('Fortune successfully saved!')));
+                          content: Text('Fal başarıyla gönderildi!')));
 
                       Navigator.pop(context);
                       Navigator.pop(context);
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: Text('Failed to save fortune.')));
-
+                          content: Text('Fal gönderirken hata oluştu! Lütfen tekrar deneyiniz.')));
                     }
                   },
-                  child: Text('Gönder'),
+                  child: _isButtonDisabled
+                      ? CircularProgressIndicator(
+                          color: Colors.white,
+                        )
+                      : Text('Gönder'),
                   style: ElevatedButton.styleFrom(
                     padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
                     textStyle: TextStyle(fontSize: 20),

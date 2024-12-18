@@ -125,12 +125,13 @@ class AnswerInputPage extends StatelessWidget {
 
                         if (success) {
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            content: Text('Answer sent successfully'),
+                            content: Text('Cevap başarıyla gönderildi!'),
                           ));
+                          Navigator.pop(context);
                           Navigator.pop(context);
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            content: Text('Failed to send answer'),
+                            content: Text('Cevap gönderilemedi! Lütfen tekrar deneyin.'),
                           ));
                           Navigator.pop(context);
                           Navigator.pop(context);
