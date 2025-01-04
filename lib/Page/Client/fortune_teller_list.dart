@@ -138,7 +138,7 @@ class _ClientFortuneTellerListPageState
                 hintStyle: TextStyle(color: Colors.white54),
                 prefixIcon: Icon(Icons.search, color: Colors.white),
                 filled: true,
-                fillColor: Colors.black.withOpacity(0.5),
+                fillColor: Colors.white.withOpacity(0.3),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                   borderSide: BorderSide.none,

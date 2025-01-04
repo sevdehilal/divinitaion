@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:divinitaion/Models/fortune_categories_entity.dart';
+import 'package:divinitaion/Models/fortune_topic.dart';
 import 'package:divinitaion/Models/fortune_entity.dart';
 import 'package:divinitaion/Models/fortune_model_for_fortune_teller.dart';
 import 'package:divinitaion/Models/fortune_teller_entity.dart';
@@ -10,6 +10,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import '../Models/fortune_category.dart';
 import '../Models/login.dart';
 
 class ApiService {
@@ -121,7 +122,7 @@ class ApiService {
     }
   }
 
-  Future<List<FortuneCategory>> fetchFortuneCategories() async {
+  Future<List<FortuneTopic>> fetchFortuneTopics() async {
     final response = await http
         .get(Uri.parse("https://fallinfal.com/api/Category/GetAllCategory"));
 
@@ -129,7 +130,7 @@ class ApiService {
       Map<String, dynamic> jsonResponse = json.decode(response.body);
       List<dynamic> jsonList =
           jsonResponse['data']; // Use 'data' if the response is wrapped
-      return jsonList.map((json) => FortuneCategory.fromJson(json)).toList();
+      return jsonList.map((json) => FortuneTopic.fromJson(json)).toList();
     } else {
       throw Exception('Failed to load categories');
     }
@@ -539,6 +540,20 @@ class ApiService {
     } catch (e) {
       print("Bir hata oluştu: $e");
       return false;
+    }
+  }
+
+  Future<List<FortuneCategory>> getFortuneCategories() async {
+    final response = await http
+        .get(Uri.parse("https://fallinfal.com/api/Category/GetallFalCategory"));
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> jsonResponse = json.decode(response.body);
+      List<dynamic> jsonList =
+          jsonResponse['data'];
+      return jsonList.map((json) => FortuneCategory.fromJson(json)).toList();
+    } else {
+      throw Exception('Kategori çekme başarısız!');
     }
   }
 }

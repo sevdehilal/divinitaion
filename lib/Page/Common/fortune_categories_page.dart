@@ -1,5 +1,6 @@
-import 'package:divinitaion/Widgets/CommonWidgets/logout_button.dart';
+import 'package:divinitaion/Page/Common/backround_container.dart';
 import 'package:flutter/material.dart';
+import 'package:divinitaion/Widgets/CommonWidgets/logout_button.dart';
 import 'package:divinitaion/Page/Client/fortune_teller_list.dart';
 
 class FortuneCategoriesPage extends StatelessWidget {
@@ -23,78 +24,56 @@ class FortuneCategoriesPage extends StatelessWidget {
             padding: const EdgeInsets.only(right: 8.0),
             child: LogoutButton(),
           ),
-        ],     
+        ],
       ),
-      body: Stack(
-        children: [
-          // Arka plan resmi
-          Container(
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('lib/assets/background.png'),
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
-          // İçerik
-          Column(
-            children: [
-              SizedBox(height: 10),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Hemen Yeni Bir Fal Baktır !',
-                        style: TextStyle(
-                          fontSize: 19,
-                          fontWeight: FontWeight.w600,
-                          color: const Color.fromARGB(255, 255, 255, 255),
-                          shadows: [
-                            Shadow(
-                              blurRadius: 8.0,
-                              color: Colors.black.withOpacity(0.9),
-                              offset: Offset(2.0, 2.0),
-                            ),
-                          ],
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                      SizedBox(height: 50),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          _imageCardButton(
-                              context, 'lib/assets/kahvefali.png', 'Kahve Falı'),
-                          _imageCardButton(
-                              context, 'lib/assets/hand.png', 'El Falı'),
+      body: BackgroundContainer(
+        child: Column(
+          children: [
+            SizedBox(height: 10),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Hemen Yeni Bir Fal Baktır !',
+                      style: TextStyle(
+                        fontSize: 19,
+                        fontWeight: FontWeight.w600,
+                        color: const Color.fromARGB(255, 255, 255, 255),
+                        shadows: [
+                          Shadow(
+                            blurRadius: 8.0,
+                            color: Colors.black.withOpacity(0.9),
+                            offset: Offset(2.0, 2.0),
+                          ),
                         ],
                       ),
-                      SizedBox(height: 20),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          _imageCardButton(
-                              context, 'lib/assets/dharita.png', 'Doğum Haritası'),
-                          _imageCardButton(
-                              context, 'lib/assets/tarot.png', 'Tarot Falı'),
-                        ],
-                      ),
-                    ],
-                  ),
+                      textAlign: TextAlign.center,
+                    ),
+                    SizedBox(height: 50),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        _imageCardButton(
+                            context, 'lib/assets/kahvefali.png', 'Kahve Falı'),
+                        _imageCardButton(
+                            context, 'lib/assets/hand.png', 'El Falı'),
+                      ],
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
-        ],
+            ),
+          ],
+        ),
       ),
     );
   }
 
   Widget _imageCardButton(
-    BuildContext context, String imagePath, String fortuneName) {
+      BuildContext context, String imagePath, String fortuneName) {
     return GestureDetector(
       onTap: () {
         Navigator.push(

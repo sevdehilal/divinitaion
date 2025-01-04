@@ -18,7 +18,13 @@ class _PendingFortuneListState extends State<PendingFortuneList> {
   @override
   void initState() {
     super.initState();
-    _pendingFortuneList = _apiService.FetchPendingFortunesByFortuneTellerId();
+    _loadPendingFortunes();
+  }
+
+  void _loadPendingFortunes() {
+    setState(() {
+      _pendingFortuneList = _apiService.FetchPendingFortunesByFortuneTellerId();
+    });
   }
 
   @override
@@ -41,7 +47,7 @@ class _PendingFortuneListState extends State<PendingFortuneList> {
             padding: const EdgeInsets.only(right: 8.0),
             child: LogoutButton(),
           ),
-        ],   
+        ],
       ),
       body: BackgroundContainer(
         child: FutureBuilder<List<FortuneForFortuneTeller>>(
@@ -68,13 +74,17 @@ class _PendingFortuneListState extends State<PendingFortuneList> {
                 final fortune = fortunes[index];
 
                 return GestureDetector(
-                  onTap: () {
-                    Navigator.push(
+                  onTap: () async {
+                    final result = await Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => AnswerPage(fortune: fortune),
                       ),
                     );
+
+                    if (result == true) {
+                      _loadPendingFortunes();
+                    }
                   },
                   child: FortuneCardForFortuneTeller(
                     fortune: fortune,

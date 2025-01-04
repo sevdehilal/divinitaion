@@ -44,7 +44,7 @@ class _CustomFortuneTellerCardState extends State<CustomFortuneTellerCard> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
       ),
-      color: Colors.black.withOpacity(0.5),
+      color: Colors.white.withOpacity(0.3),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -57,7 +57,7 @@ class _CustomFortuneTellerCardState extends State<CustomFortuneTellerCard> {
                   style: const TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                    color: Colors.black,
                   ),
                 ),
                 const SizedBox(width: 5),
@@ -66,7 +66,7 @@ class _CustomFortuneTellerCardState extends State<CustomFortuneTellerCard> {
                   style: const TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                    color: Colors.black,
                   ),
                 ),
               ],
@@ -77,16 +77,16 @@ class _CustomFortuneTellerCardState extends State<CustomFortuneTellerCard> {
                 const Icon(Icons.star, color: Colors.amber),
                 const SizedBox(width: 2),
                 Text(
-                  "${(widget.fortuneTeller.rating ?? 0).toStringAsFixed(1)}", // Virgülden sonra bir basamak
+                  "${(widget.fortuneTeller.rating ?? 0).toStringAsFixed(1)}",
                   style: const TextStyle(
                     fontSize: 16,
-                    color: Colors.white,
+                    color: Colors.black,
                   ),
                 ),
                 const SizedBox(width: 10),
                 const Icon(
                   Icons.visibility,
-                  color: Colors.white,
+                  color: Colors.black,
                   size: 18,
                 ),
                 const SizedBox(width: 4),
@@ -94,7 +94,7 @@ class _CustomFortuneTellerCardState extends State<CustomFortuneTellerCard> {
                   "${widget.fortuneTeller.totalVoted ?? 0}",
                   style: const TextStyle(
                     fontSize: 16,
-                    color: Colors.white,
+                    color: Colors.black,
                   ),
                 ),
               ],
@@ -107,7 +107,7 @@ class _CustomFortuneTellerCardState extends State<CustomFortuneTellerCard> {
                   "${widget.fortuneTeller.requirementCredit}",
                   style: const TextStyle(
                     fontSize: 16,
-                    color: Colors.white,
+                    color: Colors.black,
                   ),
                 ),
                 const Spacer(),
@@ -158,11 +158,12 @@ class _CustomFortuneTellerCardState extends State<CustomFortuneTellerCard> {
                       );
                     },
                     style: OutlinedButton.styleFrom(
-                      side: const BorderSide(color: Colors.white),
+                      side: const BorderSide(color: Colors.black, width: 2.0),
+
                     ),
                     child: const Text(
                       'Fal Baktır',
-                      style: TextStyle(color: Colors.white),
+                      style: TextStyle(color: Colors.black),
                     ),
                   ),
               ],

@@ -1,9 +1,9 @@
 class FortuneCategory {
-  final int? id;
+  final int id;
   final String categoryName;
 
   FortuneCategory({
-    this.id,
+    required this.id,
     required this.categoryName,
   });
 

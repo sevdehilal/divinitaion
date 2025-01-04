@@ -1,8 +1,8 @@
 import 'package:divinitaion/Models/fortune_list.dart';
 import 'package:divinitaion/Page/Client/answered_fortune_page.dart';
+import 'package:divinitaion/Page/Common/backround_container.dart';
 import 'package:divinitaion/Services/service.dart';
 import 'package:divinitaion/Widgets/ClientWidgets/fortune_card.dart';
-import 'package:divinitaion/Widgets/CommonWidgets/logout_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
@@ -34,39 +34,31 @@ class _FortuneListState extends State<FortuneList> with SingleTickerProviderStat
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Fallarım',
-          style: TextStyle(
-                fontSize: 20,
-                color: const Color.fromARGB(255, 255, 255, 255),
-              ),
-        ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 8.0),
-            child: LogoutButton(),
-          ),
-        ],   
+    return BackgroundContainer(
+      child: Scaffold(
         backgroundColor: Colors.transparent,
-        elevation: 0, // AppBar gölgesini kaldırır
-        bottom: TabBar(
-          controller: _tabController,
-          labelColor: const Color.fromARGB(255, 224, 0, 253),
-          unselectedLabelColor: Colors.white,
-          tabs: [
-            Tab(text: 'Cevap Bekleyen Fallar',),
-            Tab(text: 'Fallarım'),
+        body: Column(
+          children: [
+            TabBar(
+              controller: _tabController,
+              labelColor: const Color.fromARGB(202, 232, 162, 241),
+              unselectedLabelColor: Colors.white,
+              tabs: [
+                Tab(text: 'Cevap Bekleyen Fallar'),
+                Tab(text: 'Fallarım'),
+              ],
+            ),
+            Expanded(
+              child: TabBarView(
+                controller: _tabController,
+                children: [
+                  _buildFortuneList(_pendingFortunes, 'Cevap Bekleyen Fal bulunmamaktadır.', false),
+                  _buildFortuneList(_pastFortunes, 'Geçmiş Fal bulunmamaktadır.', true),
+                ],
+              ),
+            ),
           ],
         ),
-      ),
-      backgroundColor: Colors.transparent,
-      body: TabBarView(
-        controller: _tabController,
-        children: [
-          _buildFortuneList(_pendingFortunes, 'Cevap Bekleyen Fallar yok.', false),
-          _buildFortuneList(_pastFortunes, 'Geçmiş Fallar yok.', true),
-        ],
       ),
     );
   }
@@ -80,7 +72,7 @@ class _FortuneListState extends State<FortuneList> with SingleTickerProviderStat
         } else if (snapshot.hasError) {
           return Center(child: Text('Error: ${snapshot.error}'));
         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return Center(child: Text(emptyMessage));
+          return Center(child: Text(emptyMessage, style: TextStyle(color: Colors.white)));
         }
 
         final fortunes = snapshot.data!;

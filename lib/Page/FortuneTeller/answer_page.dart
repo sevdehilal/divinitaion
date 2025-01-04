@@ -73,7 +73,7 @@ class AnswerPage extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Telveden Manzaralar',
+                          'Fal Fotoğrafları',
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,

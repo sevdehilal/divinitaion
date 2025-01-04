@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:divinitaion/Models/fortune_model_for_fortune_teller.dart';
+import 'package:divinitaion/Page/FortuneTeller/pending_fortune_list.dart';
 import 'package:divinitaion/Services/service.dart';
 import 'package:flutter/material.dart';
 import 'package:divinitaion/Page/Common/backround_container.dart';
@@ -74,7 +75,7 @@ class AnswerInputPage extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Telveden Manzaralar',
+                          'Fal Fotoğrafları',
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -134,7 +135,12 @@ class AnswerInputPage extends StatelessWidget {
                             content: Text('Cevap gönderilemedi! Lütfen tekrar deneyin.'),
                           ));
                           Navigator.pop(context);
-                          Navigator.pop(context);
+                          Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                PendingFortuneList()),
+                                      );
                         }
                       } catch (e) {
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'dart:convert'; // base64Decode için gerekli
+import 'dart:convert';
 import 'package:divinitaion/Models/fortune_model_for_fortune_teller.dart';
-import 'package:google_fonts/google_fonts.dart'; // Google Fonts kütüphanesini ekledik
-import 'package:intl/intl.dart'; // intl paketini import etmeniz gerekiyor
+import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 
 class FortuneCardForFortuneTeller extends StatelessWidget {
   final FortuneForFortuneTeller fortune;
@@ -18,7 +18,7 @@ class FortuneCardForFortuneTeller extends StatelessWidget {
       color: Colors.transparent,
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.black.withOpacity(0.5),
+          color: Colors.white.withOpacity(0.3),
           borderRadius: BorderRadius.circular(15.0),
           border: Border.all(
             width: 1,
@@ -46,17 +46,17 @@ class FortuneCardForFortuneTeller extends StatelessWidget {
                   _buildImage(fortune.imageData3),
                 ],
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 4),
               Text(
                 '${fortune.firstName ?? ''} ${fortune.lastName ?? ''}',
                 style: GoogleFonts.montserrat(
-                  fontSize: 18,
+                  fontSize: 20,
                   fontWeight: FontWeight.bold,
-                  color: Color(0xFFC0C0C0),
+                  color: Colors.black,
                 ),
               ),
 
-              const SizedBox(height: 8),
+              const SizedBox(height: 4),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -64,7 +64,7 @@ class FortuneCardForFortuneTeller extends StatelessWidget {
                     fortune.createDate != null ? DateFormat('dd/MM/yyyy HH:mm:ss').format(fortune.createDate?.toLocal() ?? DateTime.now()) : "?",                    
                     style: GoogleFonts.montserrat(
                     fontSize: 14,
-                    color: Color(0xFFD4AF37),
+                    color: Colors.black,
                     ),
                   ),
                 ],
@@ -76,7 +76,6 @@ class FortuneCardForFortuneTeller extends StatelessWidget {
     );
   }
 
-  // Resim Yükleme Yardımcı Fonksiyonu
   Widget _buildImage(String? imageData) {
     return Expanded(
       child: Padding(
@@ -86,7 +85,7 @@ class FortuneCardForFortuneTeller extends StatelessWidget {
           child: imageData != null && imageData.isNotEmpty
               ? Image.memory(
                   base64Decode(imageData),
-                  height: 90, // Resim yüksekliğini ayarladık
+                  height: 90, 
                   fit: BoxFit.cover,
                   errorBuilder: (context, error, stackTrace) {
                     return Container(

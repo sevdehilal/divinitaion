@@ -5,6 +5,8 @@ import 'package:divinitaion/Models/register_client.dart';
 import 'package:divinitaion/Models/fortune_teller_entity.dart';
 import 'package:divinitaion/Services/service.dart';
 
+import '../../Models/fortune_category.dart';
+
 class RegisterPage extends StatefulWidget {
   @override
   _RegisterPageState createState() => _RegisterPageState();
@@ -16,8 +18,7 @@ class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController _experienceController = TextEditingController();
   final TextEditingController _dateOfBirthController = TextEditingController();
   final TextEditingController _occupationController = TextEditingController();
-  final TextEditingController _maritalStatusController =
-      TextEditingController();
+  final TextEditingController _maritalStatusController = TextEditingController();
   final TextEditingController _userNameController = TextEditingController();
   final TextEditingController _genderController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
@@ -27,8 +28,8 @@ class _RegisterPageState extends State<RegisterPage> {
   int _selectedTabIndex = 0;
   bool _isPasswordVisible = false;
 
-  List<String> _categories = ['Tarot', 'Kahve Falı', 'El Falı', 'Aşk Falı'];
-  String? _selectedCategory;
+  List<FortuneCategory> _categories = [];
+  List<FortuneCategory> _selectedCategories = [];
 
   List<String> _genderOptions = ['Kız', 'Erkek'];
   String? _selectedGender;
@@ -45,6 +46,14 @@ class _RegisterPageState extends State<RegisterPage> {
         _dateOfBirthController.text = DateFormat('dd-MM-yyyy').format(picked);
       });
     }
+  }
+
+  Future<void> _fetchCategories() async {
+    List<FortuneCategory> categories = await _apiService.getFortuneCategories();
+    
+    setState(() {
+      _categories = categories;
+    });
   }
 
   Future<void> _register() async {
@@ -84,6 +93,7 @@ class _RegisterPageState extends State<RegisterPage> {
       userName: _userNameController.text,
       email: _emailController.text,
       password: _passwordController.text,
+      falCategories: _selectedCategories.map((category) => category.id).toList(),
     );
 
     bool success = await _apiService.registerFortuneTeller(newFortuneTeller);
@@ -96,10 +106,15 @@ class _RegisterPageState extends State<RegisterPage> {
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-            content:
-                Text('Falcı olarak kayıt başarısız. Lütfen tekrar deneyin.')),
+            content: Text('Falcı olarak kayıt başarısız. Lütfen tekrar deneyin.')),
       );
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchCategories();
   }
 
   @override
@@ -237,7 +252,7 @@ class _RegisterPageState extends State<RegisterPage> {
           obscureText: !_isPasswordVisible,
         ),
         SizedBox(height: 20),
-        ElevatedButton(
+        OutlinedButton(
           onPressed: _register,
           child: Text('Kayıt Ol'),
         ),
@@ -268,27 +283,6 @@ class _RegisterPageState extends State<RegisterPage> {
           readOnly: true,
         ),
         TextField(
-          controller: _experienceController,
-          decoration: InputDecoration(labelText: 'Deneyim (Yıl)'),
-          keyboardType: TextInputType.number,
-          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-        ),
-        DropdownButtonFormField<String>(
-          decoration: InputDecoration(labelText: 'Bakacağı Fal Kategorisi'),
-          value: _selectedCategory,
-          onChanged: (newValue) {
-            setState(() {
-              _selectedCategory = newValue;
-            });
-          },
-          items: _categories.map((category) {
-            return DropdownMenuItem<String>(
-              value: category,
-              child: Text(category),
-            );
-          }).toList(),
-        ),
-        TextField(
           controller: _userNameController,
           decoration: InputDecoration(labelText: 'Kullanıcı Adı'),
         ),
@@ -314,8 +308,39 @@ class _RegisterPageState extends State<RegisterPage> {
           ),
           obscureText: !_isPasswordVisible,
         ),
-        SizedBox(height: 20),
-        ElevatedButton(
+        SizedBox(height: 10),
+        Align(
+          alignment: Alignment.topLeft,
+          child: Text(
+            'Bakılacak Fal Kategorisi',
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          ),
+        ),
+        SizedBox(height: 5),
+        _categories.isEmpty
+            ? CircularProgressIndicator()
+            : Wrap(
+                children: _categories.map((category) {
+                  return Row(
+                    children: [
+                      Checkbox(
+                        value: _selectedCategories.contains(category),
+                        onChanged: (bool? value) {
+                          setState(() {
+                            if (value != null && value) {
+                              _selectedCategories.add(category);
+                            } else {
+                              _selectedCategories.remove(category);
+                            }
+                          });
+                        },
+                      ),
+                      Text(category.categoryName),
+                    ],
+                  );
+                }).toList(),
+              ),
+        OutlinedButton(
           onPressed: _fortuneTellerRegister,
           child: Text('Onaya Sun'),
         ),

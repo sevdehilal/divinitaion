@@ -30,7 +30,7 @@ class _FortuneCardState extends State<FortuneCard> {
         child: SizedBox(
           height: 150,
           child: Card(
-            color: Colors.black.withOpacity(0.5),
+            color: Colors.white.withOpacity(0.3),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(16.0),
             ),
@@ -43,7 +43,7 @@ class _FortuneCardState extends State<FortuneCard> {
                   Icon(
                     Icons.coffee,
                     size: 50,
-                    color: Colors.white,
+                    color: const Color.fromARGB(158, 232, 162, 241),
                   ),
                   SizedBox(width: 25),
                   Expanded(
@@ -55,15 +55,15 @@ class _FortuneCardState extends State<FortuneCard> {
                         Text(
                           'Falcı: ${widget.fortune.fortunetellerFirstName} ${widget.fortune.fortunetellerLastName}',
                           style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
+                            color: Colors.black,
+                            fontSize: 18,
                           ),
                         ),
                         Text(
                           'Tarih: ${widget.fortune.createDate != null ? DateFormat('dd/MM/yyyy HH:mm:ss').format(widget.fortune.createDate?.toLocal() ?? DateTime.now()) : "?" }',
                           style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 14,
+                            color: Colors.black,
+                            fontSize: 16,
                           ),
                         ),
                       ],

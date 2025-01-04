@@ -1,3 +1,4 @@
+import 'package:divinitaion/Models/fortune_category.dart';
 import 'package:divinitaion/Models/fortune_teller_entity.dart';
 import 'package:divinitaion/Page/Common/backround_container.dart';
 import 'package:flutter/material.dart';
@@ -15,14 +16,15 @@ class _FortuneTellerProfilePageState extends State<FortuneTellerProfilePage> {
   final ApiService _apiService = ApiService();
   late Future<FortuneTeller> _fortuneTellerFuture;
   bool _isEditing = false;
+  Future<List<FortuneCategory>>? _categoriesFuture;
+  List<int> _selectedCategories = [];
 
   final TextEditingController _userNameController = TextEditingController();
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _genderController = TextEditingController();
   final TextEditingController _experienceController = TextEditingController();
-  final TextEditingController _requirementCreditController =
-      TextEditingController();
+  final TextEditingController _requirementCreditController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _ratingController = TextEditingController();
   final TextEditingController _totalCreditController = TextEditingController();
@@ -32,6 +34,7 @@ class _FortuneTellerProfilePageState extends State<FortuneTellerProfilePage> {
   void initState() {
     super.initState();
     _fortuneTellerFuture = _apiService.getFortuneTeller();
+    _categoriesFuture = _apiService.getFortuneCategories();
   }
 
   @override
@@ -61,6 +64,7 @@ class _FortuneTellerProfilePageState extends State<FortuneTellerProfilePage> {
     _ratingController.text = fortuneTeller.rating?.toString() ?? '0.0';
     _totalCreditController.text = fortuneTeller.totalCredit?.toString() ?? '0.0';
     _dateOfBirthController.text = DateFormat('dd/MM/yyyy').format(fortuneTeller.dateOfBirth);
+    _selectedCategories = fortuneTeller.falCategories ?? [];
   }
 
   void _toggleEdit() async {
@@ -74,9 +78,6 @@ class _FortuneTellerProfilePageState extends State<FortuneTellerProfilePage> {
         'requirementCredit':
             int.tryParse(_requirementCreditController.text) ?? 0,
         'gender': _genderController.text,
-        'email': _emailController.text,
-        'rating': double.tryParse(_ratingController.text) ?? 0,
-        'totalCredit': int.tryParse(_totalCreditController.text) ?? 0,
       };
 
       final success = await _apiService.updateFortuneTellerProfile(updatedData);
@@ -181,8 +182,49 @@ class _FortuneTellerProfilePageState extends State<FortuneTellerProfilePage> {
                     child: _buildTextField('Kullanıcı Adı', _userNameController,
                         isEditable: false)),
                 _buildCard(
-                    child: _buildTextField('E-Posta', _emailController,
+                    child: _buildTextField('E-mail', _emailController,
                         isEditable: false)),
+                _buildCard(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Bakılan Fal Kategorileri',
+                        style: TextStyle(color: Colors.white, fontSize: 18),
+                      ),
+                      Divider(
+                        color: Colors.white,
+                        thickness: 1,
+                      ),
+                      FutureBuilder<List<FortuneCategory>>(
+                        future: _categoriesFuture,
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState == ConnectionState.waiting) {
+                            return CircularProgressIndicator();
+                          } else if (snapshot.hasError) {
+                            return Text('Bir hata oluştu: ${snapshot.error}');
+                          } else if (snapshot.hasData) {
+                            List<FortuneCategory> categories = snapshot.data!;
+
+                            return Column(
+                              children: categories.map((category) {
+                                return Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    category.categoryName,
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                );
+                              }).toList(),
+                            );
+                          } else {
+                            return Text('Fal kategorileri bulunamadı.');
+                          }
+                        },
+                      ),
+                    ],
+                  ),
+                ),
               ],
             ),
           ),

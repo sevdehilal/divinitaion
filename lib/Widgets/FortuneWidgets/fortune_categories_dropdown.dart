@@ -1,4 +1,4 @@
-import 'package:divinitaion/Models/fortune_categories_entity.dart';
+import 'package:divinitaion/Models/fortune_category.dart';
 import 'package:divinitaion/Services/service.dart';
 import 'package:flutter/material.dart';
 
@@ -19,7 +19,7 @@ class _FortuneCategoriesDropdown extends State<FortuneCategoriesDropdown> {
   @override
   void initState() {
     super.initState();
-    _items = _apiService.fetchFortuneCategories();
+    _items = _apiService.getFortuneCategories();
   }
 
   @override
@@ -32,7 +32,6 @@ class _FortuneCategoriesDropdown extends State<FortuneCategoriesDropdown> {
         } else if (snapshot.hasError) {
           return Center(child: Text('Hata: ${snapshot.error}'));
         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          // Boş veri durumu
           return Center(child: Text('Kategoriler bulunamadı'));
         }
 
