@@ -59,7 +59,7 @@ class _GoogleSignInScreenState extends State<GoogleSignInScreen> {
                     style: TextStyle(fontSize: 18),
                   ),
                   Text(
-                    'Rol: ${_loginResponse?.roles.join(", ") ?? 'Bilinmiyor'}', // Kullanıcının rolleri
+                    'Rol: ${_loginResponse?.roles.join(", ") ?? 'Bilinmiyor'}',
                     style: TextStyle(fontSize: 14, color: Colors.grey),
                   ),
                   SizedBox(height: 20),

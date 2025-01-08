@@ -209,7 +209,7 @@ class _FortuneAnswerPageState extends State<FortuneAnswerPage> {
                     }),
                   ),
                 const SizedBox(height: 10),
-                Center(  // Center the button here
+                Center(
                   child: OutlinedButton(
                     onPressed: _captureAndShareScreenshot,
                     style: OutlinedButton.styleFrom(

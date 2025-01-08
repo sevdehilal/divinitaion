@@ -4,7 +4,6 @@ import 'package:divinitaion/Page/Common/backround_container.dart';
 import 'package:divinitaion/Services/service.dart';
 import 'package:divinitaion/Widgets/ClientWidgets/fortune_card.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class FortuneList extends StatefulWidget {
   @override
@@ -15,7 +14,6 @@ class _FortuneListState extends State<FortuneList> with SingleTickerProviderStat
   final ApiService _apiService = ApiService();
   late Future<List<FortuneListt>> _pendingFortunes;
   late Future<List<FortuneListt>> _pastFortunes;
-  final FlutterSecureStorage _secureStorage = FlutterSecureStorage();
   late TabController _tabController;
 
   @override
@@ -76,6 +74,8 @@ class _FortuneListState extends State<FortuneList> with SingleTickerProviderStat
         }
 
         final fortunes = snapshot.data!;
+        fortunes.sort((a, b) => b.createDate?.compareTo(a.createDate ?? DateTime.now()) ?? 0);
+
         return ListView.builder(
           itemCount: fortunes.length,
           itemBuilder: (context, index) {

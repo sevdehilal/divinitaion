@@ -7,11 +7,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 class CustomFortuneTellerCard extends StatefulWidget {
   final FortuneTeller fortuneTeller;
   final int clientCredit;
+  final int falCategoryId;
 
   const CustomFortuneTellerCard({
     Key? key,
     required this.fortuneTeller,
     required this.clientCredit,
+    required this.falCategoryId,
   }) : super(key: key);
 
   @override
@@ -153,6 +155,7 @@ class _CustomFortuneTellerCardState extends State<CustomFortuneTellerCard> {
                         MaterialPageRoute(
                           builder: (context) => PhotoSelectionPage(
                             fortuneTeller: widget.fortuneTeller,
+                            falCategoryId: widget.falCategoryId,
                           ),
                         ),
                       );

@@ -5,6 +5,7 @@ class FortuneListt {
   final String? answer;
   final DateTime? createDate;
   final List<String>? categories;
+  final String? falCategory;
   final double? score;
 
   FortuneListt({
@@ -14,6 +15,7 @@ class FortuneListt {
     this.answer,
     this.createDate,
     this.categories,
+    this.falCategory,
     this.score,
   });
 
@@ -32,6 +34,7 @@ class FortuneListt {
           ? DateTime.parse(json['createDate'])
           : null,
       categories: categoriesList,
+      falCategory: json['falCategory'] as String?,
       score: json['score'] != null
         ? (json['score'] is int ? (json['score'] as int).toDouble() : json['score'] as double)
         : null,
@@ -46,6 +49,7 @@ class FortuneListt {
       'answer': answer,
       'createDate': createDate?.toIso8601String(),
       'categories': categories,
+      'falCategory': falCategory,
       'score': score,
     };
   }

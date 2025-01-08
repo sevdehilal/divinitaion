@@ -1,4 +1,4 @@
-import 'package:divinitaion/Page/Common/login.dart';
+import 'package:divinitaion/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'dart:ui';
@@ -50,14 +50,13 @@ class LogoutButton extends StatelessWidget {
       await secureStorage.deleteAll();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Logged out and data cleared!')),
+
       );
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => LoginPage()),
-      );
+      
+      MyApp.globalKey.currentState?.restartApp();
     }
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return OutlinedButton(

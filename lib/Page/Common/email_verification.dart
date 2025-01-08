@@ -2,7 +2,7 @@ import 'package:divinitaion/Services/service.dart';
 import 'package:flutter/material.dart';
 
 class EmailVerificationPage extends StatefulWidget {
-  final int id; // ID parametresi dışarıdan alınacak
+  final int id;
 
   EmailVerificationPage({required this.id});
 
@@ -13,7 +13,6 @@ class EmailVerificationPage extends StatefulWidget {
 class _EmailVerificationPageState extends State<EmailVerificationPage> {
   bool _isLoading = false;
 
-  // API'ye ID gönderme fonksiyonu
   Future<void> _verifyId() async {
     setState(() {
       _isLoading = true;

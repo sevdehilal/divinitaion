@@ -12,10 +12,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 class FortuneTellingPage extends StatefulWidget {
   final FortuneTeller fortuneTeller;
   final List<PlatformFile> selectedFiles;
+  final int falCategoryId;
 
   FortuneTellingPage({
     required this.fortuneTeller,
     required this.selectedFiles,
+    required this.falCategoryId,
   });
 
   @override
@@ -197,13 +199,13 @@ class _FortuneTellingPageState extends State<FortuneTellingPage> {
                                     ? widget.selectedFiles[2]
                                     : null;
 
-                                final SharedPreferences prefs =
-                                    await SharedPreferences.getInstance();
+                                final SharedPreferences prefs = await SharedPreferences.getInstance();
                                 final int? id = prefs.getInt('id');
                                 bool success = await _apiService.saveFortune(
                                   clientId: id,
                                   fortunetellerId: widget.fortuneTeller.id,
                                   categoryIds: categoryIds,
+                                  falCategoryId: widget.falCategoryId,
                                   photo1: photo1!,
                                   photo2: photo2!,
                                   photo3: photo3!,

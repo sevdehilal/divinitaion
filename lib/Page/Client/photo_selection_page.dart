@@ -9,8 +9,9 @@ import 'package:image_picker/image_picker.dart';
 
 class PhotoSelectionPage extends StatefulWidget {
   final FortuneTeller fortuneTeller;
+  final int falCategoryId;
 
-  PhotoSelectionPage({required this.fortuneTeller});
+  PhotoSelectionPage({required this.fortuneTeller, required this.falCategoryId});
 
   @override
   _PhotoSelectionPageState createState() => _PhotoSelectionPageState();
@@ -57,7 +58,6 @@ class _PhotoSelectionPageState extends State<PhotoSelectionPage> {
       final pickedFile = await imagePicker.pickImage(source: source);
 
       if (pickedFile != null) {
-        // Senkron olmayan işlemi `setState` dışına al
         final fileBytes = kIsWeb ? await pickedFile.readAsBytes() : null;
         final fileSize = File(pickedFile.path).lengthSync();
 
@@ -97,6 +97,7 @@ class _PhotoSelectionPageState extends State<PhotoSelectionPage> {
         builder: (context) => FortuneTellingPage(
           fortuneTeller: widget.fortuneTeller,
           selectedFiles: _selectedFiles,
+          falCategoryId: widget.falCategoryId,
         ),
       ),
     );
@@ -125,7 +126,7 @@ class _PhotoSelectionPageState extends State<PhotoSelectionPage> {
                       side: BorderSide(color: Colors.white),
                     ),
                     child: Text(
-                      'Kahve Telvelerini Seç',
+                      'Fotoğraf Seç',
                       style: TextStyle(color: Colors.white),
                     ),
                   ),

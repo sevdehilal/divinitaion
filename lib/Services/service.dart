@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:divinitaion/Models/fortune_topic.dart';
-import 'package:divinitaion/Models/fortune_entity.dart';
 import 'package:divinitaion/Models/fortune_model_for_fortune_teller.dart';
 import 'package:divinitaion/Models/fortune_teller_entity.dart';
 import 'package:divinitaion/Models/fortune_list.dart';
@@ -107,15 +106,14 @@ class ApiService {
     }
   }
 
-  Future<List<FortuneTeller>> FetchFortuneTeller() async {
+  Future<List<FortuneTeller>> FetchFortuneTeller(int fortuneCategoryId) async {
     final response = await http
-        .get(Uri.parse("https://fallinfal.com/api/Client/GetAllFortuneTeller"));
+    .get(Uri.parse("https://fallinfal.com/api/Client/GetAllFortuneTeller?FortuneCategoryId=$fortuneCategoryId"));
 
     if (response.statusCode == 200) {
-      // Extract the 'data' field from the response
       Map<String, dynamic> jsonResponse = json.decode(response.body);
       List<dynamic> jsonList =
-          jsonResponse['data']; // Use 'data' if the response is wrapped
+          jsonResponse['data'];
       return jsonList.map((json) => FortuneTeller.fromJson(json)).toList();
     } else {
       throw Exception('Failed to load users');
@@ -129,7 +127,7 @@ class ApiService {
     if (response.statusCode == 200) {
       Map<String, dynamic> jsonResponse = json.decode(response.body);
       List<dynamic> jsonList =
-          jsonResponse['data']; // Use 'data' if the response is wrapped
+          jsonResponse['data'];
       return jsonList.map((json) => FortuneTopic.fromJson(json)).toList();
     } else {
       throw Exception('Failed to load categories');
@@ -191,16 +189,15 @@ class ApiService {
     required int? clientId,
     required int? fortunetellerId,
     required List<int> categoryIds,
+    required int falCategoryId,
     required PlatformFile photo1,
     required PlatformFile photo2,
     required PlatformFile photo3,
   }) async {
     try {
-      // Prepare the request URL
       var url =
           Uri.parse("https://fallinfal.com/api/Application/AddApplication");
 
-      // Convert photos to base64
       String base64Photo1 = kIsWeb
           ? base64Encode(photo1.bytes!)
           : base64Encode(File(photo1.path!).readAsBytesSync());
@@ -217,12 +214,12 @@ class ApiService {
         'ClientId': clientId,
         'FortunetellerId': fortunetellerId,
         'CategoryIds': categoryIds,
+        'FalCategoryId': falCategoryId ,
         'Photo1': base64Photo1,
         'Photo2': base64Photo2,
         'Photo3': base64Photo3,
       };
 
-      print(base64Photo2.length);
       var response = await http.post(
         url,
         headers: {'Content-Type': 'application/json'},
@@ -358,12 +355,9 @@ class ApiService {
 
     if (response.statusCode == 200) {
       try {
-        // Parse the response body as JSON
         final Map<String, dynamic> responseBody = json.decode(response.body);
 
-        // Check if the 'success' field is true
         if (responseBody['success'] == true) {
-          // Extract the 'data' field which contains the credit value
           int credit = responseBody['data'];
           return credit;
         } else {
@@ -396,14 +390,12 @@ class ApiService {
 
   Future<void> earnCoin(int credit) async {
     try {
-      // SharedPreferences'den token alıyoruz
       final prefs = await SharedPreferences.getInstance();
       final token = prefs.getString('token');
       if (token == null) {
         throw Exception("Token bulunamadı");
       }
 
-      // API çağrısı
       final url = Uri.parse(
           "https://fallinfal.com/api/Client/EarnCredit?credit=$credit");
 

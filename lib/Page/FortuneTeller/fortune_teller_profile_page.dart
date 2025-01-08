@@ -17,7 +17,6 @@ class _FortuneTellerProfilePageState extends State<FortuneTellerProfilePage> {
   late Future<FortuneTeller> _fortuneTellerFuture;
   bool _isEditing = false;
   Future<List<FortuneCategory>>? _categoriesFuture;
-  List<int> _selectedCategories = [];
 
   final TextEditingController _userNameController = TextEditingController();
   final TextEditingController _firstNameController = TextEditingController();
@@ -64,7 +63,6 @@ class _FortuneTellerProfilePageState extends State<FortuneTellerProfilePage> {
     _ratingController.text = fortuneTeller.rating?.toString() ?? '0.0';
     _totalCreditController.text = fortuneTeller.totalCredit?.toString() ?? '0.0';
     _dateOfBirthController.text = DateFormat('dd/MM/yyyy').format(fortuneTeller.dateOfBirth);
-    _selectedCategories = fortuneTeller.falCategories ?? [];
   }
 
   void _toggleEdit() async {
@@ -266,7 +264,6 @@ class _FortuneTellerProfilePageState extends State<FortuneTellerProfilePage> {
 Widget _buildDropdownField(String label, TextEditingController controller) {
   const genderOptions = ['Kadın', 'Erkek', 'Belirtmek İstemiyor'];
 
-  // Dropdown'da kullanılacak değer için kontrol
   String? dropdownValue = genderOptions.contains(controller.text)
       ? controller.text
       : null;

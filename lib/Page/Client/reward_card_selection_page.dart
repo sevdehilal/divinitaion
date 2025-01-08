@@ -1,4 +1,3 @@
-import 'package:divinitaion/Page/Client/fortune_teller_list.dart';
 import 'package:divinitaion/Services/service.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -27,22 +26,19 @@ class _RewardCardSelectionPageState extends State<RewardCardSelectionPage> {
   @override
   void initState() {
     super.initState();
-    // AdMob test ID'sini kullanarak reklamı yükle
     _loadRewardedAd();
   }
 
-  // Reklam yükleme fonksiyonu
   void _loadRewardedAd() {
     RewardedAd.load(
       adUnitId:
-          'ca-app-pub-3940256099942544/5224354917', // Google'ın AdMob test ID'si
+          'ca-app-pub-3940256099942544/5224354917',
       request: AdRequest(),
       rewardedAdLoadCallback: RewardedAdLoadCallback(
         onAdLoaded: (ad) {
           setState(() {
             _rewardedAd = ad;
           });
-          // Reklam yüklendiğinde otomatik olarak göster
           _showRewardedAd();
         },
         onAdFailedToLoad: (error) {
@@ -52,7 +48,6 @@ class _RewardCardSelectionPageState extends State<RewardCardSelectionPage> {
     );
   }
 
-  // Reklamı gösterme fonksiyonu
   void _showRewardedAd() {
     if (_rewardedAd != null) {
       _rewardedAd!.show(
@@ -71,7 +66,6 @@ class _RewardCardSelectionPageState extends State<RewardCardSelectionPage> {
   @override
   void dispose() {
     super.dispose();
-    // Reklam nesnesini serbest bırak
     _rewardedAd?.dispose();
   }
 
@@ -185,12 +179,7 @@ class _RewardCardSelectionPageState extends State<RewardCardSelectionPage> {
                                             "Ödül başarıyla gönderildi: $selectedReward Coin!"),
                                       ));
                                       Navigator.pop(context);
-                                      Navigator.pushReplacement(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                ClientFortuneTellerList()),
-                                      );
+                                      Navigator.pop(context);
                                     } catch (e) {
                                       setState(() {
                                         isConfirmed = false;

@@ -14,19 +14,18 @@ class CustomScaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      extendBody: true, // Body'nin altına uzanmasını sağlar
+      extendBody: true,
       appBar: appBar,
       bottomNavigationBar: bottomNavigationBar,
       body: Stack(
         children: [
-          // Arka plan resmi
           Positioned.fill(
             child: Image.asset(
-              'lib/assets/background.png', // Arka plan resmi
-              fit: BoxFit.cover, // Tam ekran boyutunda yerleştirir
+              'lib/assets/background.png',
+              fit: BoxFit.cover, 
             ),
           ),
-          body, // Sayfa içeriği
+          body,
         ],
       ),
     );

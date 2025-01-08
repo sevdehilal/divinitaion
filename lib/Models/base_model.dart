@@ -9,7 +9,6 @@ class BaseModel {
     this.data,
   });
 
-  // Ortak JSON'dan modele dönüşüm
   BaseModel fromJson(Map<String, dynamic> json) {
     return BaseModel(
       success: json['success'],
@@ -18,7 +17,6 @@ class BaseModel {
     );
   }
 
-  // Ortak modelden JSON'a dönüşüm
   Map<String, dynamic> toJson() {
     return {
       'success': success,

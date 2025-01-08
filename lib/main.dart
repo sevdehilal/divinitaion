@@ -1,8 +1,5 @@
 import 'dart:io';
-import 'package:divinitaion/AuthGoogle/login.dart';
 import 'package:divinitaion/Page/Common/welcome.dart';
-import 'package:divinitaion/Services/twitter.dart';
-import 'package:divinitaion/Widgets/ClientWidgets/client_navigation_bar.dart';
 import 'package:divinitaion/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -13,11 +10,38 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   MobileAds.instance.initialize();
-  runApp(MaterialApp(
-    home: WelcomePage(),
-    debugShowCheckedModeBanner: false,
-  ));
+
+  runApp(MyApp());
 }
+
+class MyApp extends StatefulWidget {
+  static final GlobalKey<_MyAppState> globalKey = GlobalKey<_MyAppState>();
+
+  MyApp() : super(key: globalKey);
+
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  Key appKey = UniqueKey();
+
+  void restartApp() {
+    setState(() {
+      appKey = UniqueKey();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      key: appKey,
+      home: WelcomePage(),
+    );
+  }
+}
+
 
 class MyHttpOverrides extends HttpOverrides {
   @override

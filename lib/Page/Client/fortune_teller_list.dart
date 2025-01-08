@@ -6,6 +6,10 @@ import 'package:divinitaion/Widgets/CommonWidgets/logout_button.dart';
 import 'package:flutter/material.dart';
 
 class ClientFortuneTellerList extends StatefulWidget {
+  final int fortuneCategoryId;
+
+  ClientFortuneTellerList({required this.fortuneCategoryId});
+
   @override
   _ClientFortuneTellerListPageState createState() =>
       _ClientFortuneTellerListPageState();
@@ -22,7 +26,7 @@ class _ClientFortuneTellerListPageState
   @override
   void initState() {
     super.initState();
-    _userList = _apiService.FetchFortuneTeller();
+    _userList = _apiService.FetchFortuneTeller(widget.fortuneCategoryId);
     _clientCreditFuture = _apiService.fetchClientCreditByClientId();
 
     _userList.then((fortuneTellers) {
@@ -208,6 +212,7 @@ class _ClientFortuneTellerListPageState
                           return CustomFortuneTellerCard(
                             fortuneTeller: fortuneTeller,
                             clientCredit: clientCredit,
+                            falCategoryId: widget.fortuneCategoryId,
                           );
                         },
                       );

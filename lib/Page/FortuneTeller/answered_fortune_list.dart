@@ -62,7 +62,6 @@ class _AnsweredFortuneListState extends State<AnsweredFortuneList> {
 
             final fortunes = snapshot.data!;
 
-            // Tarih sıralaması
             fortunes.sort((a, b) {
               if (a.createDate == null || b.createDate == null) {
                 return 0;

@@ -19,7 +19,7 @@ class LoginResponse extends BaseModel {
   final int userId;
   final String email;
   final bool emailConfirmed;
-  final List<String> roles; // Yeni eklenen roles alanı
+  final List<String> roles;
 
   LoginResponse({
     required bool success,
@@ -31,26 +31,24 @@ class LoginResponse extends BaseModel {
     required this.roles,
   }) : super(success: success, message: message);
 
-  // JSON'dan dönüşüm işlemi
   factory LoginResponse.fromJson(Map<String, dynamic> json) {
     return LoginResponse(
       success: json['success'],
       message: json['message'],
-      token: json['data']['token'], // JSON'dan 'data' objesinden token alıyoruz
-      userId: json['data']['id'],   // 'data' objesinden userId alıyoruz
-      email: json['data']['email'], // 'data' objesinden email alıyoruz
-      emailConfirmed: json['data']['emailConfirmed'], // 'data' objesinden emailConfirmed alıyoruz
-      roles: List<String>.from(json['data']['roles'] ?? []), // 'data' objesinden roles alıyoruz
+      token: json['data']['token'],
+      userId: json['data']['id'],
+      email: json['data']['email'],
+      emailConfirmed: json['data']['emailConfirmed'],
+      roles: List<String>.from(json['data']['roles'] ?? []),
     );
   }
 
-  // Modelden JSON'a dönüşüm işlemi
   @override
   Map<String, dynamic> toJson() {
     return {
       'success': success,
       'message': message,
-      'data': { // Burada verileri 'data' objesine yerleştiriyoruz
+      'data': {
         'token': token,
         'userId': userId,
         'email': email,

@@ -1,13 +1,27 @@
-import 'package:divinitaion/Page/Client/fortune_teller_list.dart';
-import 'package:divinitaion/Page/Common/login.dart';
-import 'package:divinitaion/Widgets/FortuneWidgets/fortune_teller_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:divinitaion/Page/Common/login.dart';
+import 'package:divinitaion/Widgets/ClientWidgets/client_navigation_bar.dart';
+import 'package:divinitaion/Widgets/FortuneWidgets/fortune_teller_navigation_bar.dart';
 
-class WelcomePage extends StatelessWidget {
+class WelcomePage extends StatefulWidget {
+  @override
+  _WelcomePageState createState() => _WelcomePageState();
+}
+
+class _WelcomePageState extends State<WelcomePage> {
   final storage = const FlutterSecureStorage();
+  bool _isSplashVisible = true;
 
-  WelcomePage({super.key});
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(Duration(seconds: 2), () {
+      setState(() {
+        _isSplashVisible = false;
+      });
+    });
+  }
 
   Future<String> isLoggedIn() async {
     String? loggedInRole = await storage.read(key: 'loggedInAs');
@@ -17,14 +31,27 @@ class WelcomePage extends StatelessWidget {
     if (loggedInRole == "fortuneteller") {
       return "fortuneteller";
     }
-    if (loggedInRole == "") {
-      return "";
-    }
     return "";
   }
 
   @override
   Widget build(BuildContext context) {
+    if (_isSplashVisible) {
+      return Scaffold(
+        backgroundColor: Colors.white,
+        body: Center(
+          child: ClipOval(
+            child: Image.asset(
+              'lib/assets/logo1.png',
+              width: 250,
+              height: 250,
+              fit: BoxFit.cover,
+            ),
+          ),
+        ),
+      );
+    }
+
     return FutureBuilder<String>(
       future: isLoggedIn(),
       builder: (context, snapshot) {
@@ -37,7 +64,7 @@ class WelcomePage extends StatelessWidget {
         } else {
           String? loggedInRole = snapshot.data;
           if (loggedInRole == "client") {
-            return ClientFortuneTellerList();
+            return CustomBottomNavigation();
           }
           if (loggedInRole == "fortuneteller") {
             return FortuneTellerBottomNavigation();

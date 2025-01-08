@@ -10,24 +10,17 @@ class ScreenshotSharePage extends StatefulWidget {
 }
 
 class _ScreenshotSharePageState extends State<ScreenshotSharePage> {
-  // ScreenshotController oluşturuyoruz
   final ScreenshotController _screenshotController = ScreenshotController();
 
-  // Ekran görüntüsünü al ve paylaş
   Future<void> _takeScreenshotAndShare() async {
     try {
-      // Ekran görüntüsünü al
       final image = await _screenshotController.capture();
 
       if (image != null) {
-        // Geçici bir dosya yolu al
         final directory = await getTemporaryDirectory();
         final imagePath = File('${directory.path}/screenshot.png');
 
-        // Görüntüyü dosyaya yaz
         await imagePath.writeAsBytes(image);
-
-        // Share Plus ile paylaş
 
         await Share.shareXFiles([XFile(imagePath.path)], text: 'Great picture');
       } else {
@@ -50,7 +43,6 @@ class _ScreenshotSharePageState extends State<ScreenshotSharePage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Paylaşılacak içerik
               Container(
                 padding: EdgeInsets.all(16),
                 color: Colors.grey[200],

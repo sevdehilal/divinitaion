@@ -57,9 +57,9 @@ class FortuneCategoriesPage extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         _imageCardButton(
-                            context, 'lib/assets/kahvefali.png', 'Kahve Falı'),
+                            context, 'lib/assets/kahvefali.png', 'Kahve Falı', 1),
                         _imageCardButton(
-                            context, 'lib/assets/hand.png', 'El Falı'),
+                            context, 'lib/assets/hand.png', 'El Falı', 2),
                       ],
                     ),
                   ],
@@ -73,13 +73,13 @@ class FortuneCategoriesPage extends StatelessWidget {
   }
 
   Widget _imageCardButton(
-      BuildContext context, String imagePath, String fortuneName) {
+      BuildContext context, String imagePath, String fortuneName, int falCategoryId) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => ClientFortuneTellerList(),
+            builder: (context) => ClientFortuneTellerList(fortuneCategoryId: falCategoryId),
           ),
         );
       },

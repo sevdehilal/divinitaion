@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:typed_data';
-
 import 'package:file_picker/file_picker.dart';
 
 class Fortune {
@@ -25,7 +24,6 @@ class Fortune {
   });
 
   factory Fortune.fromJson(Map<String, dynamic> json) {
-    // Parse photos from base64 strings
     List<PlatformFile> photoList = [];
     for (int i = 1; i <= 3; i++) {
       String key = 'photo$i';
@@ -33,14 +31,12 @@ class Fortune {
         String? photoBase64 = json[key];
         if (photoBase64 != null && photoBase64.isNotEmpty) {
           try {
-            // Convert base64 to bytes
             List<int> bytes = base64Decode(photoBase64);
-            // Create PlatformFile object
             photoList.add(
               PlatformFile(
                 name: 'photo$i.jpg',
                 size: bytes.length,
-                bytes: Uint8List.fromList(bytes), // Convert List<int> to Uint8List
+                bytes: Uint8List.fromList(bytes),
               ),
             );
           } catch (e) {

@@ -4,7 +4,6 @@ class GoogleUser {
   final String firstName;
   final String lastName;
 
-  // Constructor
   GoogleUser({
     required this.googleId,
     required this.email,
@@ -12,7 +11,6 @@ class GoogleUser {
     required this.lastName,
   });
 
-  // fromJson methodu (eğer gelen JSON verisini parse etmeniz gerekirse)
   factory GoogleUser.fromJson(Map<String, dynamic> json) {
     return GoogleUser(
       googleId: json['googleId'],
@@ -22,7 +20,6 @@ class GoogleUser {
     );
   }
 
-  // toJson methodu (JSON formatına dönüştürme)
   Map<String, dynamic> toJson() {
     return {
       'googleId': googleId,
